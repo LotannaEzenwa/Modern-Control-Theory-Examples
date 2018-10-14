@@ -1,5 +1,6 @@
-#Modern Control Theory Techniques and Examples
+# Modern Control Theory Techniques and Examples
 
+<<<<<<< HEAD
 Examples, theory, and technique in modern control. 
 
 [![Build Status](https://img.shields.io/badge/language-MATLAB-brightgreen.svg)](#)
