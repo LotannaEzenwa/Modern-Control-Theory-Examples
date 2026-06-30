@@ -1,6 +1,15 @@
 %% Nyquist Stability Criterion
-% Ogata, Modern Control Engineering, Ch. 7: The Nyquist Stability
-% Criterion
+% *Closed-loop stability from encirclements of $-1$.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * apply $Z=N+P$ to read closed-loop stability off a Nyquist plot,
+% * work a stable-open-loop and an unstable-open-loop ($P>0$) example, and
+% * watch a stable design lose stability as the gain crosses $K_{cr}$.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % For a unity-feedback loop with open-loop transfer function $G(s)H(s)$,
 % the Nyquist criterion relates the number of closed-loop right-half-plane

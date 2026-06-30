@@ -1,6 +1,15 @@
 %% Relative Stability: Gain Margin and Phase Margin
-% Ogata, Modern Control Engineering, Ch. 7: Gain Margin, Phase Margin,
-% and Stability Analysis
+% *How much headroom is there before instability?*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * define gain margin and phase margin and read them with |margin|,
+% * relate phase margin to the equivalent damping ratio, and
+% * watch the margins shrink to zero as the loop gain rises.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % For a minimum-phase open-loop system whose Nyquist plot crosses the
 % real axis to the right of $-1$, two scalar measures of *relative*

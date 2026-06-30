@@ -1,5 +1,15 @@
 %% Higher-Order System Response and Dominant Poles
-% Ogata, Modern Control Engineering, Ch. 5: Higher-Order Systems
+% *When a third-order system behaves like a second-order one.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * approximate a high-order system by its *dominant poles*,
+% * match DC gain so the approximation is fair, and
+% * see when the approximation holds and when it breaks down.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A system with three or more poles generally has no simple closed
 % form for its transient specifications. However, if a pair of

@@ -1,5 +1,15 @@
 %% First-Order System Response
-% Ogata, Modern Control Engineering, Ch. 5: First-Order Systems
+% *One pole, one time constant, no overshoot.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * derive the $1/(Ts+1)$ step response and the 63.2% rule,
+% * read the time constant $T$ off the initial slope, and
+% * see the ramp and impulse responses of a first-order lag.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A first-order system has the transfer function
 %

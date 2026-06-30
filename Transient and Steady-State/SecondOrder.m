@@ -1,5 +1,15 @@
 %% Second-Order System Response
-% Ogata, Modern Control Engineering, Ch. 5: Second-Order Systems
+% *Damping ratio and natural frequency set the whole transient.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * sweep the damping ratio $\zeta$ and watch the response change,
+% * compute rise time, peak time, overshoot, and settling time, and
+% * check the closed-form specs against |stepinfo|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The standard second-order transfer function is
 %

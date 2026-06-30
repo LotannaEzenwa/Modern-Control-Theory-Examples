@@ -1,6 +1,9 @@
 %% Transient and Steady-State -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 5: end-of-chapter style
-% stability and transient-response problems.
+% *Practice: Routh stability ranges and transient specifications.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Routh Stability Range
 % A unity-feedback system has forward-path transfer function

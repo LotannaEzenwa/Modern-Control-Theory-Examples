@@ -1,6 +1,15 @@
 %% Transient and Steady-State Response Analysis
-% Ogata, Modern Control Engineering, Ch. 5: Transient and Steady-State
-% Response Analysis
+% *Driving systems with standard test signals to compare them fairly.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * meet the standard test signals (step, ramp, impulse, parabolic),
+% * simulate them with |step|, |impulse|, and |lsim|, and
+% * see how the transient and steady-state parts of a response separate.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The time response of a control system is split into two parts:
 %

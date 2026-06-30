@@ -1,5 +1,15 @@
 %% Routh-Hurwitz Stability Criterion
-% Ogata, Modern Control Engineering, Ch. 5: Routh's Stability Criterion
+% *Counting right-half-plane roots without solving for them.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * build a Routh array and read off the number of unstable roots,
+% * find the range of a gain $K$ that keeps a loop stable, and
+% * confirm the boundary against the actual closed-loop poles.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A linear system is stable if and only if all poles of its closed-loop
 % transfer function lie in the open left half of the $s$-plane. The

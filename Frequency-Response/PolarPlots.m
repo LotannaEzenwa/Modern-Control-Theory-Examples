@@ -1,5 +1,15 @@
 %% Polar Plots
-% Ogata, Modern Control Engineering, Ch. 7: Polar (Nyquist) Plots
+% *Tracing $G(j\omega)$ in the complex plane.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * plot the polar locus of a first-order and a type-1 system by hand,
+% * verify it against |nyquist|, and
+% * see how loop gain scales the locus toward the critical point $-1$.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The polar plot of $G(j\omega)$ traces the locus of the complex number
 % $G(j\omega) = \text{Re}\,G(j\omega) + j\,\text{Im}\,G(j\omega)$

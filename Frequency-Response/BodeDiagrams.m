@@ -1,6 +1,15 @@
 %% Bode Diagrams
-% Ogata, Modern Control Engineering, Ch. 7: Bode Diagram (Logarithmic
-% Plot) Construction
+% *Adding up simple factors on a log-frequency axis.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * learn the asymptotic rules for gain, integrator, and pole/zero factors,
+% * compare an asymptotic sketch with the exact |bode| plot, and
+% * read the gain and phase crossover frequencies with |margin|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A Bode diagram plots $20\log_{10}|G(j\omega)|$ (dB) and
 % $\angle G(j\omega)$ (deg) vs. $\log_{10}\omega$. Because $G(j\omega)$

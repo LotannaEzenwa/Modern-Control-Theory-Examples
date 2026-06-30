@@ -1,6 +1,15 @@
 %% Frequency-Domain Compensator Design
-% Ogata, Modern Control Engineering, Ch. 7-8: Lead/Lag Compensation via
-% the Frequency Response
+% *Designing lead/lag compensators straight from the Bode plot.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7--8.
+%
+% In this tutorial you will:
+%
+% * size a lead compensator from a phase-margin specification,
+% * place its corner frequencies and recompute the margin, and
+% * see the lag compensator as the magnitude-attenuation dual.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % This file parallels the root-locus compensator designs in
 % |Root-Locus/LeadCompensation.m| and |Root-Locus/LagCompensation.m|, but

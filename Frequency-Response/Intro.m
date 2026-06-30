@@ -1,5 +1,15 @@
 %% Introduction to Frequency-Response Analysis
-% Ogata, Modern Control Engineering, Ch. 7: Frequency-Response Analysis
+% *What a system does to a sinusoid: gain and phase vs. frequency.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * see why the steady-state sinusoidal response is captured by $G(j\omega)$,
+% * verify the gain/phase prediction against a simulation, and
+% * meet the Bode, polar, and Nichols ways of plotting $G(j\omega)$.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The frequency response of a system is its steady-state response to a
 % sinusoidal input. For a stable, linear time-invariant system with

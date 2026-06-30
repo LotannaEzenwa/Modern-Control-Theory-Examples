@@ -1,6 +1,9 @@
 %% Frequency-Response -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 7: end-of-chapter style margin
-% and frequency-response design problems.
+% *Practice: read margins, find the max gain for a spec, and design a lead.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Find Gain/Phase Margins and Assess Stability
 % For $G(s) = \frac{K}{s(s+2)(s+10)}$ with $K=200$, find the gain and
