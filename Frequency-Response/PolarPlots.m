@@ -66,3 +66,23 @@ figure
 nyquist(G2)
 title('Nyquist Plot via |nyquist|: $G(s)=\frac{1}{s(s+1)}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Before vs. After: Gain Scales the Polar Plot Toward -1
+% Raising the loop gain scales the whole polar plot radially while the -1
+% point (red) stays fixed, so a higher gain pushes the locus closer to
+% (and eventually around) -1 -- the geometric onset of instability that
+% the Nyquist criterion formalizes.
+G2a = tf(1,[1 1 0]); G2b = tf(4,[1 1 0]);
+figure
+hold on
+plot(real(squeeze(freqresp(G2a,w2))),imag(squeeze(freqresp(G2a,w2))),'b','LineWidth',1.3)
+plot(real(squeeze(freqresp(G2b,w2))),imag(squeeze(freqresp(G2b,w2))),'r','LineWidth',1.3)
+plot(-1,0,'rp','MarkerSize',13,'MarkerFaceColor','r')
+hold off
+grid on
+xlim([-4 1]); ylim([-6 1])
+legend('Before ($K=1$)','After ($K=4$)','$-1$ point','Interpreter','latex','FontSize',12)
+title('Polar Plot: Gain Pushes the Locus Toward $-1$','Interpreter','latex','FontSize',15)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)

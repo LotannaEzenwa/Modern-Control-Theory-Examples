@@ -50,15 +50,22 @@ y_pred = M*sin(w_test*t + phi);
 
 figure
 hold on
+plot(t,u,'k:')
 plot(t,y,'b')
 plot(t,y_pred,'r--')
 hold off
-legend('Simulated $y(t)$','Predicted $AM\sin(\omega t+\phi)$','Interpreter','latex','FontSize',14)
-title('Frequency Response Verified by Simulation','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+legend('Input $u(t)=\sin(2t)$ (before)','Simulated output $y(t)$ (after)', ...
+    'Predicted $AM\sin(\omega t+\phi)$','Interpreter','latex','FontSize',12)
+title('What the System Does to a Sinusoid: Gain $M$ and Phase Shift $\phi$','Interpreter','latex','FontSize',15)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 xlim([20 30])
+
+%%
+% Read the "before vs. after" directly off the plot: the output is the
+% input scaled by M = |G(j2)| and delayed in phase by phi = angle(G(j2)).
+fprintf('At w=2: gain M = %.4f (output/input amplitude), phase = %.2f deg\n', M, phi*180/pi)
 
 %% Standard Frequency-Response Plots
 % Three equivalent graphical representations of $G(j\omega)$ are used

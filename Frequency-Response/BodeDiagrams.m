@@ -81,3 +81,16 @@ grid on
 [Gm,Pm,Wcp,Wcg] = margin(G);
 fprintf('Gain crossover frequency wc = %.4f rad/s\n', Wcg)
 fprintf('Phase crossover frequency wp = %.4f rad/s\n', Wcp)
+
+%% Before vs. After: Raising the Gain Shifts the Magnitude Up
+% Multiplying the loop gain by 10 lifts the entire magnitude curve by
+% 20 dB, pushing the gain-crossover frequency higher and eroding the
+% phase margin -- the frequency-domain "before/after" of a gain change.
+figure
+bode(G, 10*G)
+legend('Before ($G$)','After ($10G$)','Interpreter','latex','FontSize',12)
+title('Bode: Before vs. After a 20 dB Gain Increase','Interpreter','latex','FontSize',16)
+grid on
+[~,Pm1] = margin(G);
+[~,Pm2] = margin(10*G);
+fprintf('Phase margin: before = %.1f deg, after (10x gain) = %.1f deg\n', Pm1, Pm2)

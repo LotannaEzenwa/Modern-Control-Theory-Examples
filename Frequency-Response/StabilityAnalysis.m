@@ -55,13 +55,31 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 zeta_approx = Pm/100;
 fprintf('Approximate equivalent damping ratio from PM: zeta = %.4f\n', zeta_approx)
 
-%% Sweeping Gain to Show the Margin Shrinking to Zero
+%% Sweeping Gain: Margins Shrink Toward Instability
+% As the loop gain rises the phase margin shrinks and eventually goes
+% negative (closed-loop unstable). Print GM/PM across a range:
 Ks = [5 20 60 96];
-figure
-hold on
 for k = Ks
     Gk = tf(k,conv([1 0],conv([1 1],[1 4])));
     [gm,pm] = margin(Gk);
     fprintf('K=%5.1f: GM=%.3f (%.2f dB), PM=%.2f deg\n', k, gm, 20*log10(gm), pm)
 end
+
+%% Before vs. After in the Time Domain
+% The same trend as closed-loop step responses (using stable gains so the
+% curves stay on screen): more gain -> less phase margin -> more overshoot
+% and ringing, marching from "before" (well damped) toward instability.
+Ks_stable = [5 12 18];
+figure
+hold on
+for k = Ks_stable
+    step(feedback(tf(k,conv([1 0],conv([1 1],[1 4]))),1), 0:0.02:15)
+end
 hold off
+grid on
+legend(arrayfun(@(k) sprintf('$K=%d$',k), Ks_stable,'UniformOutput',false), ...
+    'Interpreter','latex','FontSize',12)
+title('Closed-Loop Step as Gain Rises (Margin Shrinks)','Interpreter','latex','FontSize',16)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)

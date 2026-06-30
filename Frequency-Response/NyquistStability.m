@@ -57,3 +57,22 @@ grid on
 T3 = feedback(G3,1);
 fprintf('Closed-loop poles of G3/(1+G3):\n'); disp(pole(T3))
 fprintf('Closed-loop stable: %d\n', all(real(pole(T3))<0))
+
+%% Before vs. After: Crossing the Critical Gain
+% Back to the first plant. Below Kcr the Nyquist plot stays to the right
+% of -1 (no encirclement, closed-loop stable); above Kcr it encircles -1
+% (Z = 2, unstable). This is the same stability boundary the root locus
+% crosses at K = Kcr.
+den3 = conv(conv([1 1],[1 2]),[1 3]);
+figure
+subplot(1,2,1)
+nyquist(tf(30,den3))
+title('Before: $K=30<K_{cr}$ (stable)','Interpreter','latex','FontSize',13)
+grid on
+subplot(1,2,2)
+nyquist(tf(90,den3))
+title('After: $K=90>K_{cr}$ (encircles $-1$)','Interpreter','latex','FontSize',13)
+grid on
+fprintf('K=30: closed-loop RHP poles = %d;  K=90: closed-loop RHP poles = %d\n', ...
+    sum(real(pole(feedback(tf(30,den3),1)))>0), ...
+    sum(real(pole(feedback(tf(90,den3),1)))>0))
