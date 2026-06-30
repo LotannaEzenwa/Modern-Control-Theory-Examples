@@ -1,5 +1,15 @@
 %% The Transfer Function
-% Ogata, Modern Control Engineering, Ch. 2.3
+% *The central object of classical control: $G(s)=Y(s)/U(s)$.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2.3.
+%
+% In this tutorial you will:
+%
+% * define the transfer function from a linear ODE (zero initial conditions),
+% * build it with |tf| and inspect poles, zeros, and DC gain, and
+% * connect $G(s)$ to the step response.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % For a linear, time-invariant system described by the constant-
 % coefficient differential equation

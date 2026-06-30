@@ -1,6 +1,9 @@
 %% Mathematical Models -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 2-4: end-of-chapter style
-% modeling exercises.
+% *Practice: ODE-to-TF, parameter identification, and block reduction.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2--4 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: ODE to Transfer Function
 % Find the transfer function $G(s)=Y(s)/U(s)$ for the system

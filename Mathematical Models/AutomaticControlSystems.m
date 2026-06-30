@@ -1,5 +1,15 @@
 %% Automatic Control Systems: Open-Loop vs. Closed-Loop
-% Ogata, Modern Control Engineering, Ch. 1-2
+% *Why we close the loop: disturbance rejection and reduced sensitivity.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 1--2.
+%
+% In this tutorial you will:
+%
+% * compare open-loop and closed-loop step responses,
+% * compute the steady-state error reduction from feedback, and
+% * see feedback reject an input disturbance.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % An *open-loop* control system uses a controller and process (plant)
 % in a forward path only -- the output is not measured or compared to

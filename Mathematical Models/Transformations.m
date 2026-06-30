@@ -1,5 +1,15 @@
 %% Block Diagrams and Mason's Gain Formula
-% Ogata, Modern Control Engineering, Ch. 2.4-2.5
+% *Reducing an interconnection of blocks to one transfer function.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2.4--2.5.
+%
+% In this tutorial you will:
+%
+% * apply the series, parallel, and feedback reduction rules,
+% * use |series|, |parallel|, and |feedback| to combine blocks, and
+% * cross-check a multi-loop diagram with Mason's gain formula.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Complex control systems are described by interconnected blocks, each
 % representing a transfer function, joined by summing junctions and

@@ -1,6 +1,15 @@
 %% Fluid (Liquid-Level) Systems
-% Ogata, Modern Control Engineering, Ch. 4: Mathematical Modeling of
-% Fluid Systems
+% *Tanks, valves, and the resistance-capacitance view of fluid dynamics.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 4.
+%
+% In this tutorial you will:
+%
+% * derive a single-tank model from conservation of mass,
+% * relate it to the first-order RC time constant, and
+% * extend to an interacting two-tank system.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Consider a single tank of cross-sectional area $C$ with inflow rate
 % $q_i(t)$ and outflow through a resistive valve to atmosphere, with

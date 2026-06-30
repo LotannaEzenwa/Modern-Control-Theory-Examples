@@ -1,6 +1,15 @@
 %% Electrical Systems
-% Ogata, Modern Control Engineering, Ch. 3: Mathematical Modeling of
-% Electrical Systems
+% *Kirchhoff's laws to transfer functions, and the electrical-mechanical analogy.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 3.
+%
+% In this tutorial you will:
+%
+% * model a series RLC circuit with KVL,
+% * see the force-voltage analogy with the mass-spring-damper, and
+% * model an op-amp PI controller circuit.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Electrical circuits are modeled with Kirchhoff's voltage and current
 % laws. Consider a series RLC circuit driven by source voltage

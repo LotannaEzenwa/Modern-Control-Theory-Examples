@@ -1,6 +1,15 @@
 %% Mathematical Models -- Introduction
-% Ogata, Modern Control Engineering, Ch. 2: Mathematical Modeling of
-% Control Systems
+% *From a differential equation to a transfer function.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2.
+%
+% In this tutorial you will:
+%
+% * recall the Laplace transform pairs that make LTI analysis algebraic,
+% * turn a governing ODE into a transfer function $G(s)=Y(s)/U(s)$, and
+% * read poles and DC gain off $G(s)$ with |pole| and |dcgain|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A mathematical model of a dynamic system is the set of equations that
 % represent its dynamics. For linear, time-invariant (LTI) systems

@@ -1,6 +1,15 @@
 %% Thermal Systems
-% Ogata, Modern Control Engineering, Ch. 4: Mathematical Modeling of
-% Thermal Systems
+% *Thermal resistance and capacitance: the thermometer as a first-order lag.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 4.
+%
+% In this tutorial you will:
+%
+% * model a thermometer from a heat balance,
+% * recognize the familiar first-order time constant $\tau=RC$, and
+% * see how a thicker wall (larger R) slows the response.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Thermal systems, like fluid systems, are characterized by a
 % resistance and a capacitance:

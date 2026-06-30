@@ -1,6 +1,15 @@
 %% Mechanical Systems
-% Ogata, Modern Control Engineering, Ch. 3: Mathematical Modeling of
-% Mechanical Systems
+% *Newton's second law to transfer functions: mass-spring-damper systems.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 3.
+%
+% In this tutorial you will:
+%
+% * derive the mass-spring-damper model from a free-body diagram,
+% * see the translational/rotational analogy, and
+% * build a two-mass system directly in state-space form.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Mechanical systems obey Newton's second law, $\sum F = m\ddot{x}$.
 % For a translational mass-spring-damper system with displacement
