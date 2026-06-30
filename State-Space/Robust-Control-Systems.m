@@ -65,7 +65,7 @@ hold off
 legend('30% less damping','Nominal','30% more damping','Interpreter','latex','FontSize',12)
 title('Closed-Loop Step Response Under Plant Perturbation','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Stability Margin Check Across Perturbations

@@ -23,7 +23,7 @@ figure
 step(T1)
 title('Problem 1: ZN Method 2 PID Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 2: Compare ZN Tuning to a Hand-Tuned PID
@@ -48,7 +48,7 @@ hold off
 legend('ZN Method 2','Hand-Tuned (reduced overshoot)','Interpreter','latex','FontSize',14)
 title('Problem 2: ZN vs. Hand-Tuned PID','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: PI-Only vs. Full PID Steady-State and Transient Tradeoff
@@ -78,5 +78,5 @@ hold off
 legend('PI','PID','Interpreter','latex','FontSize',14)
 title('Problem 3: PI vs. PID Overshoot Reduction','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

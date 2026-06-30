@@ -37,7 +37,7 @@ hold off
 legend('Interpreter','latex','FontSize',12)
 title('Proportional Control: Effect of $K_p$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 Kp_demo = 5;
@@ -64,7 +64,7 @@ hold off
 legend('P only','PI','Interpreter','latex','FontSize',14)
 title('P vs. PI Control','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Proportional-Derivative (PD) Control
@@ -83,7 +83,7 @@ hold off
 legend('P only','PD','Interpreter','latex','FontSize',14)
 title('P vs. PD Control','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Full PID Control
@@ -107,5 +107,5 @@ hold off
 legend('P','PI','PD','PID','Interpreter','latex','FontSize',14)
 title('Qualitative Comparison of P, PI, PD, PID Control','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

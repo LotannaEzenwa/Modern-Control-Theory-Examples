@@ -48,7 +48,7 @@ figure
 impulse(T_marginal, 0:0.01:10)
 title('Problem 2: Sustained Oscillation at $K=48$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Transient Specs from a Gain Choice
@@ -66,5 +66,5 @@ figure
 step(T3)
 title('Problem 3: Step Response at $K=20$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

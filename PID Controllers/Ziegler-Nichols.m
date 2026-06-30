@@ -40,7 +40,7 @@ hold off
 ylim([0 1.2*yfinal])
 title('Reaction-Curve Method: $L$ and $T$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -62,7 +62,7 @@ figure
 step(T1)
 title('ZN Method 1: Closed-Loop PID Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Second Method: Ultimate Gain / Ultimate Period (Closed-Loop)
@@ -89,7 +89,7 @@ figure
 impulse(T_marginal,0:0.01:10)
 title('Sustained Oscillation at $K=K_{cr}$ (Verifying $P_{cr}$)','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -116,5 +116,5 @@ hold off
 legend('Method 1 (Reaction Curve)','Method 2 (Ultimate Gain)','Interpreter','latex','FontSize',14)
 title('Ziegler-Nichols: Method 1 vs. Method 2 PID Tuning','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

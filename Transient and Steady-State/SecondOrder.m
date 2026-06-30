@@ -33,7 +33,7 @@ legend(arrayfun(@(z) sprintf('$\\zeta=%.1f$',z), zetas, 'UniformOutput', false),
     'Interpreter','latex','FontSize',12)
 title('Second-Order Step Response vs. Damping Ratio','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Underdamped Transient-Response Specifications
@@ -75,7 +75,7 @@ xline(tp,'--')
 hold off
 title('Second-Order Underdamped Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Verification via MATLAB's stepinfo

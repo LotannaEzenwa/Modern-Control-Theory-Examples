@@ -27,7 +27,7 @@ figure
 step(G)
 title('First-Order Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% The 63.2% Time-Constant Rule
@@ -61,7 +61,7 @@ hold off
 legend('$y(t)$','Tangent at $t=0$','Interpreter','latex','FontSize',14,'Location','southeast')
 title('Graphical Time-Constant Estimation','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Unit-Ramp and Unit-Impulse Response
@@ -77,11 +77,11 @@ y_ramp = t2 - T + T*exp(-t2/T);
 plot(t2,y_ramp)
 title('First-Order Ramp Response','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',16)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 
 subplot(2,1,2)
 impulse(G)
 title('First-Order Impulse Response','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',16)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',16)

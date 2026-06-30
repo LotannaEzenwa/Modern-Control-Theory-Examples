@@ -75,5 +75,5 @@ hold off
 legend('PI (frequency-tuned)','PID (frequency-tuned)','Interpreter','latex','FontSize',14)
 title('Frequency-Domain PID Tuning: Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

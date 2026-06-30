@@ -37,7 +37,7 @@ hold off
 legend('Open-loop','Closed-loop (unity feedback)','Interpreter','latex','FontSize',14)
 title('Open-Loop vs. Closed-Loop Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -69,5 +69,5 @@ hold off
 legend('Open-loop disturbance response','Closed-loop disturbance response','Interpreter','latex','FontSize',12)
 title('Disturbance Rejection via Feedback','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

@@ -77,7 +77,7 @@ hold off
 legend('Uncompensated','Lead-Compensated','Interpreter','latex','FontSize',14)
 title('Step Response: Frequency-Domain Lead Design','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Lag Compensator: Phase-Margin Specification (Brief Note)

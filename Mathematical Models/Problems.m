@@ -22,7 +22,7 @@ figure
 step(G1)
 title('Problem 1: Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 2: Spring-Mass-Damper Parameter Identification
@@ -45,7 +45,7 @@ figure
 step(G2)
 title('Problem 2: Identified System Step Response','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Block-Diagram Reduction
@@ -64,5 +64,5 @@ figure
 step(T)
 title('Problem 3: Closed-Loop Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

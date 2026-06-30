@@ -39,7 +39,7 @@ stem(1:length(omega_n), omega_n, 'filled', 'LineWidth', 1.5)
 grid on
 title('Undamped Natural Frequencies','Interpreter','latex','FontSize',20)
 ylabel('$\omega_i$ (rad/s)','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('Mode number $i$','Interpreter','latex','FontSize',20)
 
 %% Pole Map
@@ -50,5 +50,5 @@ grid on
 axis equal
 title('Poles of the Undamped Structural Model','Interpreter','latex','FontSize',18)
 ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)

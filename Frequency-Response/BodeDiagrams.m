@@ -63,7 +63,7 @@ hold off
 legend('Exact','Asymptotic (piecewise-linear)','Interpreter','latex','FontSize',14)
 title('Bode Magnitude: Asymptotic vs. Exact','Interpreter','latex','FontSize',20)
 ylabel('dB','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\omega$ (rad/s)','Interpreter','latex','FontSize',20)
 grid on
 

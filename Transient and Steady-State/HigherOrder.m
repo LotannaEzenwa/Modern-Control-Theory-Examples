@@ -45,7 +45,7 @@ hold off
 legend('Exact third-order','Dominant-pole approximation','Interpreter','latex','FontSize',14)
 title('Dominant-Pole Approximation vs. Exact Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -69,5 +69,5 @@ hold off
 legend('Exact (close extra pole at $s=-3$)','Dominant-pole approximation','Interpreter','latex','FontSize',12)
 title('Approximation Breakdown: Non-Dominant Extra Pole','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

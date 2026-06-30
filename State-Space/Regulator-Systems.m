@@ -68,7 +68,7 @@ plot(t,x_resp(:,1),'b',t,xhat_resp(:,1),'r--')
 legend('$x_1$ (true)','$\hat{x}_1$ (estimated)','Interpreter','latex','FontSize',14)
 title('Observer-Based Regulator: Initial-Condition Response','Interpreter','latex','FontSize',20)
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Transfer Function of the Observer-Based Compensator

@@ -60,7 +60,7 @@ figure
 step(sys_cl)
 title('Pole-Placement Closed-Loop Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Effect of Desired Pole Location on Response Speed and Control Effort
@@ -84,5 +84,5 @@ hold off
 legend('Slower poles','Faster poles','Interpreter','latex','FontSize',14)
 title('Pole Location vs. Response Speed','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

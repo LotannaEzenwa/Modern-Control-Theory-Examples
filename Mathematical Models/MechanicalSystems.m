@@ -27,7 +27,7 @@ figure
 step(G_trans)
 title('Mass-Spring-Damper Step Response','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Rotational Analog
@@ -68,5 +68,5 @@ figure
 step(sys_2mass)
 title('Two-Mass System Step Response ($x_1$)','Interpreter','latex','FontSize',20)
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

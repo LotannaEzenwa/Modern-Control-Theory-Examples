@@ -64,7 +64,7 @@ A_d = sys_dsct.A;  B_d = sys_dsct.B;
 G = acker(A_d', -C_d', desired_poles)';
 ```
 
-**Plot formatting**: Axes labels use LaTeX interpreter with FontSize 20–30; `ylabel` rotation is set to 0 with right horizontal alignment. This is consistent across all files and should be preserved.
+**Plot formatting**: Axes labels use LaTeX interpreter with FontSize 20–30; `ylabel` rotation is set to 0 (kept horizontal) via `set(get(gca,'YLabel'),'Rotation',0)`. This is consistent across all files and should be preserved. (Do not re-add a `'HorizontalAlignment'` argument to that `set` call — it was removed because it crashed plotting in some environments.)
 
 **Section structure**: Scripts use `%%` cell blocks for MATLAB's cell-mode execution. Each `%% Part N` block is a self-contained analysis step. Block-level comments explain the mathematical derivation inline using `%` and LaTeX (`$$...$$`).
 

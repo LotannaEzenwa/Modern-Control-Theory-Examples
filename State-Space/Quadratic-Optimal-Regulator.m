@@ -59,7 +59,7 @@ legend('Aggressive ($Q_{11}=100,R=1$)','Gentle ($Q_{11}=1,R=10$)', ...
     'Interpreter','latex','FontSize',14)
 title('LQR: Effect of $Q/R$ Weighting on Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Guaranteed Stability and Robustness Margins

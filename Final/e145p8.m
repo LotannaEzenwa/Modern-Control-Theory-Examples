@@ -26,5 +26,5 @@ grid on
 legend('$x_k$', '$u_k$', 'Interpreter', 'latex', 'FontSize', 14)
 title('Deadbeat State Trajectory $z_{k+1}=Mz_k$', 'Interpreter', 'latex', 'FontSize', 20)
 ylabel('$z_k$', 'Interpreter', 'latex', 'FontSize', 20)
-set(get(gca, 'YLabel'), 'Rotation', 0, 'HorizontalAlignment', 'right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$k$', 'Interpreter', 'latex', 'FontSize', 20)

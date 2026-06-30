@@ -56,7 +56,7 @@ hold off
 legend('Simulated $y(t)$','Predicted $AM\sin(\omega t+\phi)$','Interpreter','latex','FontSize',14)
 title('Frequency Response Verified by Simulation','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 xlim([20 30])
 

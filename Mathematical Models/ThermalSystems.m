@@ -40,7 +40,7 @@ figure
 step(G_thermo)
 title('Thermometer Step Response','Interpreter','latex','FontSize',20)
 ylabel('$\theta_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -67,5 +67,5 @@ hold off
 legend('$R=0.9$','$R=3$ (thicker wall)','Interpreter','latex','FontSize',14)
 title('Effect of Thermal Resistance on Response Speed','Interpreter','latex','FontSize',20)
 ylabel('$\theta_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

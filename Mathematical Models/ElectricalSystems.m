@@ -28,7 +28,7 @@ figure
 step(G_rlc)
 title('Series RLC Circuit Step Response','Interpreter','latex','FontSize',20)
 ylabel('$e_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% The Electrical-Mechanical Analogy

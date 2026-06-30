@@ -38,7 +38,7 @@ yline(45,'r--')
 hold off
 title('Problem 2: Phase Margin vs. Gain','Interpreter','latex','FontSize',20)
 ylabel('$PM$ (deg)','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$K$','Interpreter','latex','FontSize',20)
 grid on
 
@@ -79,5 +79,5 @@ hold off
 legend('Uncompensated','Lead-Compensated','Interpreter','latex','FontSize',14)
 title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

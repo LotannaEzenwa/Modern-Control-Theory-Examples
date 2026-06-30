@@ -56,14 +56,14 @@ plot(t,x_true(:,1),'b',t,x_hat(:,1),'r--')
 legend('$x_1$ (true)','$\hat{x}_1$ (estimate)','Interpreter','latex','FontSize',14)
 title('Observer State Estimation: $x_1$','Interpreter','latex','FontSize',20)
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 figure
 plot(t, vecnorm(x_true-x_hat,2,2))
 title('Observer Estimation Error Norm $\|x-\hat{x}\|$','Interpreter','latex','FontSize',20)
 ylabel('$\|e(t)\|$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Choosing Observer Pole Speed

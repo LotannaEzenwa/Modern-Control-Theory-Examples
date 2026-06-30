@@ -64,7 +64,7 @@ plot(t,x_resp)
 legend('$x_1$','$x_2$','$x_3$','Interpreter','latex','FontSize',14)
 title('Advanced Problem: Observer-Based Regulator Response','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Closed-Loop Transfer Function via the Compensator

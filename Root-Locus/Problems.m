@@ -46,7 +46,7 @@ figure
 step(T2)
 title('Problem 2: Step Response at $\zeta=0.707$ Design Point','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Lead Compensator for a Settling-Time Spec
@@ -87,5 +87,5 @@ figure
 step(T3_comp)
 title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

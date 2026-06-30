@@ -56,7 +56,7 @@ stairs(0:N,x_hist')
 legend('$x_1$ (position)','$x_2$ (velocity)','Interpreter','latex','FontSize',14)
 title('Problem 10: Deadbeat-Style Regulation','Interpreter','latex','FontSize',20)
 ylabel('$x_k$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$k$','Interpreter','latex','FontSize',20)
 
 fprintf('\nFinal state norm after %d steps: %.2e\n', N, norm(x_hist(:,end)))

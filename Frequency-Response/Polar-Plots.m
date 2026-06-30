@@ -35,7 +35,7 @@ axis equal
 grid on
 title('Polar Plot: $G(j\omega)=\frac{1}{1+j\omega}$','Interpreter','latex','FontSize',20)
 ylabel('$\mathrm{Im}\,G(j\omega)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}\,G(j\omega)$','Interpreter','latex','FontSize',20)
 
 %% Worked Example: Type-1 System
@@ -56,7 +56,7 @@ grid on
 xlim([-3 1]); ylim([-5 1])
 title('Polar Plot: $G(s)=\frac{1}{s(s+1)}$ (Type-1)','Interpreter','latex','FontSize',20)
 ylabel('$\mathrm{Im}\,G(j\omega)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}\,G(j\omega)$','Interpreter','latex','FontSize',20)
 
 %% Using the Control System Toolbox Directly

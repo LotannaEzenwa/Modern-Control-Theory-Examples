@@ -46,7 +46,7 @@ figure
 step(G_tank)
 title('Liquid-Level Tank Step Response','Interpreter','latex','FontSize',20)
 ylabel('$h(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -76,5 +76,5 @@ figure
 step(G_2tank)
 title('Two-Tank Interacting System Step Response','Interpreter','latex','FontSize',20)
 ylabel('$h_2(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

@@ -39,7 +39,7 @@ figure
 step(sys_ss)
 title('State-Space Model: Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% State-Space to Transfer Function
@@ -82,5 +82,5 @@ plot(t,x_free)
 legend('$x_1(t)$','$x_2(t)$','Interpreter','latex','FontSize',14)
 title('Zero-Input (Free) Response from $x(0)=[1;0]$','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
