@@ -10,6 +10,8 @@
 % * discretize a plant and place its discrete poles at the origin with |acker|,
 % * verify the closed-loop $A-BK$ is nilpotent, and
 % * watch the state hit zero in exactly $n$ steps.
+%
+% Run with |publish('DeadbeatControl.m')|, or step through with *Ctrl+Enter*.
 
 %% Discretize the plant
 % Continuous plant $G(s)=\dfrac{1}{s^2+s}$ (an integrator plus a lag),

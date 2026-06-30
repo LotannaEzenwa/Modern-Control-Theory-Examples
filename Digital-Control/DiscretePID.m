@@ -12,6 +12,8 @@
 % * read off the resulting *difference equation*,
 % * close the loop in discrete time and compare with the continuous design, and
 % * see how the sample time changes the achievable performance.
+%
+% Run with |publish('DiscretePID.m')|, or step through with *Ctrl+Enter*.
 
 %% Plant and a continuous PID design
 % Plant $G(s)=\dfrac{1}{(s+1)(s+3)}$. We first design a continuous PID

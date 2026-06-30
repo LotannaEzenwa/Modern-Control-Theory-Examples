@@ -10,6 +10,8 @@
 %   decay along a simulated trajectory, and
 % * for a linear system, solve the *Lyapunov equation*
 %   $A^TP+PA=-Q$ with |lyap| and use $V=x^TPx$.
+%
+% Run with |publish('LyapunovStability.m')|, or step through with *Ctrl+Enter*.
 
 %% Energy as a Lyapunov function (damped pendulum)
 % For $\ddot{\theta}+b\dot{\theta}+\sin\theta=0$, the total energy

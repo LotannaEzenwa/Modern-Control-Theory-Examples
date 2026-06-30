@@ -14,6 +14,8 @@
 %
 % Builds on |State-Space/PolePlacement.m| and
 % |State-Space/QuadraticOptimalRegulator.m|.
+%
+% Run with |publish('InvertedPendulum.m')|, or step through with *Ctrl+Enter*.
 
 %% Linearized cart-pole model
 % Parameters: cart mass $M$, pole mass $m$, half-length $l$, inertia $I$,

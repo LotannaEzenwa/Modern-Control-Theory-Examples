@@ -13,6 +13,8 @@
 %
 % Ties together |Mathematical Models/ElectricalSystems.m| and
 % |PID Controllers/Intro.m|.
+%
+% Run with |publish('DCMotorPositionControl.m')|, or step through with *Ctrl+Enter*.
 
 %% Physical model
 % Electrical: $L\dot{i}+Ri = V - K_e\dot{\theta}$.
