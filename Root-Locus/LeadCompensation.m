@@ -24,6 +24,21 @@ wn_desired = 8;
 sd = -zeta*wn_desired + 1j*wn_desired*sqrt(1-zeta^2);
 fprintf('Desired dominant pole: %.4f + %.4fj\n', real(sd), imag(sd))
 
+%% Before: The Uncompensated Locus Misses the Target
+% Plot the uncompensated root locus and mark the desired dominant pole
+% s_d (both conjugates). It does not lie on the locus, so no value of
+% plain gain K can place a closed-loop pole there -- which is exactly why
+% a compensator is needed.
+figure
+rlocus(G)
+hold on
+plot(real(sd),imag(sd),'rp','MarkerSize',14,'MarkerFaceColor','r')
+plot(real(sd),-imag(sd),'rp','MarkerSize',14,'MarkerFaceColor','r')
+hold off
+legend('Uncompensated locus','Desired pole $s_d$','Interpreter','latex','FontSize',12)
+title('Before: Desired Pole Is Off the Uncompensated Locus','Interpreter','latex','FontSize',18)
+grid on
+
 %% Angle Deficiency
 % The open-loop transfer function has no finite zeros and a positive DC
 % gain, so its phase at $s_d$ is $\angle G(s_d) = -\sum_i\angle(s_d-p_i)$.
@@ -71,18 +86,50 @@ G_comp = series(Gc_full,G);
 T_comp = feedback(G_comp,1);
 T_uncomp = feedback(G,1);
 
+%% What I Did: The Compensator Reshapes the Locus
+% Adding the lead pole/zero pulls the locus to the left so that it now
+% passes through the desired pole s_d (marked again for reference).
+figure
+rlocus(G_comp)
+hold on
+plot(real(sd),imag(sd),'rp','MarkerSize',14,'MarkerFaceColor','r')
+plot(real(sd),-imag(sd),'rp','MarkerSize',14,'MarkerFaceColor','r')
+hold off
+legend('Compensated locus','Desired pole $s_d$','Interpreter','latex','FontSize',12)
+title('What Changed: Compensated Locus Now Passes Through $s_d$','Interpreter','latex','FontSize',17)
+grid on
+
+%% After: What Changed in the Time Response
+% Side by side, the lead compensator speeds up the response and cuts the
+% overshoot relative to the uncompensated closed loop.
 figure
 hold on
 step(T_uncomp)
 step(T_comp)
 hold off
-legend('Uncompensated','Lead-Compensated','Interpreter','latex','FontSize',14)
-title('Lead Compensation: Step Response Comparison','Interpreter','latex','FontSize',20)
+legend('Before (uncompensated)','After (lead-compensated)','Interpreter','latex','FontSize',14)
+title('Lead Compensation: Step Response Before vs. After','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
+info_before = stepinfo(T_uncomp);
+info_after  = stepinfo(T_comp);
+fprintf('Overshoot:     before = %.1f%%, after = %.1f%%\n', info_before.Overshoot, info_after.Overshoot)
+fprintf('Settling time: before = %.3f s, after = %.3f s\n', info_before.SettlingTime, info_after.SettlingTime)
+
+%% After: Where the Dominant Poles Moved
+% The pole map makes the design goal explicit -- the dominant closed-loop
+% poles move from the slow uncompensated location to the faster, better
+% damped target near s_d.
 figure
-rlocus(G_comp)
-title('Compensated Root Locus','Interpreter','latex','FontSize',20)
+hold on
+plot(real(pole(T_uncomp)),imag(pole(T_uncomp)),'bo','MarkerSize',9,'LineWidth',1.5)
+plot(real(pole(T_comp)),imag(pole(T_comp)),'rx','MarkerSize',11,'LineWidth',1.5)
+hold off
 grid on
+legend('Before (uncompensated poles)','After (compensated poles)','Interpreter','latex','FontSize',12)
+title('Dominant Pole Movement (Before vs. After)','Interpreter','latex','FontSize',17)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)

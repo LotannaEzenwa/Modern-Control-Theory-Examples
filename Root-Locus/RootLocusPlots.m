@@ -59,3 +59,28 @@ K_cr = 12;
 p_cr = roots([1 4 3 K_cr]);
 disp('Closed-loop poles at the stability boundary K=12:')
 disp(p_cr)
+
+%% Before vs. After: How the Poles Migrate with Gain
+% The locus *is* the before/after story. At K=0 (before) the closed-loop
+% poles sit exactly on the open-loop poles; as K grows they migrate along
+% the branches, reaching the imaginary axis at K = Kcr (onset of
+% instability). Overlay the K=0 starting points, an intermediate K, and
+% the K=Kcr endpoints on the locus.
+p0   = poles_ol;                  % K = 0   (before)
+pmid = pole(feedback(6*G,1));     % K = 6   (intermediate)
+% p_cr already holds the K = Kcr boundary poles
+figure
+rlocus(G)
+hold on
+plot(real(p0),imag(p0),'ks','MarkerSize',10,'LineWidth',1.5)
+plot(real(pmid),imag(pmid),'bd','MarkerSize',8,'LineWidth',1.5)
+plot(real(p_cr),imag(p_cr),'rx','MarkerSize',11,'LineWidth',1.5)
+xline(0,'k:')
+hold off
+legend('Locus','$K=0$ (before)','$K=6$','$K=K_{cr}=12$ (boundary)', ...
+    'Interpreter','latex','FontSize',11,'Location','southwest')
+title('Closed-Loop Pole Migration: $K=0 \rightarrow K_{cr}$','Interpreter','latex','FontSize',18)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+grid on

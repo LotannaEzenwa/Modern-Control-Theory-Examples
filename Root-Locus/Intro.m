@@ -81,3 +81,25 @@ figure
 rlocus(G)
 title('Root Locus of $G(s)=\frac{1}{s(s+2)(s+4)}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Before vs. After: Starting Points and Where They Go
+% At K=0 the closed-loop poles coincide with the open-loop poles (the
+% "before"); as K increases they trace the locus. Overlay the K=0 poles,
+% the test point s0, and the closed-loop poles for a sample K so the
+% migration the locus encodes is explicit.
+K_demo = 20;
+cl_demo = pole(feedback(K_demo*G,1));
+figure
+rlocus(G)
+hold on
+plot(real(poles),imag(poles),'ks','MarkerSize',10,'LineWidth',1.5)
+plot([real(s0) real(s0)],[imag(s0) -imag(s0)],'rp','MarkerSize',13,'MarkerFaceColor','r')
+plot(real(cl_demo),imag(cl_demo),'bd','MarkerSize',8,'LineWidth',1.5)
+hold off
+legend('Locus','$K=0$ poles (before)','Test point $s_0$','$K=20$ poles (after)', ...
+    'Interpreter','latex','FontSize',11)
+title('From Open-Loop Poles ($K=0$) Along the Locus','Interpreter','latex','FontSize',17)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+grid on
