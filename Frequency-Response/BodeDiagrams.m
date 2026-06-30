@@ -1,347 +1,83 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-%% Part 2
-
-inp = randn(1,ll);
-x_0 = [1 0];
-
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
-
-%%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
-
-
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-%%
-% From class, we define the observer Markov Parameters using the following
-% equations.
+%% Bode Diagrams
+% Ogata, Modern Control Engineering, Ch. 7: Bode Diagram (Logarithmic
+% Plot) Construction
 %
-% $\bar{Y}_0 = D$
+% A Bode diagram plots $20\log_{10}|G(j\omega)|$ (dB) and
+% $\angle G(j\omega)$ (deg) vs. $\log_{10}\omega$. Because $G(j\omega)$
+% is normally a product of simple pole/zero/gain/integrator factors, and
+% $\log|G_1G_2| = \log|G_1|+\log|G_2|$, the log-magnitude and phase of
+% each factor can be sketched separately on a log-frequency axis and
+% simply *added* -- this is the key advantage of the logarithmic plot.
+
+%% Standard (Bode) Factors and Their Asymptotic Rules
 %
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
+% *1. Gain $K$*: contributes a constant $20\log_{10}|K|$ dB, $0^\circ$
+% (or $180^\circ$ if $K<0$) phase, independent of $\omega$.
 %
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-%%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
+% *2. Integrator/differentiator $(j\omega)^{\pm1}$*: magnitude slope of
+% $\mp20$ dB/decade through 0 dB at $\omega=1$; constant phase of
+% $\mp90^\circ$.
 %
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
-
-%% Part 4
-% Generate System Markov Parameters 
-
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
+% *3. First-order pole/zero $(1+j\omega T)^{\pm1}$*: low-frequency
+% asymptote 0 dB (flat); high-frequency asymptote slope $\pm20$ dB/decade
+% beyond the *corner frequency* $\omega=1/T$; phase goes from $0^\circ$
+% to $\pm90^\circ$, passing through $\pm45^\circ$ at the corner.
 %
-% $$Y_0 = D$$
+% *4. Quadratic pole/zero
+% $\left(1+2\zeta(j\omega/\omega_n)+(j\omega/\omega_n)^2\right)^{\pm1}$*:
+% asymptotic slope $\pm40$ dB/decade beyond $\omega_n$; near the corner
+% the actual curve deviates from the asymptote by an amount depending on
+% $\zeta$ (resonant peak for small $\zeta$); phase goes from $0^\circ$ to
+% $\mp180^\circ$.
+
+%% Worked Example: Sketch vs. Exact Bode Plot
+% $G(s) = \frac{10(s+2)}{s(s+10)}$. Rewrite in Bode (time-constant) form:
 %
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
+% $G(j\omega) = \frac{10\times2(1+j\omega/2)}{j\omega\times10(1+j\omega/10)}
+%   = \frac{2(1+j\omega/2)}{j\omega(1+j\omega/10)}$
 %
-% The function uses the following formula:
-%
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+% Corner frequencies: zero at $\omega=2$, pole at $\omega=10$, plus an
+% integrator (pole at the origin).
+K_bode = 2;             % Bode gain after factoring to time-constant form
+z1 = 2; p1 = 10;        % corner frequencies
+
+w = logspace(-2,3,500);
+s = 1j*w;
+
+% Exact response
+G = tf([10 20],[1 10 0]);
+[mag,phase] = bode(G,w);
+mag = squeeze(mag); phase = squeeze(phase);
+
+% Asymptotic (piecewise-linear) approximation, built term by term:
+% gain + integrator (-20 dB/dec), then +20 dB/dec beyond the zero corner
+% and -20 dB/dec beyond the pole corner.
+mag_dB_piecewise = 20*log10(K_bode) - 20*log10(w);
+mag_dB_piecewise = mag_dB_piecewise + 20*log10(max(w/z1,1)) - 20*log10(max(w/p1,1));
 
 figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+semilogx(w,20*log10(mag),'b','LineWidth',1.5)
+hold on
+semilogx(w,mag_dB_piecewise,'r--')
+hold off
+legend('Exact','Asymptotic (piecewise-linear)','Interpreter','latex','FontSize',14)
+title('Bode Magnitude: Asymptotic vs. Exact','Interpreter','latex','FontSize',20)
+ylabel('dB','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$\omega$ (rad/s)','Interpreter','latex','FontSize',20)
+grid on
 
-
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
-
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
-
+%% Full Bode Diagram via the Control System Toolbox
 figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
+bode(G)
+title('Bode Diagram: $G(s)=\frac{10(s+2)}{s(s+10)}$','Interpreter','latex','FontSize',20)
+grid on
 
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+%% Gain Crossover and Phase Crossover Frequencies
+% The *gain crossover frequency* $\omega_c$ is where $|G(j\omega)|=1$
+% (0 dB); the *phase crossover frequency* $\omega_p$ is where
+% $\angle G(j\omega)=-180^\circ$. These define the gain and phase
+% margins (see |StabilityAnalysis.m|).
+[Gm,Pm,Wcp,Wcg] = margin(G);
+fprintf('Gain crossover frequency wc = %.4f rad/s\n', Wcg)
+fprintf('Phase crossover frequency wp = %.4f rad/s\n', Wcp)

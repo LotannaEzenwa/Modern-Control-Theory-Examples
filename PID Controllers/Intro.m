@@ -1,347 +1,111 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-%% Part 2
-
-inp = randn(1,ll);
-x_0 = [1 0];
-
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
-
-%%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
-
-
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-%%
-% From class, we define the observer Markov Parameters using the following
-% equations.
+%% Introduction to PID Control
+% Ogata, Modern Control Engineering, Ch. 8: PID Controllers
 %
-% $\bar{Y}_0 = D$
+% A PID controller computes its actuating signal from the error
+% $e(t)=r(t)-y(t)$ as a weighted sum of proportional, integral, and
+% derivative terms:
 %
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
+% $u(t) = K_p e(t) + K_i\int_0^t e(\tau)\,d\tau + K_d\frac{de(t)}{dt}$
 %
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
+% with transfer function (often written with $K_i=K_p/T_i$,
+% $K_d=K_pT_d$):
+%
+% $G_c(s) = K_p\left(1+\frac{1}{T_i s}+T_d s\right)$
+%
+% where $T_i$ is the *integral (reset) time* and $T_d$ the *derivative
+% (rate) time*.
+
+%% Plant Used Throughout This File
+% $G(s) = \frac{1}{(s+1)(s+2)}$, unity feedback, step reference.
+G = tf(1,conv([1 1],[1 2]));
+t = 0:0.01:15;
+
+%% Proportional (P) Control
+% $G_c(s)=K_p$. Increasing $K_p$ speeds the response and reduces (but
+% does not eliminate) steady-state error for a type-0 plant, at the cost
+% of increased overshoot.
+Kps = [2 5 15];
+figure
+hold on
+for Kp = Kps
+    T = feedback(Kp*G,1);
+    [y,tt] = step(T,t);
+    plot(tt,y,'DisplayName',sprintf('K_p=%d',Kp))
 end
-
-%%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
-%
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
+yline(1,'k--','HandleVisibility','off')
+hold off
+legend('Interpreter','latex','FontSize',12)
+title('Proportional Control: Effect of $K_p$','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
-%% Part 4
-% Generate System Markov Parameters 
+Kp_demo = 5;
+T_p = feedback(Kp_demo*G,1);
+ess_p = 1 - dcgain(T_p);
+fprintf('P control (Kp=%d): steady-state error = %.4f\n', Kp_demo, ess_p)
 
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
-%
-% $$Y_0 = D$$
-%
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
-%
-% The function uses the following formula:
-%
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+%% Proportional-Integral (PI) Control
+% $G_c(s)=K_p\left(1+\frac{1}{T_is}\right)$. The integral term adds a
+% pole at the origin, making the loop type-1 and driving steady-state
+% step error to zero, at the cost of a slower response and reduced phase
+% margin (more oscillatory) compared to P alone.
+Kp_pi = 5; Ti = 2;
+Gc_pi = tf(Kp_pi*[1 1/Ti],[1 0]);
+T_pi = feedback(Gc_pi*G,1);
+ess_pi = 1 - dcgain(T_pi);
+fprintf('PI control: steady-state error = %.6f (should be ~0)\n', ess_pi)
 
 figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+hold on
+step(T_p,t)
+step(T_pi,t)
+hold off
+legend('P only','PI','Interpreter','latex','FontSize',14)
+title('P vs. PI Control','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
-
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
-
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
+%% Proportional-Derivative (PD) Control
+% $G_c(s)=K_p(1+T_ds)$. The derivative term adds phase lead, improving
+% damping/reducing overshoot and speeding settling, but does not affect
+% steady-state error and amplifies high-frequency measurement noise.
+Kp_pd = 5; Td = 0.3;
+Gc_pd = tf(Kp_pd*[Td 1],1);
+T_pd = feedback(Gc_pd*G,1);
 
 figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
+hold on
+step(T_p,t)
+step(T_pd,t)
+hold off
+legend('P only','PD','Interpreter','latex','FontSize',14)
+title('P vs. PD Control','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+%% Full PID Control
+% Combining all three terms gives zero steady-state error (from the
+% integral action) together with good transient response (from the
+% derivative action).
+Kp = 5; Ti = 2; Td = 0.3;
+% Gc(s) = Kp*(Td*s + 1 + 1/(Ti*s)) = Kp*(Td*s^2 + s + 1/Ti)/s
+Gc_pid = tf(Kp*[Td 1 1/Ti],[1 0]);
+T_pid = feedback(Gc_pid*G,1);
+ess_pid = 1 - dcgain(T_pid);
+fprintf('PID control: steady-state error = %.6f\n', ess_pid)
 
 figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+hold on
+step(T_p,t)
+step(T_pi,t)
+step(T_pd,t)
+step(T_pid,t)
+hold off
+legend('P','PI','PD','PID','Interpreter','latex','FontSize',14)
+title('Qualitative Comparison of P, PI, PD, PID Control','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+xlabel('$t$','Interpreter','latex','FontSize',20)

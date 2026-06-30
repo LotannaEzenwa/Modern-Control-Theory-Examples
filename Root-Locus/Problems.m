@@ -1,347 +1,91 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
+%% Root-Locus -- Worked Problems
+% Ogata, Modern Control Engineering, Ch. 6: end-of-chapter style
+% root-locus and compensator design problems.
 
-%% Part 2
-
-inp = randn(1,ll);
-x_0 = [1 0];
-
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
-
-%%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
-
-
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-%%
-% From class, we define the observer Markov Parameters using the following
-% equations.
+%% Problem 1: Locate the Breakaway Point
+% For $G(s) = \frac{K}{s(s+4)}$, find the breakaway point on the real
+% axis and the corresponding gain.
 %
-% $\bar{Y}_0 = D$
+% Characteristic equation: $s(s+4)+K=0 \Rightarrow K=-s^2-4s$.
+% Breakaway: $\frac{dK}{ds}=-2s-4=0 \Rightarrow s=-2$.
+% $K$ at breakaway: $K = -(-2)^2-4(-2) = -4+8 = 4$.
+syms s K
+Ksym = -(s^2+4*s);
+dKds = diff(Ksym,s);
+s_breakaway = double(solve(dKds==0,s));
+K_breakaway = double(subs(Ksym,s,s_breakaway));
+fprintf('Breakaway point s = %.4f, K = %.4f\n', s_breakaway, K_breakaway)
+
+G1 = tf(1,[1 4 0]);
+figure
+rlocus(G1)
+hold on
+plot(real(s_breakaway),imag(s_breakaway),'ro','MarkerSize',8)
+hold off
+title('Problem 1: Root Locus with Breakaway Point','Interpreter','latex','FontSize',20)
+grid on
+
+%% Problem 2: Gain for a Specified Damping Ratio
+% For the same $G(s) = \frac{K}{s(s+4)}$, find $K$ such that the
+% closed-loop poles have $\zeta=0.707$.
 %
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
-%
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
+% Closed-loop char. eq.: $s^2+4s+K=0$. Standard form
+% $s^2+2\zeta\omega_n s+\omega_n^2=0 \Rightarrow 2\zeta\omega_n=4,\
+% \omega_n^2=K$. With $\zeta=0.707$: $\omega_n = 4/(2\times0.707) =
+% 2.828$, so $K=\omega_n^2 \approx 8$.
+zeta2 = 0.707;
+wn2 = 4/(2*zeta2);
+K2 = wn2^2;
+fprintf('Required K for zeta=0.707: K = %.4f\n', K2)
 
-%%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
-%
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
-
-%% Part 4
-% Generate System Markov Parameters 
-
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
-%
-% $$Y_0 = D$$
-%
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
-%
-% The function uses the following formula:
-%
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+T2 = feedback(K2*G1,1);
+poles_2 = pole(T2)
+info2 = stepinfo(T2)
 
 figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+step(T2)
+title('Problem 2: Step Response at $\zeta=0.707$ Design Point','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
+%% Problem 3: Lead Compensator for a Settling-Time Spec
+% For $G(s) = \frac{K}{s(s+4)}$, design a lead compensator
+% $G_c(s)=\frac{s+z_c}{s+p_c}$ so the dominant closed-loop poles achieve
+% $\zeta=0.5$ and $\omega_n=6$. (Note $\omega_n=4$ would land exactly on
+% the uncompensated locus, requiring no lead; $\omega_n=6$ sits to the
+% left of it, so a genuine lead network is needed.)
+zeta3 = 0.5; wn3 = 6;
+sd3 = -zeta3*wn3 + 1j*wn3*sqrt(1-zeta3^2);
 
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
+ol_poles3 = [0 -4];
+phase_G3 = -sum(angle(sd3 - ol_poles3))*180/pi;   % angle of G(sd3)
+phi_lead3 = mod((-180 - phase_G3) + 360, 360);    % lead phase to add
+fprintf('Desired pole: %.4f + %.4fj\n', real(sd3), imag(sd3))
+fprintf('Open-loop phase at s_d = %.2f deg, lead to supply = %.2f deg\n', ...
+    phase_G3, phi_lead3)
 
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
+zc3 = -real(sd3);   % place zero under the desired pole's real part
+angle_zero3 = angle(sd3 + zc3)*180/pi;
+angle_pole3 = angle_zero3 - phi_lead3;
+pc3 = -real(sd3) + imag(sd3)/tand(angle_pole3);
 
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
+Gc3 = tf([1 zc3],[1 pc3]);
+G3 = tf(1,[1 4 0]);
+Kc3 = 1/abs(evalfr(Gc3*G3,sd3));
+fprintf('Lead compensator: zero at %.4f, pole at %.4f, gain Kc = %.4f\n', -zc3, -pc3, Kc3)
 
+G3_comp = series(Kc3*Gc3,G3);
+T3_comp = feedback(G3_comp,1);
 
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
+% Verify a closed-loop pole lands near the target s_d.
+cl3 = pole(T3_comp);
+[~,i3] = min(abs(cl3 - sd3));
+fprintf('Nearest closed-loop pole to s_d: %.4f + %.4fj\n', real(cl3(i3)), imag(cl3(i3)))
 
 figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
+step(T3_comp)
+title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+xlabel('$t$','Interpreter','latex','FontSize',20)
