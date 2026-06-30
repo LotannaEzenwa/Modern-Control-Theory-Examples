@@ -66,7 +66,27 @@ xhat_resp = z(:,n+1:end);
 figure
 plot(t,x_resp(:,1),'b',t,xhat_resp(:,1),'r--')
 legend('$x_1$ (true)','$\hat{x}_1$ (estimated)','Interpreter','latex','FontSize',14)
-title('Observer-Based Regulator: Initial-Condition Response','Interpreter','latex','FontSize',20)
+title('Observer-Based Regulator: Initial-Condition Response','Interpreter','latex','FontSize',18)
+ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Open-Loop Drift vs. Regulated Response
+% Without control the plant (a pole at the origin) never returns to zero
+% from a disturbance; the observer-based regulator drives every state to
+% zero using only the measured output y -- and it does so even though the
+% observer starts with no knowledge of the true state.
+t2 = 0:0.01:8;
+x_openloop = initial(ss(A,zeros(n,1),eye(n),0), x0, t2);
+figure
+plot(t2, x_openloop(:,1),'b','LineWidth',1.3)
+hold on
+plot(t, x_resp(:,1),'r','LineWidth',1.3)
+hold off
+grid on
+legend('Before (open-loop, no control)','After (observer-based regulator)', ...
+    'Interpreter','latex','FontSize',12)
+title('Regulation: Before vs. After','Interpreter','latex','FontSize',17)
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

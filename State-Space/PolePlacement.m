@@ -18,6 +18,23 @@ D = 0;
 fprintf('Open-loop poles: '); disp(eig(A)')
 fprintf('Controllability rank = %d (n=%d)\n', rank(ctrb(A,B)), size(A,1))
 
+%% Before: The Open-Loop System Does Not Regulate
+% The open-loop A has a pole at the origin (an integrator) plus lightly
+% damped modes, so from any disturbance the state never returns to zero.
+% This is the "before" we are about to fix with state feedback.
+figure
+subplot(1,2,1)
+plot(real(eig(A)),imag(eig(A)),'bx','MarkerSize',11,'LineWidth',1.5)
+grid on; axis equal
+title('Before: Open-Loop Poles','Interpreter','latex','FontSize',14)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',15)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',15)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+subplot(1,2,2)
+initial(ss(A,B,C,D),[1;0;0],0:0.01:10)
+title('Before: Open-Loop IC Response (never settles)','Interpreter','latex','FontSize',12)
+grid on
+
 %% Ackermann's Formula
 % For SISO systems, the feedback gain placing the poles at the roots of a
 % desired characteristic polynomial $\alpha_c(s)=s^n+\alpha_1s^{n-1}+
@@ -58,10 +75,26 @@ Nr = -1/(C*((A-B*K_acker)\B));
 sys_cl = ss(A-B*K_acker, B*Nr, C, D);
 figure
 step(sys_cl)
-title('Pole-Placement Closed-Loop Step Response','Interpreter','latex','FontSize',20)
+title('After: Pole-Placement Closed-Loop Step Response','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% What Changed: Poles Moved into the Left-Half Plane
+% State feedback relocated every closed-loop pole from its open-loop
+% position (one sat at the origin) to the chosen stable locations -- this
+% pole movement is exactly what produced the well-behaved step above.
+figure
+hold on
+plot(real(eig(A)),imag(eig(A)),'bx','MarkerSize',12,'LineWidth',1.5)
+plot(real(eig(A-B*K_acker)),imag(eig(A-B*K_acker)),'ro','MarkerSize',9,'LineWidth',1.5)
+hold off
+grid on
+legend('Before (open-loop)','After ($A-BK$)','Interpreter','latex','FontSize',12)
+title('Pole Placement: Before vs. After','Interpreter','latex','FontSize',17)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 
 %% Effect of Desired Pole Location on Response Speed and Control Effort
 % Faster (more negative) poles give a quicker response but typically

@@ -62,8 +62,25 @@ t = 0:0.001:2;
 figure
 plot(t,x_resp)
 legend('$x_1$','$x_2$','$x_3$','Interpreter','latex','FontSize',14)
-title('Advanced Problem: Observer-Based Regulator Response','Interpreter','latex','FontSize',20)
+title('After: Observer-Based Regulator Response','Interpreter','latex','FontSize',18)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Uncontrolled Plant vs. Observer-Based Regulator
+% Without control the plant drifts (it has a pole at the origin); the
+% observer-based compensator -- using only the measured output y -- drives
+% every state back to zero.
+x_ol = initial(ss(A,zeros(n,1),eye(n),0), x0, t);
+figure
+plot(t, x_ol(:,1),'b','LineWidth',1.3)
+hold on
+plot(t, x_resp(:,1),'r','LineWidth',1.3)
+hold off
+grid on
+legend('Before (uncontrolled)','After (observer-based regulator)','Interpreter','latex','FontSize',12)
+title('Advanced Problem: Before vs. After','Interpreter','latex','FontSize',17)
+ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 

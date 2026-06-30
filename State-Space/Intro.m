@@ -55,6 +55,21 @@ G_direct = tf(1,[m b k]);
 fprintf('Direct TF poles vs. SS-derived poles:\n')
 [pole(G_direct) pole(G_from_ss)]
 
+%% What Changed vs. What Didn't: Representation vs. Behavior
+% Converting between state-space and transfer-function form changes the
+% *representation* but not the input-output *behavior*: the step
+% responses of the ss and tf models lie exactly on top of each other.
+figure
+step(sys_ss)
+hold on
+step(G_from_ss,'r--')
+hold off
+legend('State-space model','Recovered transfer function','Interpreter','latex','FontSize',12)
+title('Same Behavior in Two Representations','Interpreter','latex','FontSize',16)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
 %% Transfer Function to State-Space
 % Conversely, `ss(G)` realizes a transfer function in (typically)
 % controllable canonical form. The realization is *not unique* --

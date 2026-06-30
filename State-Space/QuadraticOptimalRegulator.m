@@ -38,6 +38,26 @@ disp(K_care)
 residual = A'*P_care + P_care*A - P_care*B*(R\B')*P_care + Q;
 fprintf('||Riccati residual|| = %.2e (should be ~0)\n', norm(residual))
 
+%% Before vs. After: Open-Loop vs. LQR-Regulated Response
+% From the same initial state, the open-loop plant rings (lightly damped
+% complex poles); the LQR feedback u=-Kx pulls the state to zero quickly
+% and smoothly -- the "after" of optimal regulation.
+x0 = [1; 0];
+t = 0:0.01:12;
+x_ol  = initial(ss(A,zeros(2,1),eye(2),0), x0, t);
+x_lqr = initial(ss(A-B*K,zeros(2,1),eye(2),0), x0, t);
+figure
+plot(t,x_ol(:,1),'b','LineWidth',1.3)
+hold on
+plot(t,x_lqr(:,1),'r','LineWidth',1.3)
+hold off
+grid on
+legend('Before (open-loop)','After (LQR $u=-Kx$)','Interpreter','latex','FontSize',13)
+title('LQR Regulation: Before vs. After','Interpreter','latex','FontSize',17)
+ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
 %% Effect of Q and R on the Tradeoff
 % Increasing $Q$ (penalize state error more) drives faster, more
 % aggressive poles; increasing $R$ (penalize control effort more) yields

@@ -76,3 +76,25 @@ observer_poles_slow = [-3,-3.5,-4];
 G_slow = acker(A',C',observer_poles_slow)';
 fprintf('\n||G|| (fast poles) = %.2f, ||G|| (slow poles) = %.2f\n', ...
     norm(G), norm(G_slow))
+
+%% What Changes with Observer Pole Speed: Error Convergence
+% The "before" is a wrong initial estimate (the observer starts at zero
+% while the plant starts away from it); the "after" is the estimate
+% catching up. Re-running with the slower observer poles shows what
+% changes: faster observer poles (larger |G|) drive the error to zero
+% sooner.
+A_obs_slow = A - G_slow*C;
+sys_obs_slow = ss(A_obs_slow,[B G_slow],eye(3),zeros(3,2));
+x_hat_slow = lsim(sys_obs_slow,u_aug',t,x0_hat);
+figure
+plot(t, vecnorm(x_true-x_hat,2,2),'b','LineWidth',1.3)
+hold on
+plot(t, vecnorm(x_true-x_hat_slow,2,2),'r--','LineWidth',1.3)
+hold off
+grid on
+legend('Fast observer poles ($-10,-10.5,-11$)','Slow observer poles ($-3,-3.5,-4$)', ...
+    'Interpreter','latex','FontSize',12)
+title('What Changed: Error Decay vs. Observer Speed','Interpreter','latex','FontSize',16)
+ylabel('$\|e(t)\|$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
