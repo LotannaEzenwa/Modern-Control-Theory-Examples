@@ -1,347 +1,100 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-%% Part 2
-
-inp = randn(1,ll);
-x_0 = [1 0];
-
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
-
-%%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
-
-
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-%%
-% From class, we define the observer Markov Parameters using the following
-% equations.
+%% State-Space Representation Theory: Canonical Forms
+% Ogata, Modern Control Engineering, Ch. 9: Controllable, Observable, and
+% Diagonal Canonical Forms
 %
-% $\bar{Y}_0 = D$
+% For a SISO transfer function
 %
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
+% $$\frac{Y(s)}{U(s)} = \frac{b_0s^n+b_1s^{n-1}+\cdots+b_n}
+%   {s^n+a_1s^{n-1}+\cdots+a_n}$$
 %
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
+% there are several standard state-space realizations, related to each
+% other by a similarity transformation $\bar{x}=Tx$ (equivalently
+% $A\to T^{-1}AT,\ B\to T^{-1}B,\ C\to CT$), which leaves the transfer
+% function -- and hence the input-output behavior -- unchanged.
 
-%%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
+G = tf([1 6 12],[1 6 11 6]);
+[num,den] = tfdata(G,'v');
+fprintf('G(s) numerator: '); disp(num)
+fprintf('G(s) denominator: '); disp(den)
+
+%% Controllable Canonical Form
+% Useful for pole-placement design (the structure makes Ackermann's
+% formula transparent). For $a_1,a_2,a_3$ the denominator coefficients
+% (monic, $a_0=1$):
 %
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
-
-%% Part 4
-% Generate System Markov Parameters 
-
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
+% $$A_{cc}=\begin{bmatrix}-a_1&-a_2&-a_3\\1&0&0\\0&1&0\end{bmatrix},\quad
+%   B_{cc}=\begin{bmatrix}1\\0\\0\end{bmatrix}$$
 %
-% $$Y_0 = D$$
+% $$C_{cc}=\begin{bmatrix}b_1&b_2&b_3\end{bmatrix},\quad b_i=\text{(numerator
+% coefficients of the same order, after removing any }b_0\text{ direct
+% term)}$$
+a1 = den(2); a2 = den(3); a3 = den(4);
+b1 = num(2)-num(1)*a1;
+b2 = num(3)-num(1)*a2;
+b3 = num(4)-num(1)*a3;
+A_cc = [-a1 -a2 -a3; 1 0 0; 0 1 0];
+B_cc = [1;0;0];
+C_cc = [b1 b2 b3];
+D_cc = num(1);
+sys_cc = ss(A_cc,B_cc,C_cc,D_cc);
+
+%% Observable Canonical Form
+% The transpose structure of controllable canonical form -- useful for
+% observer (Luenberger) design by duality:
 %
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
+% $$A_{oc}=\begin{bmatrix}-a_1&1&0\\-a_2&0&1\\-a_3&0&0\end{bmatrix},\quad
+%   B_{oc}=\begin{bmatrix}b_1\\b_2\\b_3\end{bmatrix},\quad
+%   C_{oc}=\begin{bmatrix}1&0&0\end{bmatrix}$$
+A_oc = [-a1 1 0; -a2 0 1; -a3 0 0];
+B_oc = [b1;b2;b3];
+C_oc = [1 0 0];
+D_oc = num(1);
+sys_oc = ss(A_oc,B_oc,C_oc,D_oc);
+
+%% Diagonal (Modal) Canonical Form
+% When the poles $p_1,\dots,p_n$ are distinct, partial-fraction expansion
 %
-% The function uses the following formula:
+% $$\frac{Y(s)}{U(s)}=b_0+\frac{c_1}{s-p_1}+\frac{c_2}{s-p_2}+\frac{c_3}{s-p_3}$$
 %
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+% gives a diagonal $A$ whose entries are the poles, decoupling the
+% states -- each $\dot{x}_i=p_ix_i+u$ evolves independently.
+[r_pf,p_pf,k_pf] = residue(num,den);
+A_diag = diag(p_pf);
+B_diag = ones(length(p_pf),1);
+C_diag = r_pf';
+D_diag = sum(k_pf);
+sys_diag = ss(A_diag,B_diag,C_diag,D_diag);
+
+%% Verifying Equivalence
+% All three realizations -- and the original `tf`-derived `ss(G)` --
+% share the same transfer function and poles, confirming they are
+% similar representations of the same input-output system.
+fprintf('Poles -- controllable: '); disp(pole(sys_cc)')
+fprintf('Poles -- observable:   '); disp(pole(sys_oc)')
+fprintf('Poles -- diagonal:     '); disp(pole(sys_diag)')
 
 figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+hold on
+step(sys_cc)
+step(sys_oc,'--')
+step(sys_diag,':')
+hold off
+legend('Controllable canonical','Observable canonical','Diagonal canonical', ...
+    'Interpreter','latex','FontSize',14)
+title('Equivalent Realizations: Identical Step Response','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
-
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
-
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
-
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+%% The Similarity Transformation Matrix
+% Between controllable and observable canonical form realizations of the
+% *same* system, $T$ can be found by matching the controllability
+% matrices: $T = \mathcal{C}_{cc}\mathcal{C}_{oc}^{-1}$ is generally not
+% applicable directly between distinct canonical types without going
+% through a common basis; here we instead verify the diagonal form's
+% transformation directly via the eigenvector matrix of $A_{cc}$.
+[V_eig,~] = eig(A_cc);
+T = V_eig;
+A_check = T\A_cc*T;
+fprintf('T^{-1}*A_cc*T (should match diag(poles), up to reordering):\n')
+disp(real(A_check))

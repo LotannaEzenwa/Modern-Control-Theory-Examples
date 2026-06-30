@@ -1,347 +1,87 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
+%% Mathematical Models -- Introduction
+% Ogata, Modern Control Engineering, Ch. 2: Mathematical Modeling of
+% Control Systems
+%
+% A mathematical model of a dynamic system is the set of equations that
+% represent its dynamics. For linear, time-invariant (LTI) systems
+% governed by a constant-coefficient linear ODE
+%
+% $$a_n\frac{d^n y}{dt^n} + \dots + a_1\dot{y} + a_0 y =
+%   b_m\frac{d^m u}{dt^m} + \dots + b_1\dot{u} + b_0 u$$
+%
+% the Laplace transform converts the ODE (with zero initial conditions)
+% into an algebraic relationship between the transforms of the input and
+% output, $U(s)$ and $Y(s)$.
 
-%% Part 2
+%% The Laplace Transform
+% The Laplace transform of a time function $f(t)$, $t \geq 0$, is
+%
+% $$F(s) = \mathcal{L}[f(t)] = \int_0^\infty f(t) e^{-st}\,dt$$
+%
+% Two properties make it the natural tool for LTI systems:
+%
+% * Differentiation: $\mathcal{L}[\dot f(t)] = sF(s) - f(0)$
+% * Linearity: $\mathcal{L}[a f(t) + b g(t)] = aF(s) + bG(s)$
+%
+% Common transform pairs used throughout this repository:
+%
+% $$\mathcal{L}[1(t)] = \frac{1}{s}, \quad
+%   \mathcal{L}[t] = \frac{1}{s^2}, \quad
+%   \mathcal{L}[e^{-at}] = \frac{1}{s+a}, \quad
+%   \mathcal{L}[\sin(\omega t)] = \frac{\omega}{s^2+\omega^2}$$
 
-inp = randn(1,ll);
-x_0 = [1 0];
+syms t s
+f1 = heaviside(t);          % unit step
+f2 = t;                     % unit ramp
+f3 = exp(-2*t);             % decaying exponential
+f4 = sin(3*t);              % sinusoid
 
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
+F1 = laplace(f1,t,s);
+F2 = laplace(f2,t,s);
+F3 = laplace(f3,t,s);
+F4 = laplace(f4,t,s);
 
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
+disp('Step, ramp, exponential, sinusoid transforms:')
+disp([F1 F2 F3 F4])
+
+%% From ODE to Transfer Function
+% With zero initial conditions, taking the Laplace transform of the
+% governing ODE above and solving for the ratio $Y(s)/U(s)$ gives the
+% *transfer function*
+%
+% $$G(s) = \frac{Y(s)}{U(s)} =
+%   \frac{b_m s^m + \dots + b_1 s + b_0}{a_n s^n + \dots + a_1 s + a_0}$$
+%
+% As a first example, consider
+%
+% $$\ddot{y} + 3\dot{y} + 2y = u$$
+%
+% Taking the Laplace transform term by term: $s^2 Y(s) + 3sY(s) + 2Y(s)
+% = U(s)$, so
+%
+% $$G(s) = \frac{1}{s^2+3s+2}$$
+
+G = tf(1,[1 3 2]);
+G
 
 %%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
-
-
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
+% The poles of $G(s)$ are the roots of the denominator polynomial; they
+% determine the natural (unforced) response of the system.
+poles_G = pole(G)
 
 %%
-% From class, we define the observer Markov Parameters using the following
-% equations.
-%
-% $\bar{Y}_0 = D$
-%
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
-%
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
+% A unit-step response confirms the system settles to its DC gain,
+% $G(0) = 1/2$, consistent with the final value theorem
+% $\lim_{t\to\infty} y(t) = \lim_{s\to 0} sG(s)\frac{1}{s} = G(0)$.
+figure
+step(G)
+title('Step Response of $G(s)=\frac{1}{s^2+3s+2}$','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
-%
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
-
-%% Part 4
-% Generate System Markov Parameters 
-
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
-%
-% $$Y_0 = D$$
-%
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
-%
-% The function uses the following formula:
-%
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-
-
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
-
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
-
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+% The remaining files in this directory build up the physical systems
+% (mechanical, electrical, fluid, thermal) whose governing equations
+% produce transfer functions of this type, plus the block-diagram
+% algebra used to combine them into full control systems.

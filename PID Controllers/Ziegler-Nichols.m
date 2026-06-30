@@ -1,347 +1,120 @@
-% Setup discrete system
-close ALL HIDDEN
-n = 2;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0];
-D = 0;
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
+%% Ziegler-Nichols Tuning
+% Ogata, Modern Control Engineering, Ch. 8: Ziegler-Nichols Rules for
+% Tuning PID Controllers
+%
+% Ziegler and Nichols proposed two empirical rules for choosing
+% $K_p,T_i,T_d$ that give roughly a 25% overshoot decay ratio, without
+% needing a full mathematical model of the plant.
 
-%% Part 2
+%% First Method: Reaction Curve (Open-Loop Step Response)
+% Applicable to plants whose open-loop unit-step response is
+% S-shaped (no integration, no dominant complex poles) -- characterized
+% by a *delay time* $L$ and a *time constant* $T$, read from the point of
+% inflection's tangent line.
+%
+% Plant: $G(s)=\frac{1}{(s+1)(s+2)(s+3)}$ (no integrator, S-shaped step
+% response).
+G = tf(1,conv(conv([1 1],[1 2]),[1 3]));
+[y,t] = step(G,0:0.001:10);
 
-inp = randn(1,ll);
-x_0 = [1 0];
+% Find the inflection point (max slope) and its tangent line.
+dy = gradient(y,t);
+[maxslope,idx] = max(dy);
+t_infl = t(idx); y_infl = y(idx);
 
-[Y,X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
+% Tangent line: y = y_infl + maxslope*(t - t_infl); intersects y=0 at L,
+% and reaches the final value at L+T.
+yfinal = dcgain(G);
+L = t_infl - y_infl/maxslope;
+T_rc = (yfinal - y_infl)/maxslope + t_infl - L;
+fprintf('Reaction curve: L = %.4f, T = %.4f\n', L, T_rc)
 
-%% 
-% Using the acker function, we place the eigenvalues of A+GC at 0
-G = acker(A_d',-C_d',[0 0])';
+figure
+plot(t,y,'b','LineWidth',1.5)
+hold on
+tang = y_infl + maxslope*(t-t_infl);
+plot(t,tang,'r--')
+yline(yfinal,'k:')
+xline(L,'g:'); xline(L+T_rc,'g:')
+hold off
+ylim([0 1.2*yfinal])
+title('Reaction-Curve Method: $L$ and $T$','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
-% Here, I check G is working as expected by taking the norm of (A+GC)^2
-norm((A_d+G*C)^2)
+% Ziegler-Nichols first-method tuning table:
+%
+% P:   $K_p = T/L$
+%
+% PI:  $K_p = 0.9T/L,\ T_i = L/0.3$
+%
+% PID: $K_p = 1.2T/L,\ T_i = 2L,\ T_d = 0.5L$
+Kp_zn1 = 1.2*T_rc/L;
+Ti_zn1 = 2*L;
+Td_zn1 = 0.5*L;
+fprintf('ZN Method 1 PID: Kp=%.4f, Ti=%.4f, Td=%.4f\n', Kp_zn1, Ti_zn1, Td_zn1)
 
+Gc1 = tf(Kp_zn1*[Td_zn1 1 1/Ti_zn1],[1 0]);
+T1 = feedback(Gc1*G,1);
+figure
+step(T1)
+title('ZN Method 1: Closed-Loop PID Step Response','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
-%% Part 3
-% Generate Markov Parameters, System and Observer
-n = 2;
-N = 4;
-OMP = zeros(1,2*n+1);
+%% Second Method: Ultimate Gain / Ultimate Period (Closed-Loop)
+% Applicable more generally: with only proportional control in the loop,
+% raise $K_p$ until the closed-loop response is a sustained oscillation
+% (marginal stability). That gain is $K_{cr}$, and the oscillation
+% period is $P_{cr}$.
+%
+% For $G(s)=\frac{1}{(s+1)(s+2)(s+3)}$, the characteristic equation under
+% proportional gain $K$ is $(s+1)(s+2)(s+3)+K=0$, i.e.
+% $s^3+6s^2+11s+(6+K)=0$. By Routh's array, the marginal-stability gain
+% is found from the $s^1$ row: $\frac{6\times11-(6+K)}{6}=0 \Rightarrow K=60$.
+Kcr = 60;
+fprintf('Ultimate gain Kcr = %.4f\n', Kcr)
+
+% At K=Kcr the auxiliary equation 6s^2+(6+Kcr)=0 gives the oscillation
+% frequency.
+omega_cr = sqrt((6+Kcr)/6);
+Pcr = 2*pi/omega_cr;
+fprintf('Ultimate period Pcr = %.4f s (omega_cr = %.4f rad/s)\n', Pcr, omega_cr)
+
+T_marginal = feedback(Kcr*G,1);
+figure
+impulse(T_marginal,0:0.01:10)
+title('Sustained Oscillation at $K=K_{cr}$ (Verifying $P_{cr}$)','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
-% From class, we define the observer Markov Parameters using the following
-% equations.
+% Ziegler-Nichols second-method tuning table:
 %
-% $\bar{Y}_0 = D$
+% P:   $K_p = 0.5K_{cr}$
 %
-% $$\bar{Y}_i = C\bar{A}^{i-1}\bar{B}, i = 1...\infty$$
-% 
-% Where
+% PI:  $K_p = 0.45K_{cr},\ T_i = P_{cr}/1.2$
 %
-% $$\bar{A} = A+GC$$
-% 
-% $$\bar{B} = [B+GD, -G]$$
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
+% PID: $K_p = 0.6K_{cr},\ T_i = 0.5P_{cr},\ T_d = 0.125P_{cr}$
+Kp_zn2 = 0.6*Kcr;
+Ti_zn2 = 0.5*Pcr;
+Td_zn2 = 0.125*Pcr;
+fprintf('ZN Method 2 PID: Kp=%.4f, Ti=%.4f, Td=%.4f\n', Kp_zn2, Ti_zn2, Td_zn2)
 
-%%
-% We compare this to the observer markov parameters calculated via the
-% solution to the observer equation:
-% 
-% $\bar{y}=\bar{P}\bar{V}$
-% 
-% or equivalently,
-%
-% $$\bar{P}=\bar{y}\bar{V}^{\dagger}$$   
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-%% 
-% The pinv2 function (attached) calculates the pseudoinverse using the SVD
-% with a tolerance on the percentage of each individual singular value to
-% the largest singular value
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-%%
-% The Normalized Singular Values of $\bar{V}$ for p=2
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-
-
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-figure
-plot(abs(OMP-cap_y_hat))
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP))
-
-%% Part 4
-% Generate System Markov Parameters 
-
-n_mp = 5;
-
-%%
-% The system Markov Parameters are generated through the following
-% equation:
-%
-% $$Y_0 = D$$
-%
-% $$Y_i = CA^{i-1}B, i = 1\dots\infty$$
-% 
-% The first five Markov Parameters are
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-SMP
-%%
-% We can recover the System Markov Parameters using the function
-% recover_SYSMP.
-%
-% The function uses the following formula:
-%
-% $$Y_k = \bar{Y}^{(1)}_k - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=1\dots p$$
-%
-% $$Y_k = - \sum_{i=1}^{k}\bar{Y}_i^{(2)}Y_{k-i}\quad k=p+1\dots \infty$$
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
+Gc2 = tf(Kp_zn2*[Td_zn2 1 1/Ti_zn2],[1 0]);
+T2 = feedback(Gc2*G,1);
 
 figure
-
-plot(abs(SMP-RSMP));
-
-
-axis([1 inf 0 inf])
-xticks(1:1:length(SMP))
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
+hold on
+step(T1)
+step(T2)
+hold off
+legend('Method 1 (Reaction Curve)','Method 2 (Ultimate Gain)','Interpreter','latex','FontSize',14)
+title('Ziegler-Nichols: Method 1 vs. Method 2 PID Tuning','Interpreter','latex','FontSize',20)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-
-
-%% Part 5
-% We repeat parts 3 and 4 above with p=6
-
-n = 6;
-N = 4;
-OMP = zeros(1,2*n+1);
-
-OMP(1) = D;
-for i=1:n
-    
-    OMP(2*i:2*i+1) = C_d*(A_d+G*C_d)^(i-1)*[B_d+G*D_d -G];
-end
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-
-
-
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-% Generate System Markov Parameters 
-
-n_mp = 50;
-
-SMP = zeros(1,n+1);
-SMP(1) = D;
-for i=1:n_mp-1
-    SMP(i+1) = C_d*A_d^(i-1)*B_d;
-end
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP;
-
-figure
-
-plot(abs(SMP-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 6
-% Repeat 3 and 4, but measure velocity and position
-
-n = 1;
-n_mp = 50;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [0 1;1 0];
-D = [0;0];
-dt=0.2;
-[r_outputs,n_states] = size(C);
-[r_outputs,m_inputs] = size(D);
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0.5];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-8);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-
-
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r_outputs,m_inputs);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-figure
-plot(vecnorm(OMP6-cap_y_hat));
-title('Recovered Observer Markov Parameter Error')
-ylabel('$\bar{Y}_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:1:length(OMP6))
-
-figure
-plot(vecnorm(abs(SMP6-RSMP)));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
-
-
-%% Part 7
-% Repeat for p=4
-
-n = 6;
-ll = 50;
-A_c = [0 1; -1 0];
-B_c = [0;1];
-C = [1 0;0 1];
-D = [0;0];
-dt=0.2;
-[r,n] = size(C);
-[r,m] = size(D);
-
-mat_ss = ss(A_c,B_c,C,D);
-sys_dsct = c2d(mat_ss,dt);
-A_d = sys_dsct.A;
-B_d = sys_dsct.B;
-C_d = sys_dsct.C;
-D_d = sys_dsct.D;
-
-G2 = place(A_d',-C_d',[0 0]);
-
-inp = randn(1,ll);
-x_0 = [1 0];
-[Y, X] = dlsim(A_d,B_d,C_d,D_d,inp,x_0);
-
-
-[Y_bar, V_bar] = YV_Form_nonzero(inp,Y',n);
-
-LM = 15;
-cap_y_hat = Y_bar'*pinv2(V_bar,1e-5);
-figure
-s_v_d  = svd(V_bar)';
-s_v_d = s_v_d/max(s_v_d);
-plot(s_v_d,'-x')
-title('Normalized Singular Values of V_{bar}')
-ylabel('$\frac{\sigma_i}{\sigma_r}$','Interpreter','latex','FontSize',30)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-xlabel('$i$','Interpreter','latex','FontSize',20)
-axis([1 inf 0 inf])
-xticks(1:1:length(s_v_d))
-
-cap_y_hat;
-RSMP = recover_SYSMP(cap_y_hat,n_mp,r,m);
-SMP6 = zeros(2,n_mp);
-SMP6(:,1) = D_d;
-for i=1:n_mp-1
-    SMP6(:,i+1) = C_d*(A_d)^(i-1)*B_d;
-end
-
-
-OMP6 = zeros(2,3*n+1);
-OMP6(:,1) = D_d;
-
-for i=1:n
-    
-    OMP6(:,3*i-1:3*i+1) = C_d*(A_d+G2*C_d)^(i-1)*[B_d+G2*D_d -G2];
-end
-
-
-figure
-plot(vecnorm(SMP6-RSMP));
-title('Recovered System Markov Parameter Error')
-ylabel('$Y_i$','Interpreter','latex','FontSize',20)
-xlabel('$i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
-axis([1 inf 0 inf])
-xticks(1:5:length(SMP))
+xlabel('$t$','Interpreter','latex','FontSize',20)
