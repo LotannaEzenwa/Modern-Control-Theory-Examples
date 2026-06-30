@@ -62,7 +62,7 @@ fprintf('\nExample 3: rank(Co3) = %d (n=%d)\n', rank(Co3), size(A3,1))
 
 %% Effect of Controllability on Pole Placement
 % A controllable pair permits arbitrary closed-loop pole placement via
-% state feedback $u=-Kx$ (see |Pole-Placement.m|); an uncontrollable mode
+% state feedback $u=-Kx$ (see |PolePlacement.m|); an uncontrollable mode
 % cannot have its associated eigenvalue moved by any $K$.
 K_test = place(A1,B1,[-3 -4]);
 fprintf('\nFeedback gain K placing Example 1 poles at -3,-4: ')

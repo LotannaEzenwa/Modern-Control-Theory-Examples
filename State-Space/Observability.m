@@ -45,7 +45,7 @@ end
 %% Duality Between Controllability and Observability
 % Kalman duality: $(A,C)$ is observable iff $(A^T,C^T)$ is controllable.
 % This is exactly why observer gains are designed with `acker`/`place`
-% applied to the transposed pair (see |State-Observers.m|).
+% applied to the transposed pair (see |StateObservers.m|).
 Co_dual = ctrb(A1',C1');
 Ob_direct = obsv(A1,C1);
 fprintf('\nDuality check: ctrb(A^T,C^T)^T should equal obsv(A,C)\n')
@@ -63,7 +63,7 @@ fprintf('\nExample 2 with 2 outputs: rank(Ob) = %d (n=%d)\n', ...
 % With $(A,C)$ observable, an observer can be built to asymptotically
 % reconstruct $x(t)$ from $y(t)$ and $u(t)$ alone, even though $x(t)$
 % itself is not directly measured -- the foundation of
-% |State-Observers.m|.
+% |StateObservers.m|.
 
 %% Visualizing the Rank Condition
 % Dually, the singular values of the observability matrix reveal the rank

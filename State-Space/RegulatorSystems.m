@@ -3,8 +3,8 @@
 % Control Systems
 %
 % When the full state is not measurable, the *separation principle*
-% justifies designing the state-feedback gain $K$ (from |Pole-Placement.m|)
-% and the observer gain $G$ (from |State-Observers.m|) *independently*:
+% justifies designing the state-feedback gain $K$ (from |PolePlacement.m|)
+% and the observer gain $G$ (from |StateObservers.m|) *independently*:
 % the closed-loop system built from $u=-K\hat{x}$ with $\hat{x}$ supplied
 % by the observer has characteristic polynomial equal to the *product*
 % of the controller's and the observer's individually-designed
