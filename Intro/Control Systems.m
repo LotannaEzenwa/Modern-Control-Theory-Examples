@@ -75,6 +75,18 @@ ess_cl = y_cl(end) - 1;
 fprintf('Steady-state error after disturbance -- open-loop: %.4f, closed-loop: %.4f\n', ...
     ess_ol, ess_cl)
 
+%% What Changed: Disturbance-Induced Steady-State Error
+% Quantify the "after the disturbance" error for each architecture: the
+% open loop passes the full disturbance through to the output, while
+% feedback rejects most of it -- the whole reason to close the loop.
+figure
+bar([abs(ess_ol) abs(ess_cl)])
+set(gca,'XTickLabel',{'Open-loop','Closed-loop'})
+grid on
+title('What Changed: Steady-State Error After Disturbance','Interpreter','latex','FontSize',15)
+ylabel('$|e_{ss}|$','Interpreter','latex','FontSize',18)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+
 %% Canonical Feedback Block Diagram
 % The standard unity-feedback diagram analyzed throughout this repository
 % is: reference $R(s)\to$ summing junction (error $E=R-Y$) $\to$
