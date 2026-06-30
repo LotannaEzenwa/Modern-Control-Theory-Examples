@@ -77,3 +77,20 @@ title('Frequency-Domain PID Tuning: Step Response','Interpreter','latex','FontSi
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Plain Unity Feedback vs. Frequency-Tuned PID
+% Closing the plant with plain unity feedback (before) leaves a sluggish,
+% poorly damped response; the frequency-tuned PID (after) hits the target
+% phase margin, giving a faster, better-damped step.
+G_plain = feedback(G,1);
+figure
+step(G_plain,0:0.01:20)
+hold on
+step(T_PID,0:0.01:20)
+yline(1,'k:','HandleVisibility','off')
+hold off
+legend('Before (plain unity feedback)','After (frequency-tuned PID)','Interpreter','latex','FontSize',12)
+title('Frequency Tuning: Before vs. After','Interpreter','latex','FontSize',17)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)

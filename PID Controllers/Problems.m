@@ -19,9 +19,19 @@ fprintf('Problem 1 PID: Kp=%.4f, Ti=%.4f, Td=%.4f\n', Kp1, Ti1, Td1)
 
 Gc1 = tf(Kp1*[Td1 1 1/Ti1],[1 0]);
 T1 = feedback(Gc1*G1,1);
+
+%% Problem 1 -- Before vs. After
+% "Before" is the diagnostic the tuning rule starts from: at the ultimate
+% gain K=Kcr the closed loop oscillates without decay. "After" applies the
+% ZN Method 2 PID, which damps the response into a usable step.
+T_marg = feedback(Kcr1*G1,1);
 figure
-step(T1)
-title('Problem 1: ZN Method 2 PID Step Response','Interpreter','latex','FontSize',20)
+step(T_marg,0:0.01:20)
+hold on
+step(T1,0:0.01:20)
+hold off
+legend('Before (sustained oscillation at $K_{cr}$)','After (ZN PID)','Interpreter','latex','FontSize',12)
+title('Problem 1: Before vs. After ZN Method 2 Tuning','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

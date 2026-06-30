@@ -118,3 +118,19 @@ title('Ziegler-Nichols: Method 1 vs. Method 2 PID Tuning','Interpreter','latex',
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Uncontrolled Plant vs. ZN-Tuned PID
+% The payoff: compared with the bare plant's open-loop step (slow, large
+% steady-state error), the Ziegler-Nichols PID tracks the reference with
+% integral action and a reasonable transient.
+figure
+step(G,0:0.01:10)
+hold on
+step(T2,0:0.01:10)
+yline(1,'k:','HandleVisibility','off')
+hold off
+legend('Before (open-loop plant)','After (ZN Method 2 PID)','Interpreter','latex','FontSize',13)
+title('Ziegler-Nichols: Before vs. After','Interpreter','latex','FontSize',17)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)

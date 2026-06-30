@@ -20,6 +20,22 @@
 G = tf(1,conv([1 1],[1 2]));
 t = 0:0.01:15;
 
+%% Before: The Uncontrolled Plant
+% Start from the bare plant's open-loop step response (no controller). It
+% is sluggish and -- being type-0 -- settles well short of the reference,
+% leaving a large steady-state error. Each PID term below attacks a
+% different deficiency of this baseline.
+figure
+step(G,t)
+hold on
+yline(1,'k--')
+hold off
+legend('Open-loop plant $G$','Reference','Interpreter','latex','FontSize',12)
+title('Before: Uncontrolled Plant Step Response','Interpreter','latex','FontSize',17)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
 %% Proportional (P) Control
 % $G_c(s)=K_p$. Increasing $K_p$ speeds the response and reduces (but
 % does not eliminate) steady-state error for a type-0 plant, at the cost
@@ -103,9 +119,11 @@ step(T_p,t)
 step(T_pi,t)
 step(T_pd,t)
 step(T_pid,t)
+step(G,t)
+yline(1,'k:','HandleVisibility','off')
 hold off
-legend('P','PI','PD','PID','Interpreter','latex','FontSize',14)
-title('Qualitative Comparison of P, PI, PD, PID Control','Interpreter','latex','FontSize',20)
+legend('P','PI','PD','PID','Before (open-loop)','Interpreter','latex','FontSize',13)
+title('After: P, PI, PD, PID vs. the Uncontrolled Baseline','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
