@@ -58,3 +58,12 @@ A4 = sys4.A; B4 = sys4.B; C4 = sys4.C;
 fprintf('\nProblem 4: rank(Co) = %d, rank(Ob) = %d (n=%d)\n', ...
     rank(ctrb(A4,B4)), rank(obsv(A4,C4)), size(A4,1))
 fprintf('No pole-zero cancellation present, so both hold (n=%d, full rank).\n', size(A4,1))
+
+%% Visualizing Problem 4: Pole-Zero Map
+% The realization of $G(s)=\frac{s+2}{(s+1)(s+3)(s+4)}$ has its zero at
+% $-2$ distinct from every pole, so no pole-zero cancellation occurs and
+% the system is a minimal realization -- both controllable and observable.
+figure
+pzmap(sys4)
+grid on
+title('Problem 4: Pole-Zero Map (No Cancellation)','Interpreter','latex','FontSize',18)

@@ -69,3 +69,17 @@ fprintf('\nFeedback gain K placing Example 1 poles at -3,-4: ')
 disp(K_test)
 fprintf('Closed-loop poles: ')
 disp(eig(A1-B1*K_test)')
+
+%% Visualizing the Rank Condition
+% The singular values of the controllability matrix make the rank test
+% visual: a controllable pair has all n singular values nonzero, while an
+% uncontrollable pair has a zero singular value flagging the unreachable
+% mode (its bar collapses to zero height below).
+figure
+bar([svd(Co1), svd(Co2)])
+grid on
+legend('Controllable (Ex. 1)','Uncontrollable (Ex. 2)','Interpreter','latex','FontSize',12)
+title('Singular Values of the Controllability Matrix','Interpreter','latex','FontSize',18)
+ylabel('$\sigma_i$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('Index $i$','Interpreter','latex','FontSize',20)

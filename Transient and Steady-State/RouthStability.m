@@ -102,3 +102,25 @@ end
 % using the derivative of the auxiliary polynomial formed from the row
 % above. These special cases are not required for the worked examples
 % above, which both have well-defined, nonzero first columns.
+
+%% Visualizing the Stability Boundary
+% Sweeping the gain K of the $K/(s(s+1)(s+2))$ example and plotting the
+% maximum real part of the closed-loop poles shows them crossing into the
+% right half-plane exactly at K = 6 -- the boundary the Routh array
+% predicted analytically above.
+K_sweep = 0:0.05:12;
+max_re = zeros(size(K_sweep));
+for ii = 1:numel(K_sweep)
+    max_re(ii) = max(real(roots([1 3 2 K_sweep(ii)])));
+end
+figure
+plot(K_sweep, max_re, 'b', 'LineWidth', 1.5)
+hold on
+yline(0,'k--')
+xline(6,'r:','K = 6')
+hold off
+grid on
+title('Stability Boundary: Max Pole Real Part vs. Gain','Interpreter','latex','FontSize',18)
+ylabel('$\max_i\,\mathrm{Re}(s_i)$','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$K$','Interpreter','latex','FontSize',20)

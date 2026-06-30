@@ -88,3 +88,15 @@ H2n = tf(0.5,1);
 
 inner = feedback(series(G1n,G2n),H1n);
 T_blocks = feedback(series(inner,G3n),H2n)
+
+%% Visualizing the Reduced System
+% The symbolic (Mason) and numeric (block-reduction) results are the same
+% transfer function; the step response of the reduced closed loop
+% T_blocks confirms the algebra produced a sensible, stable system.
+figure
+step(T_blocks)
+grid on
+title('Block-Reduced Closed-Loop Step Response','Interpreter','latex','FontSize',18)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)

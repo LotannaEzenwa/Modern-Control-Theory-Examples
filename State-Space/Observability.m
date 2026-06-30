@@ -64,3 +64,16 @@ fprintf('\nExample 2 with 2 outputs: rank(Ob) = %d (n=%d)\n', ...
 % reconstruct $x(t)$ from $y(t)$ and $u(t)$ alone, even though $x(t)$
 % itself is not directly measured -- the foundation of
 % |State-Observers.m|.
+
+%% Visualizing the Rank Condition
+% Dually, the singular values of the observability matrix reveal the rank
+% test: the unobservable system has a zero singular value, marking the
+% hidden mode that no output combination exposes.
+figure
+bar([svd(Ob1), svd(Ob2)])
+grid on
+legend('Observable (Ex. 1)','Unobservable (Ex. 2)','Interpreter','latex','FontSize',12)
+title('Singular Values of the Observability Matrix','Interpreter','latex','FontSize',18)
+ylabel('$\sigma_i$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('Index $i$','Interpreter','latex','FontSize',20)
