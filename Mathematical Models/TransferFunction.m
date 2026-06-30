@@ -58,9 +58,11 @@ dc_gain = dcgain(G)
 % $Y(s)=G(s)/s$. Inverting via |step| shows the system settling to the
 % DC gain found above.
 figure
-step(G)
-title('Step Response of $G(s)=\frac{2}{s^2+4s+12}$','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+[ys,ts] = step(G);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+legend('Input step (before)','Output $y(t)$ (after)','Interpreter','latex','FontSize',12)
+title('Input vs. Output: $G(s)=\frac{2}{s^2+4s+12}$','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 

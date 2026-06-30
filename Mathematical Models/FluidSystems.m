@@ -43,9 +43,11 @@ R = 2; C = 5;
 G_tank = tf(R,[R*C 1])
 
 figure
-step(G_tank)
-title('Liquid-Level Tank Step Response','Interpreter','latex','FontSize',20)
-ylabel('$h(t)$','Interpreter','latex','FontSize',20)
+[hs,ts] = step(G_tank);
+plot(ts, ones(size(ts)),'k--', ts, hs,'b','LineWidth',1.3)
+legend('Inflow step $q_i$ (before)','Tank level $h(t)$ (after)','Interpreter','latex','FontSize',11,'Location','east')
+title('Input vs. Output: Liquid-Level Tank','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 

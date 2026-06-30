@@ -89,14 +89,20 @@ H2n = tf(0.5,1);
 inner = feedback(series(G1n,G2n),H1n);
 T_blocks = feedback(series(inner,G3n),H2n)
 
-%% Visualizing the Reduced System
-% The symbolic (Mason) and numeric (block-reduction) results are the same
-% transfer function; the step response of the reduced closed loop
-% T_blocks confirms the algebra produced a sensible, stable system.
+%% Before vs. After Reduction: The Inner Loop vs. the Whole Diagram
+% Block-diagram algebra collapses the multi-block diagram step by step.
+% Compare the inner loop alone (before the outer feedback is closed) with
+% the fully reduced system T_blocks (after) -- closing the outer loop
+% speeds up and re-damps the response.
 figure
-step(T_blocks)
+step(series(inner,G3n),0:0.01:8)
+hold on
+step(T_blocks,0:0.01:8)
+hold off
 grid on
-title('Block-Reduced Closed-Loop Step Response','Interpreter','latex','FontSize',18)
+legend('Before (inner loop $\times G_3$, outer loop open)','After (fully reduced $T$)', ...
+    'Interpreter','latex','FontSize',11)
+title('Block Reduction: Before vs. After Closing the Outer Loop','Interpreter','latex','FontSize',15)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)

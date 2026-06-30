@@ -74,9 +74,12 @@ poles_G = pole(G)
 % $G(0) = 1/2$, consistent with the final value theorem
 % $\lim_{t\to\infty} y(t) = \lim_{s\to 0} sG(s)\frac{1}{s} = G(0)$.
 figure
-step(G)
-title('Step Response of $G(s)=\frac{1}{s^2+3s+2}$','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+[ys,ts] = step(G);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+yline(0.5,'r:','DC gain 0.5')
+legend('Input step (before)','Output $y(t)$ (after)','Interpreter','latex','FontSize',12,'Location','east')
+title('Input vs. Output: $G(s)=\frac{1}{s^2+3s+2}$','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 

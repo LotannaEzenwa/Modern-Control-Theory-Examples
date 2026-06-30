@@ -55,14 +55,24 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % verify its steady-state step value via the final value theorem.
 G1 = tf(1,[1 2]);
 G2 = tf(5,[1 0]);
-T = feedback(series(G1,G2),1)
+fwd = series(G1,G2);          % forward path only (before closing the loop)
+T = feedback(fwd,1)            % closed-loop (after)
 
 ess = 1 - dcgain(T);   % steady-state error for unit step (type-1 system, ess should be 0)
 fprintf('Steady-state error to unit step = %.4f\n', ess)
 
+%% Problem 3 -- Before vs. After Closing the Loop
+% The open forward path $G_1G_2$ has an integrator, so its step ramps off
+% without bound (before); closing the unity-feedback loop turns it into a
+% stable, reference-tracking system (after).
 figure
-step(T)
-title('Problem 3: Closed-Loop Step Response','Interpreter','latex','FontSize',20)
+step(fwd,0:0.01:5)
+hold on
+step(T,0:0.01:5)
+yline(1,'k:','HandleVisibility','off')
+hold off
+legend('Before (open forward path)','After (closed loop)','Interpreter','latex','FontSize',12,'Location','northwest')
+title('Problem 3: Before vs. After Closing the Loop','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
