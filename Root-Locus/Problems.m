@@ -51,20 +51,24 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Lead Compensator for a Settling-Time Spec
 % For $G(s) = \frac{K}{s(s+4)}$, design a lead compensator
-% $G_c(s)=\frac{s+z_c}{s+p_c}$ so the dominant closed-loop poles
-% achieve $\zeta=0.5$ and $\omega_n=4$ (settling time $t_s\approx1$ s).
-zeta3 = 0.5; wn3 = 4;
+% $G_c(s)=\frac{s+z_c}{s+p_c}$ so the dominant closed-loop poles achieve
+% $\zeta=0.5$ and $\omega_n=6$. (Note $\omega_n=4$ would land exactly on
+% the uncompensated locus, requiring no lead; $\omega_n=6$ sits to the
+% left of it, so a genuine lead network is needed.)
+zeta3 = 0.5; wn3 = 6;
 sd3 = -zeta3*wn3 + 1j*wn3*sqrt(1-zeta3^2);
 
 ol_poles3 = [0 -4];
-angle_poles3 = sum(angle(sd3 - ol_poles3))*180/pi;
-angle_deficiency3 = mod(180 - mod(angle_poles3,360) + 360,360);
+phase_G3 = -sum(angle(sd3 - ol_poles3))*180/pi;   % angle of G(sd3)
+phi_lead3 = mod((-180 - phase_G3) + 360, 360);    % lead phase to add
 fprintf('Desired pole: %.4f + %.4fj\n', real(sd3), imag(sd3))
-fprintf('Angle deficiency to supply = %.2f deg\n', angle_deficiency3)
+fprintf('Open-loop phase at s_d = %.2f deg, lead to supply = %.2f deg\n', ...
+    phase_G3, phi_lead3)
 
-zc3 = -real(sd3);   % place zero under desired pole's real part
-target_angle = angle(sd3-(-zc3))*180/pi - angle_deficiency3;
-pc3 = -real(sd3) - imag(sd3)/tand(target_angle);
+zc3 = -real(sd3);   % place zero under the desired pole's real part
+angle_zero3 = angle(sd3 + zc3)*180/pi;
+angle_pole3 = angle_zero3 - phi_lead3;
+pc3 = -real(sd3) + imag(sd3)/tand(angle_pole3);
 
 Gc3 = tf([1 zc3],[1 pc3]);
 G3 = tf(1,[1 4 0]);
@@ -73,6 +77,11 @@ fprintf('Lead compensator: zero at %.4f, pole at %.4f, gain Kc = %.4f\n', -zc3, 
 
 G3_comp = series(Kc3*Gc3,G3);
 T3_comp = feedback(G3_comp,1);
+
+% Verify a closed-loop pole lands near the target s_d.
+cl3 = pole(T3_comp);
+[~,i3] = min(abs(cl3 - sd3));
+fprintf('Nearest closed-loop pole to s_d: %.4f + %.4fj\n', real(cl3(i3)), imag(cl3(i3)))
 
 figure
 step(T3_comp)

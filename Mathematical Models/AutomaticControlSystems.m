@@ -41,10 +41,10 @@ set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
-% Note the open-loop system never reaches $r=1$ (its DC gain is
-% $K/(1)=4$ for a unit *impulse*, but for a unit step it simply tracks
-% $KG_p(0)=4$, not corrected toward 1), while the closed-loop system's
-% steady-state error is reduced by the loop gain:
+% Note the open-loop system does not track $r=1$: its unit-step output
+% settles to $KG_p(0)=4$, with nothing to correct it toward the
+% reference. The closed-loop system's steady-state error is instead
+% reduced by the loop gain:
 %
 % $e_{ss} = \frac{1}{1+KG_p(0)H(0)} = \frac{1}{1+4} = 0.2$
 ess_closed = 1/(1+K*dcgain(Gp))

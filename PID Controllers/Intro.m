@@ -91,7 +91,7 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % integral action) together with good transient response (from the
 % derivative action).
 Kp = 5; Ti = 2; Td = 0.3;
-Gc_pid = tf(Kp*[Td*Ti 1 1/Ti]*Ti/Ti,[Ti 0]); % Kp*(Td*s^2 + s + 1/Ti)/s, written via Ti
+% Gc(s) = Kp*(Td*s + 1 + 1/(Ti*s)) = Kp*(Td*s^2 + s + 1/Ti)/s
 Gc_pid = tf(Kp*[Td 1 1/Ti],[1 0]);
 T_pid = feedback(Gc_pid*G,1);
 ess_pid = 1 - dcgain(T_pid);

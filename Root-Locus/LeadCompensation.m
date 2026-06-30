@@ -25,32 +25,29 @@ sd = -zeta*wn_desired + 1j*wn_desired*sqrt(1-zeta^2);
 fprintf('Desired dominant pole: %.4f + %.4fj\n', real(sd), imag(sd))
 
 %% Angle Deficiency
-% Evaluate the angle contributed by the uncompensated open-loop poles
-% at $s_d$; the lead compensator must supply the remaining angle to
-% satisfy the angle condition ($180^\circ$ total).
+% The open-loop transfer function has no finite zeros and a positive DC
+% gain, so its phase at $s_d$ is $\angle G(s_d) = -\sum_i\angle(s_d-p_i)$.
+% For $s_d$ to lie on the *compensated* locus, the lead network must add
+% just enough phase that the total is $-180^\circ$:
+%
+% $\phi_{lead} = -180^\circ - \angle G(s_d)$.
 [~,p] = tfdata(G,'v');
 ol_poles = roots(p);
-angle_poles = sum(angle(sd - ol_poles))*180/pi;
-angle_deficiency = 180 - (180 - angle_poles);   % angle that must be added by Gc
-angle_deficiency = mod(180 - mod(angle_poles,360) + 360,360);
-fprintf('Angle contributed by uncompensated poles = %.2f deg\n', angle_poles)
-fprintf('Angle the lead compensator must add = %.2f deg\n', angle_deficiency)
+phase_G = -sum(angle(sd - ol_poles))*180/pi;   % angle of G(sd), degrees
+phi_lead = mod((-180 - phase_G) + 360, 360);   % lead phase to add (deg)
+fprintf('Open-loop phase at s_d = %.2f deg\n', phase_G)
+fprintf('Phase the lead compensator must add = %.2f deg\n', phi_lead)
 
 %% Placing the Compensator Zero and Pole
-% A common design choice places the compensator zero directly beneath
-% (or near) the desired pole's real part to cancel some of the
-% existing dynamics, then solves for the pole location that supplies
-% the required angle contribution.
-zc = real(sd);                      % place zero at the desired pole's real part
-angle_zero = angle(sd - (-zc))*180/pi;
-
-% angle from pole pc must equal: angle_zero - angle_deficiency (graphically)
-% Solve for pc on the real axis using the geometry: the angle from pc
-% to sd must close the angle condition.
-target_angle_from_pc = angle_zero - angle_deficiency;
-% angle(sd - (-pc)) = target_angle_from_pc (deg) -- solve for pc
-pc_candidates = -real(sd) - imag(sd)/tand(target_angle_from_pc);
-pc = pc_candidates;
+% A common design choice places the compensator zero directly beneath the
+% desired pole's real part (zero at $s=\mathrm{Re}(s_d)$), then solves for
+% the pole that supplies the remaining angle. With the zero at $-z_c$ the
+% zero contributes $\angle(s_d+z_c)$, so the pole must contribute
+% $\angle(s_d+p_c) = \angle(s_d+z_c) - \phi_{lead}$.
+zc = -real(sd);                       % zero at s = Re(s_d) (left-half plane)
+angle_zero = angle(sd + zc)*180/pi;
+angle_pole = angle_zero - phi_lead;   % required angle from the compensator pole
+pc = -real(sd) + imag(sd)/tand(angle_pole);   % pole at -pc on the real axis
 fprintf('Lead compensator zero at s = %.4f\n', -zc)
 fprintf('Lead compensator pole at s = %.4f\n', -pc)
 
@@ -59,6 +56,15 @@ Gc = tf([1 zc],[1 pc]);
 %% Gain Selection via the Magnitude Condition
 Kc = 1/abs(evalfr(Gc*G,sd));
 fprintf('Compensator gain Kc = %.4f\n', Kc)
+
+%% Verification
+% Confirm the design: with the chosen $K_c$, a closed-loop pole should sit
+% essentially on top of the desired location $s_d$.
+T_check = feedback(Kc*Gc*G,1);
+cl_poles = pole(T_check);
+[~,idx] = min(abs(cl_poles - sd));
+fprintf('Desired s_d = %.4f + %.4fj; nearest closed-loop pole = %.4f + %.4fj\n', ...
+    real(sd), imag(sd), real(cl_poles(idx)), imag(cl_poles(idx)))
 
 Gc_full = Kc*Gc;
 G_comp = series(Gc_full,G);

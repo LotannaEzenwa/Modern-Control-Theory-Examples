@@ -49,11 +49,9 @@ G = tf([10 20],[1 10 0]);
 [mag,phase] = bode(G,w);
 mag = squeeze(mag); phase = squeeze(phase);
 
-% Asymptotic approximation, built term by term in dB/degrees
-mag_dB_asym = 20*log10(K_bode) - 20*log10(w) ...
-    + 20*log10(sqrt(1+(w/z1).^2)) - 20*log10(sqrt(1+(w/p1).^2));
-% (the above already blends asymptote+exact for the 1st-order terms;
-% a piecewise-linear version is shown for comparison)
+% Asymptotic (piecewise-linear) approximation, built term by term:
+% gain + integrator (-20 dB/dec), then +20 dB/dec beyond the zero corner
+% and -20 dB/dec beyond the pole corner.
 mag_dB_piecewise = 20*log10(K_bode) - 20*log10(w);
 mag_dB_piecewise = mag_dB_piecewise + 20*log10(max(w/z1,1)) - 20*log10(max(w/p1,1));
 

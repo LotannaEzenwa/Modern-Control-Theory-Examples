@@ -40,9 +40,9 @@ xlabel('$\mathrm{Re}\,G(j\omega)$','Interpreter','latex','FontSize',20)
 
 %% Worked Example: Type-1 System
 % $G(s) = \frac{K}{s(Ts+1)}$, $K=1,T=1$. As $\omega\to0$,
-% $G(j\omega)\to\infty\angle{-90^\circ}$ (the locus approaches the
-% negative-imaginary axis asymptotically); as $\omega\to\infty$,
-% $G(j\omega)\to0\angle{-180^\circ}$.
+% $G(j\omega)\to\infty\angle{-90^\circ}$ (the locus runs off to
+% $-j\infty$ along the vertical asymptote $\mathrm{Re}=-KT=-1$); as
+% $\omega\to\infty$, $G(j\omega)\to0\angle{-180^\circ}$.
 G2 = tf(1,[1 1 0]);
 w2 = logspace(-2,2,500);
 Gjw2 = squeeze(freqresp(G2,w2));

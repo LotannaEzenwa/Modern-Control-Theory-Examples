@@ -16,8 +16,6 @@
 % $G(s) = \frac{4}{s(s+1)(s+2)}$, already exhibiting acceptable
 % transient response (the dominant poles are not being moved), but
 % with insufficient velocity-error constant $K_v$.
-G = tf(4,conv([1 0],[1 1 ...
-    ]));
 G = tf(4,conv([1 0],conv([1 1],[1 2])));
 
 %% Static Velocity Error Constant

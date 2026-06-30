@@ -53,12 +53,25 @@ angles = angle(s0 - poles) * 180/pi;
 total_angle = sum(angles);
 fprintf('Pole angles at s0: %s degrees\n', mat2str(angles,4))
 fprintf('Sum of pole angles = %.2f degrees\n', total_angle)
-fprintf('Angle condition requires an odd multiple of 180 deg; here it is %s\n', ...
-    char("not satisfied" + (mod(total_angle,360)==180 || mod(total_angle,360)==-180)*0 + ""))
 
-% Find the actual gain at this approximate point (just for illustration)
+% With no finite zeros, the open-loop phase is angle(G(s0)) = -sum(pole
+% angles). The angle condition is satisfied (s0 lies on the locus) when
+% this phase is an odd multiple of 180 deg, i.e. when the residual below
+% is zero.
+ol_phase = -total_angle;
+resid = mod(ol_phase, 360) - 180;     % 0 == exactly on the locus
+fprintf('Open-loop phase at s0 = %.2f deg\n', ol_phase)
+fprintf('Deviation from the angle condition = %.2f deg\n', resid)
+if abs(resid) < 1
+    fprintf('s0 satisfies the angle condition (it lies on the locus).\n')
+else
+    fprintf('s0 is off the locus by %.2f deg (this test point is only approximate).\n', resid)
+end
+
+% Find the gain that would place a closed-loop pole at s0 (magnitude
+% condition); only exactly valid once s0 is on the locus.
 K_at_s0 = abs(prod(s0-poles));
-fprintf('If s0 were exactly on the locus, K = %.4f\n', K_at_s0)
+fprintf('Magnitude-condition gain at s0: K = %.4f\n', K_at_s0)
 
 %% Plotting the Locus Directly
 % In practice, |rlocus| automates the angle/magnitude bookkeeping and

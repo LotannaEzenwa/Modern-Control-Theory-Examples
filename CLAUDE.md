@@ -32,7 +32,7 @@ The codebase is organized into topic-based directories and homework assignment d
 - `State-Space/` — state-space representation, controllability, observability, pole placement, LQR, state observers, robust control
 - `Intro/` — introductory examples
 
-**Important caveat**: Many `.m` files in the topic directories share identical content (the discrete observer Markov parameter derivation). This appears to be an incomplete repository where placeholder files were not yet filled with distinct content. When adding new examples to topic directories, write unique content appropriate to that topic.
+**Topic-directory content**: Each `.m` file in the topic directories is a self-contained, runnable tutorial for its named subject, written in the "code + full derivation" style — `%%` cell blocks with LaTeX-formatted derivations interleaved with Control System Toolbox code, based on the corresponding chapters of Ogata. (These files previously held byte-identical copies of an unrelated discrete observer Markov-parameter script; they have since been replaced with distinct, topic-correct content.) When adding new examples, follow the same style and keep each file's content matched to its name and directory.
 
 **Homework directories** (`HW2/`, `HW3/`, `HW5/`, `HW6/`, `Final/`) contain the actual worked examples with unique content:
 - Root-level `e145hw1*.m` files: HW1 problems (symbolic Laplace, `lsim`, `ss`, `c2d`)
@@ -45,6 +45,9 @@ The codebase is organized into topic-based directories and homework assignment d
 **Root-level helper functions**:
 - `disc_m.m` — computes a discretization sum `sum_{i=1}^{k} A^{n_i} * B * sin(0.2 * m_i)`
 - `disc_nm.m` — computes a single term `A^n * B * sin(0.2 * m)`
+- `YV_Form_nonzero.m` — builds the OKID regression data matrices `[Y_bar, V_bar]` from an input/output record, allowing a nonzero initial condition
+- `pinv2.m` — tolerance-truncated Moore-Penrose pseudoinverse via the SVD (keeps singular values above a fraction of the largest)
+- `recover_SYSMP.m` — recovers system Markov parameters from the observer Markov parameters produced by the OKID least-squares step
 
 ## Key Patterns and Conventions
 
@@ -65,10 +68,10 @@ G = acker(A_d', -C_d', desired_poles)';
 
 **Section structure**: Scripts use `%%` cell blocks for MATLAB's cell-mode execution. Each `%% Part N` block is a self-contained analysis step. Block-level comments explain the mathematical derivation inline using `%` and LaTeX (`$$...$$`).
 
-**Markov parameter workflow** (the core algorithm in many files):
+**Markov parameter / OKID workflow** (used in the `Final/` system-identification problems):
 1. Build observer Markov parameters (OMP) analytically from `(A, B, C, D, G)`
-2. Form `[Y_bar, V_bar]` data matrices via `YV_Form_nonzero` (external function, not in this repo)
-3. Recover OMP via pseudoinverse: `cap_y_hat = Y_bar' * pinv2(V_bar, tol)` where `pinv2` is a tolerance-based SVD pseudoinverse (external function, not in this repo)
-4. Recover system Markov parameters from OMP via `recover_SYSMP` (external function, not in this repo)
+2. Form `[Y_bar, V_bar]` data matrices via `YV_Form_nonzero`
+3. Recover OMP via pseudoinverse: `cap_y_hat = Y_bar' * pinv2(V_bar, tol)` where `pinv2` is a tolerance-based SVD pseudoinverse
+4. Recover system Markov parameters from OMP via `recover_SYSMP`
 
-The functions `YV_Form_nonzero`, `pinv2`, and `recover_SYSMP` are called throughout `Intro/Control Systems.m` and many State-Space files but are not present in this repository — they must be on the MATLAB path from an external source.
+The functions `YV_Form_nonzero`, `pinv2`, and `recover_SYSMP` are now provided as root-level helper functions in this repository (see above), so this workflow runs without any external dependencies.
