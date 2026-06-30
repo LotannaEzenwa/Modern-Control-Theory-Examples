@@ -24,9 +24,16 @@ T = 2;
 G = tf(1,[T 1]);
 
 figure
-step(G)
-title('First-Order Step Response','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+[ys,ts] = step(G);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+hold on
+plot(T, 1-exp(-1),'ro','MarkerSize',9,'MarkerFaceColor','r')
+xline(T,'r:')
+hold off
+legend('Input step (before)','Output $y(t)$ (after)','$63.2\%$ at $t=T$', ...
+    'Interpreter','latex','FontSize',11,'Location','southeast')
+title('First-Order Step: Input vs. Output (time constant $T$)','Interpreter','latex','FontSize',15)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 

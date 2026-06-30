@@ -83,3 +83,28 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % specifications numerically from the simulated response, providing a
 % check on the closed-form formulas above.
 info = stepinfo(G)
+
+%% What Changes with Damping: Pole Locations
+% The family of step responses at the top is driven by where the poles
+% sit. At fixed wn, increasing zeta slides the complex pair along a circle
+% of radius wn -- from the imaginary axis (undamped, sustained ringing)
+% toward the negative real axis (over-damped, no overshoot). This is the
+% "before/after" of adding damping.
+wn_fixed = 1;
+zetas_pm = [0.1 0.3 0.5 0.7 0.9];
+figure
+th = linspace(pi/2,3*pi/2,200);
+plot(wn_fixed*cos(th),wn_fixed*sin(th),'k:','HandleVisibility','off')
+hold on
+for z = zetas_pm
+    p = roots([1 2*z*wn_fixed wn_fixed^2]);
+    plot(real(p),imag(p),'o','MarkerSize',8,'LineWidth',1.5, ...
+        'DisplayName',sprintf('$\\zeta=%.1f$',z))
+end
+hold off
+grid on; axis equal
+legend('Interpreter','latex','FontSize',11,'Location','westoutside')
+title('Pole Migration as Damping $\zeta$ Increases','Interpreter','latex','FontSize',16)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)

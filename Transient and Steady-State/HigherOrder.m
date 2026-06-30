@@ -71,3 +71,19 @@ title('Approximation Breakdown: Non-Dominant Extra Pole','Interpreter','latex','
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% What We Keep vs. What We Drop: The Pole Map
+% The approximation's logic is visual: keep the slow dominant pair (close
+% to the imaginary axis, sets the bulk of the response) and drop the fast
+% pole far to the left whose mode decays before it matters.
+figure
+plot(real(poles_exact),imag(poles_exact),'bx','MarkerSize',12,'LineWidth',1.5)
+hold on
+plot(real(roots([1 2 5])),imag(roots([1 2 5])),'ro','MarkerSize',10,'LineWidth',1.5)
+hold off
+grid on
+legend('All poles (exact)','Kept dominant pair','Interpreter','latex','FontSize',12)
+title('Dominant Poles Kept vs. Fast Pole Dropped','Interpreter','latex','FontSize',16)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)

@@ -124,3 +124,19 @@ title('Stability Boundary: Max Pole Real Part vs. Gain','Interpreter','latex','F
 ylabel('$\max_i\,\mathrm{Re}(s_i)$','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$K$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Stable vs. Unstable Gain
+% The boundary in the time domain: at K=4 (< 6) the closed-loop step
+% settles; at K=8 (> 6) it diverges -- crossing K=6 flips stability.
+t_cl = 0:0.01:20;
+figure
+subplot(1,2,1)
+step(feedback(tf(4,[1 3 2 0]),1), t_cl)
+title('Before: $K=4$ (stable)','Interpreter','latex','FontSize',14)
+ylabel('$y$','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',14)
+subplot(1,2,2)
+step(feedback(tf(8,[1 3 2 0]),1), t_cl)
+title('After: $K=8$ (unstable)','Interpreter','latex','FontSize',14)
+xlabel('$t$','Interpreter','latex','FontSize',14)

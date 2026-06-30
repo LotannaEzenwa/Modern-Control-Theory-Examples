@@ -30,6 +30,22 @@ for k = Ks
     fprintf('K = %5.1f -> max real part = %8.4f\n', k, max(real(p)))
 end
 
+%% Problem 1 -- Before vs. After: Stable vs. Unstable Gain
+% In the time domain: K=20 (< 48) settles; K=60 (> 48) diverges -- the
+% Routh range made visible.
+t_cl = 0:0.01:15;
+figure
+subplot(1,2,1)
+step(feedback(tf(20,[1 6 8 0]),1), t_cl)
+title('Before: $K=20$ (stable)','Interpreter','latex','FontSize',13)
+ylabel('$y$','Interpreter','latex','FontSize',15)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',13)
+subplot(1,2,2)
+step(feedback(tf(60,[1 6 8 0]),1), t_cl)
+title('After: $K=60$ (unstable)','Interpreter','latex','FontSize',13)
+xlabel('$t$','Interpreter','latex','FontSize',13)
+
 %% Problem 2: Marginal Stability and Sustained Oscillation
 % Using the boundary $K=48$ from Problem 1, the system is marginally
 % stable; the row of zeros at $s^1$ indicates a pair of poles on the

@@ -37,9 +37,11 @@ T = feedback(G,1);
 % MATLAB's |step| command applies a unit step input ($R(s)=1/s$) and
 % plots $y(t)$.
 figure
-step(T)
-title('Unit Step Response','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+[ys,ts] = step(T);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+legend('Input step $r(t)$ (before)','Output $y(t)$ (after)','Interpreter','latex','FontSize',12,'Location','southeast')
+title('Unit Step: Input vs. Output Response','Interpreter','latex','FontSize',17)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
