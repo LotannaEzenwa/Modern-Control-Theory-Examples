@@ -1,5 +1,15 @@
 %% Introduction to the Root-Locus Method
-% Ogata, Modern Control Engineering, Ch. 6: Root-Locus Analysis
+% *Where the closed-loop poles go as the loop gain varies from 0 to infinity.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6.
+%
+% In this tutorial you will:
+%
+% * read the *angle* and *magnitude* conditions that define the locus,
+% * learn the construction rules (branches, asymptotes, breakaway points), and
+% * draw and read a locus with |rlocus|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The root locus is the set of all locations in the $s$-plane that the
 % closed-loop poles can occupy as a single real parameter (almost

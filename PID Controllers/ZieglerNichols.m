@@ -1,6 +1,15 @@
-%% Ziegler-Nichols Tuning
-% Ogata, Modern Control Engineering, Ch. 8: Ziegler-Nichols Rules for
-% Tuning PID Controllers
+%% Ziegler-Nichols PID Tuning
+% *Two classic recipes for tuning PID without a model.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 8.
+%
+% In this tutorial you will:
+%
+% * apply the *reaction-curve* (first) method from an open-loop step,
+% * apply the *ultimate-gain* (second) method from sustained oscillation, and
+% * compare the two tunings on the closed-loop step response.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Ziegler and Nichols proposed two empirical rules for choosing
 % $K_p,T_i,T_d$ that give roughly a 25% overshoot decay ratio, without

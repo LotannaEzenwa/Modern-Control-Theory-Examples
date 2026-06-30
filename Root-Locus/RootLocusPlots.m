@@ -1,5 +1,15 @@
 %% Root-Locus Plots with MATLAB
-% Ogata, Modern Control Engineering, Ch. 6: Root-Locus Analysis
+% *Drawing a locus and reading gains and closed-loop poles off it.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6.
+%
+% In this tutorial you will:
+%
+% * plot a locus with |rlocus| and find closed-loop poles for given gains,
+% * check the asymptotes and breakaway point by hand, and
+% * find the gain at the imaginary-axis crossing (the stability limit).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % This file demonstrates the |rlocus| command on a representative
 % open-loop transfer function and shows how to read closed-loop pole

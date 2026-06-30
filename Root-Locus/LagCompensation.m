@@ -1,6 +1,15 @@
 %% Root-Locus Lag Compensation
-% Ogata, Modern Control Engineering, Ch. 6: Lag Compensator Design via
-% Root Locus
+% *Improving steady-state accuracy without disturbing the transient.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6.
+%
+% In this tutorial you will:
+%
+% * size a lag compensator from a velocity-error-constant ($K_v$) spec,
+% * place its pole/zero pair near the origin to preserve the dominant poles, and
+% * confirm the transient is unchanged while ramp tracking improves.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A phase-lag compensator
 %

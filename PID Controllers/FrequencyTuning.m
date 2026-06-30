@@ -1,6 +1,15 @@
-%% PID Tuning via Frequency Response (Phase-Margin Specification)
-% Ogata, Modern Control Engineering, Ch. 8/7: Tuning PID Parameters to
-% Meet a Frequency-Domain Specification
+%% PID Tuning via Frequency Response
+% *Choosing PID gains to hit a target phase margin.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7--8.
+%
+% In this tutorial you will:
+%
+% * place the integral corner to add only a little phase lag,
+% * solve for $K_p$ that sets the gain crossover frequency, and
+% * add derivative action to recover the target phase margin.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Rather than the empirical Ziegler-Nichols rules, the PID parameters can
 % be chosen analytically to hit a target gain crossover frequency

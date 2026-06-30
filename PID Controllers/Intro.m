@@ -1,5 +1,15 @@
 %% Introduction to PID Control
-% Ogata, Modern Control Engineering, Ch. 8: PID Controllers
+% *The proportional-integral-derivative controller, one term at a time.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 8.
+%
+% In this tutorial you will:
+%
+% * see what each of the *P*, *I*, and *D* terms does on its own,
+% * combine them and watch steady-state error and overshoot improve, and
+% * build PID controllers as transfer functions with |tf| and |feedback|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A PID controller computes its actuating signal from the error
 % $e(t)=r(t)-y(t)$ as a weighted sum of proportional, integral, and

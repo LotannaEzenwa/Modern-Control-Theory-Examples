@@ -1,6 +1,15 @@
 %% Root-Locus Lead Compensation
-% Ogata, Modern Control Engineering, Ch. 6: Lead Compensator Design via
-% Root Locus
+% *Adding phase lead to pull the locus through a faster pole location.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6.
+%
+% In this tutorial you will:
+%
+% * find the angle deficiency at a desired dominant pole $s_d$,
+% * place the compensator zero and pole to supply that angle, and
+% * set the gain by the magnitude condition and verify the design.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A phase-lead compensator
 %

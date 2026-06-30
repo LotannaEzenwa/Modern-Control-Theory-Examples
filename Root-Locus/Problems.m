@@ -1,6 +1,9 @@
 %% Root-Locus -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 6: end-of-chapter style
-% root-locus and compensator design problems.
+% *Practice: breakaway points, gain for a damping spec, and lead design.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Locate the Breakaway Point
 % For $G(s) = \frac{K}{s(s+4)}$, find the breakaway point on the real

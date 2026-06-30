@@ -1,6 +1,11 @@
 %% PID Controllers -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 8: end-of-chapter style PID
-% tuning and comparison problems.
+% *Practice: tune and compare PID controllers.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 8 (end-of-chapter style).
+%
+% Three problems: Ziegler-Nichols tuning, ZN vs. hand-tuning, and a
+% PI-vs-PID steady-state/overshoot tradeoff. Step through with
+% *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Ziegler-Nichols Method 2 Tuning
 % For $G(s) = \frac{1}{s(s+1)(s+2)}$, find the ultimate gain $K_{cr}$ and

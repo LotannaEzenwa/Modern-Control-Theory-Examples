@@ -1,6 +1,16 @@
 %% Introduction to Control Systems
-% Ogata, Modern Control Engineering, Ch. 1: Introduction to Control
-% Systems
+% *Open-loop vs. closed-loop: the two ways to make a system behave.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 1.
+%
+% This is the starting point for the whole collection. In this tutorial
+% you will:
+%
+% * contrast *open-loop* and *closed-loop (feedback)* control,
+% * see why feedback rejects disturbances that open-loop control cannot, and
+% * meet the canonical unity-feedback block diagram used throughout.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A *control system* is an interconnection of components that regulates
 % its own behavior or that of another system, typically to achieve a
