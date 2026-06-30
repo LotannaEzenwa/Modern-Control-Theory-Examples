@@ -1,5 +1,15 @@
 %% Robustness of State-Space Control Systems
-% Ogata, Modern Control Engineering, Ch. 10: Robust Control Systems
+% *Will the design survive a plant that differs from the model?*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * form the sensitivity $S$ and complementary sensitivity $T$ of a loop,
+% * read classical gain/phase margins at the plant input, and
+% * test the closed loop against plant-parameter perturbations.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A controller designed from a nominal plant model $A,B,C$ must still
 % perform acceptably when the real plant differs (parameter uncertainty,

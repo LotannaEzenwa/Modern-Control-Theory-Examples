@@ -1,5 +1,15 @@
 %% Pole Placement via State Feedback
-% Ogata, Modern Control Engineering, Ch. 10: Pole Placement
+% *Putting the closed-loop poles exactly where you want them.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * compute a feedback gain with Ackermann's formula (|acker|) and |place|,
+% * add a reference gain for zero steady-state error, and
+% * trade response speed against control effort by moving the poles.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % If $(A,B)$ is completely controllable, full-state feedback
 % $u=-Kx$ (plus a reference input $r$, $u=-Kx+r$) places the closed-loop

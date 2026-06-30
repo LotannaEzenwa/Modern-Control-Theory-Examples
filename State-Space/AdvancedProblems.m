@@ -1,6 +1,15 @@
 %% State-Space Advanced Design Problem
-% Ogata, Modern Control Engineering, Ch. 10: Combined Observer + State
-% Feedback Design
+% *A full output-feedback design from start to finish.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * design a state-feedback gain and a fast observer for one plant,
+% * assemble the observer-based compensator and check the separation principle, and
+% * confirm the compensator reproduces the intended closed-loop poles.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Design problem: for the plant
 %

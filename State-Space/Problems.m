@@ -1,6 +1,9 @@
 %% State-Space -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 9: end-of-chapter style
-% controllability/observability problem set.
+% *Practice: controllability and observability of given systems.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Test Controllability and Observability
 % For $\dot{x}=Ax+Bu,\ y=Cx$ with

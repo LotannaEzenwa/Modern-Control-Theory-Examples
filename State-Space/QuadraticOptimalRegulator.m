@@ -1,5 +1,15 @@
 %% Quadratic Optimal Regulator (LQR)
-% Ogata, Modern Control Engineering, Ch. 10: Quadratic Optimal Control
+% *Letting a cost function choose the feedback gain for you.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * minimize $J=\int(x^TQx+u^TRu)\,dt$ with |lqr| and the Riccati equation,
+% * see how the $Q$/$R$ weights trade response speed against control effort, and
+% * verify LQR's guaranteed phase margin with |margin|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Rather than placing poles at hand-chosen locations, the *linear
 % quadratic regulator* (LQR) chooses the feedback gain $K$ in $u=-Kx$ to

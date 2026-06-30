@@ -1,6 +1,15 @@
 %% Observability
-% Ogata, Modern Control Engineering, Ch. 9: Observability of Linear
-% Time-Invariant Systems
+% *Can we reconstruct the state from the output?*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * test observability with the |obsv| rank condition and the PBH test,
+% * see the duality between observability and controllability, and
+% * watch a second sensor restore a lost mode.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A system is *completely observable* if the initial state $x(0)$ can be
 % determined from knowledge of the output $y(t)$ over a finite time

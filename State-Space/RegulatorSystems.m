@@ -1,6 +1,15 @@
 %% Regulator Systems: Combined State Feedback and Observer
-% Ogata, Modern Control Engineering, Ch. 10: Observed-State Feedback
-% Control Systems
+% *The separation principle: design the controller and observer separately.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * combine a state-feedback gain $K$ with an observer gain $G$,
+% * verify the separation principle in the augmented eigenvalues, and
+% * read off the observer-based compensator's transfer function.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % When the full state is not measurable, the *separation principle*
 % justifies designing the state-feedback gain $K$ (from |PolePlacement.m|)

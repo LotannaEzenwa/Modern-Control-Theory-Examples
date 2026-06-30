@@ -1,5 +1,15 @@
 %% Full-Order State Observers
-% Ogata, Modern Control Engineering, Ch. 10: State Observers
+% *Estimating the state you cannot measure.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 10.
+%
+% In this tutorial you will:
+%
+% * build a Luenberger observer and design its gain $G$ by duality,
+% * simulate the estimate converging to the true state, and
+% * see the speed/noise tradeoff in choosing the observer poles.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % When not all states are directly measurable, a *Luenberger observer*
 % reconstructs an estimate $\hat{x}(t)$ from the measured input/output:

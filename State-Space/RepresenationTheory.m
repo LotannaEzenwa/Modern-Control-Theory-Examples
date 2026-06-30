@@ -1,6 +1,15 @@
 %% State-Space Representation Theory: Canonical Forms
-% Ogata, Modern Control Engineering, Ch. 9: Controllable, Observable, and
-% Diagonal Canonical Forms
+% *Many state models, one transfer function: the canonical realizations.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * build the controllable, observable, and diagonal canonical forms,
+% * confirm they share the same poles and step response, and
+% * relate them through a similarity transformation.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % For a SISO transfer function
 %

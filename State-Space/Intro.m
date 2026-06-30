@@ -1,6 +1,15 @@
 %% Introduction to State-Space Representation
-% Ogata, Modern Control Engineering, Ch. 9: State-Space Representation of
-% Dynamic Systems
+% *Describing a system by first-order state equations $\dot{x}=Ax+Bu$.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * write a mass-spring-damper in state-space form and build it with |ss|,
+% * convert between state-space and transfer function (|tf| / |ss|), and
+% * compute the free response and meet the state-transition matrix.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A state-space model describes a system by a set of first-order
 % differential equations in the *state vector* $x(t)\in\mathbb{R}^n$,

@@ -1,6 +1,15 @@
 %% Controllability
-% Ogata, Modern Control Engineering, Ch. 9: Controllability of
-% Linear Time-Invariant Systems
+% *Can the input steer the state anywhere we want?*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * test controllability with the |ctrb| rank condition,
+% * use the PBH eigenvector test to pinpoint an uncontrollable mode, and
+% * see why controllability is what makes pole placement possible.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A system $\dot{x}=Ax+Bu$ is *completely state controllable* if, for any
 % initial state $x(0)$ and any final state $x_1$, there exists an input
