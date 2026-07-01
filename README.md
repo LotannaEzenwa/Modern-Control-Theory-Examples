@@ -57,9 +57,11 @@ Suggested reading order:
 | `Frequency-Response/` | Bode, polar/Nyquist plots, gain/phase margins, frequency-domain design |
 | `PID Controllers/` | P/PI/PD/PID, Ziegler–Nichols and frequency-domain tuning |
 | `State-Space/` | State models, controllability/observability, pole placement, observers, LQR, robustness |
+| `Servo-and-Tracking/` | Integral control, disturbance rejection, and two-degree-of-freedom design |
 | `Digital-Control/` | Sampling, ZOH, discretization, digital PID, deadbeat control |
 | `Nonlinear-Systems/` | Phase-plane analysis and Lyapunov stability |
 | `System-Identification/` | Markov parameters from data, OKID, and the ERA realization |
+| `Kalman-Filtering/` | The Kalman filter, its steady-state form, and LQG control |
 | `Case-Studies/` | End-to-end designs that tie the toolbox together (inverted pendulum, DC motor) |
 
 The `HW*/` and `Final/` folders hold the original homework and exam
