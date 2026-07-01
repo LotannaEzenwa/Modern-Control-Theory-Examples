@@ -66,7 +66,7 @@ for g = 1:3
 end
 
 figure
-plot(1:N, errs(2,:),'b', 1:N, errs(3,:),'Color',[0 .6 0], 1:N, errs(1,:),'r','LineWidth',1.1)
+plot(1:N, errs(2,:),'b', 1:N, errs(3,:),'g', 1:N, errs(1,:),'r','LineWidth',1.1)
 grid on
 legend(names{2},names{3},names{1},'Interpreter','latex','FontSize',12)
 title('Optimal vs. Other Fixed Observer Gains','Interpreter','latex','FontSize',15)

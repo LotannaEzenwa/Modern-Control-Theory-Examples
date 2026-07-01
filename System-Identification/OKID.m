@@ -41,7 +41,7 @@ rng(1);
 ll = 60;
 u  = randn(1,ll);
 x0 = [1; 0];
-Y  = lsim(sysd, u(:), [], x0).';     % Y is q-by-ll
+Y  = lsim(sysd, u(:), (0:ll-1)*T, x0).';     % Y is q-by-ll
 
 %% The deadbeat observer at the heart of OKID
 % Pick an observer gain $G$ that places the eigenvalues of $A+GC$ at the

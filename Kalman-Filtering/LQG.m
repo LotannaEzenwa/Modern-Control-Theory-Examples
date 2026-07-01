@@ -68,7 +68,7 @@ y_ol = lsim(ss(A,G,C,0), w, t, x0);   % open loop (u = 0)
 
 Bz = [G, zeros(2,1); zeros(2,1), Kf]; % [w; v] -> [x; xhat]
 sys_cl = ss(Az, Bz, [1 0 0 0], 0);    % output = true x1
-x1_cl  = lsim(sys_cl, [w; v], t, [x0; 0; 0]);
+x1_cl  = lsim(sys_cl, [w; v].', t, [x0; 0; 0]);   % inputs as columns: N-by-2
 
 figure
 plot(t, y_ol,'b', t, x1_cl,'r','LineWidth',1.2)
