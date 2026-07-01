@@ -78,3 +78,8 @@ title('Effect of Thermal Resistance on Response Speed','Interpreter','latex','Fo
 ylabel('$\theta_o(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Notice that changing |R| moves the time constant but never the final
+%   reading -- try |R = 0.3| and confirm the steady value is unchanged.
+% * Estimate the time to reach 95% (about 3*tau) and check it on the plot.

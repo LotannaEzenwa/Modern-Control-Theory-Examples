@@ -89,3 +89,9 @@ title('Two-Tank Interacting System Step Response','Interpreter','latex','FontSiz
 ylabel('$h_2(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Double the tank area |C| and notice the time constant |tau=RC| double,
+%   so the level responds half as fast.
+% * Compare the two-tank |step| with a single first-order lag and see the
+%   extra S-shaped delay a second tank adds.

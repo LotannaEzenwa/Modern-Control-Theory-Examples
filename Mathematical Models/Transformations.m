@@ -116,3 +116,9 @@ title('Block Reduction: Before vs. After Closing the Outer Loop','Interpreter','
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Flip the inner loop to positive feedback with
+%   |feedback(series(G1n,G2n),H1n,+1)| and notice the poles move the other way.
+% * Set |H2s = 1| and re-derive |T_mason|, then check it against the numeric
+%   |feedback| result -- they should still agree.

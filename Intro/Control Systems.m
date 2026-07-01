@@ -120,3 +120,10 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % topic directories of this repository: |Mathematical Models/|,
 % |Transient and Steady-State/|, |Root-Locus/|, |Frequency-Response/|,
 % |PID Controllers/|, and |State-Space/|.
+
+%% Try it yourself
+% * Change the proportional gain |Kp| from 9 to 2 and re-run: notice the
+%   closed-loop response gets slower and the residual disturbance error
+%   grows -- feedback helps *less* with less loop gain.
+% * Move the disturbance earlier (|d_step_time = 1|) and watch the
+%   open-loop curve shift permanently while the closed loop recovers.

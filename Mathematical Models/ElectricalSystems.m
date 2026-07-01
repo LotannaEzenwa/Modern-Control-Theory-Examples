@@ -76,3 +76,9 @@ G_opamp = tf(-[R2*C2 1],[R1*C2 0])
 figure
 bode(G_opamp)
 title('Op-Amp PI Circuit Frequency Response','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Shrink |R| toward 0 and notice the RLC response become more oscillatory
+%   (less damping) -- the electrical twin of a light mechanical damper.
+% * Check the analogy: build the mass-spring-damper with |m=L, b=R, k=1/C|
+%   and confirm its poles match the circuit.

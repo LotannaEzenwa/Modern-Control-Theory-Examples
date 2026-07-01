@@ -81,3 +81,8 @@ title('Two-Mass System Step Response ($x_1$)','Interpreter','latex','FontSize',2
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Lower the damping to |b = 1| and notice the step response start to
+%   overshoot -- the same underdamped behavior as a lightly damped circuit.
+% * Set |k = 0| (no spring) and watch the system lose its restoring force.

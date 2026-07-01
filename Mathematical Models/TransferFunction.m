@@ -80,3 +80,8 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % Transfer functions of this form -- built directly from a governing
 % ODE -- are the common currency used throughout the rest of this
 % directory to model mechanical, electrical, fluid, and thermal systems.
+
+%% Try it yourself
+% * Change the numerator to |num = [1 2]| (add a zero) and notice how the
+%   zero speeds up the early response without moving the poles.
+% * Compare |zpk(G)| with |tf(G)| -- the same system in two readable forms.

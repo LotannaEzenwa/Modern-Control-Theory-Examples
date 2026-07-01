@@ -81,3 +81,9 @@ title('Disturbance Rejection via Feedback','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Raise |K| to 20 and notice the closed-loop steady-state error 1/(1+K)
+%   shrink further while the open loop drifts even farther off.
+% * Halve the plant gain and watch the closed loop barely move -- feedback
+%   desensitizes the output to plant changes.

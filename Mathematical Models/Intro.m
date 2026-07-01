@@ -97,3 +97,8 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % (mechanical, electrical, fluid, thermal) whose governing equations
 % produce transfer functions of this type, plus the block-diagram
 % algebra used to combine them into full control systems.
+
+%% Try it yourself
+% * Swap |G = tf(1,[1 3 2])| for one with complex poles, e.g.
+%   |tf(1,[1 1 4])|, and notice the step response now overshoots and rings.
+% * Use |dcgain(G)| to predict the final value before you plot it.

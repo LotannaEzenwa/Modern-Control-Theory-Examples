@@ -79,3 +79,9 @@ title('Problem 3: Before vs. After Closing the Loop','Interpreter','latex','Font
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, change the target |zeta| to 0.2 and recompute |b|:
+%   notice how much less damping the system then needs.
+% * In Problem 3, remove the integrator (|G2 = tf(5,[1 5])|) and see the
+%   steady-state error stop being zero.
