@@ -31,30 +31,36 @@ function publish_all(varargin)
     here = fileparts(mfilename('fullpath'));
     fprintf('Publishing tutorials (%s, evalCode=%d)\n', opts.format, opts.evalCode);
 
-    % Pin the graphics-root colors to a professional dark-on-light scheme for
-    % the duration of the run, then restore the user's defaults via onCleanup.
-    % Two problems this solves:
-    %   (1) Published LaTeX equations and figure titles/labels are captured
-    %       from offscreen text objects whose color comes from these root
-    %       defaults; if a startup.m changed them they can render white and
-    %       become invisible -- so we pin all text/axis colors dark.
-    %   (2) On a white HTML page a pure-white figure has no visible edge, so
-    %       the plots "disappear". We give the figure a soft gray frame around
-    %       a white plot area (the classic report look), keep a visible grid,
-    %       and -- critically -- turn OFF InvertHardcopy, because publish/print
-    %       otherwise forces the captured background back to white regardless
-    %       of the FigureColor we set.
+    % Make every published figure a crisp, readable dark-on-white plot,
+    % regardless of the user's MATLAB desktop theme. Two coordinated pieces:
+    %
+    %   (1) Force a LIGHT graphics theme for the run (R2025a+). Without this,
+    %       a user in MATLAB's dark theme gets black-background figures in the
+    %       report. force_light_theme() sets it via the settings API and is
+    %       guarded, so older releases just skip it and fall back on (2).
+    %
+    %   (2) Pin the graphics-root text/axis/grid colors dark and leave
+    %       InvertHardcopy at its default 'on' (which whitens the figure
+    %       background on publish). This keeps published LaTeX equations and
+    %       figure labels black even if a startup.m changed the defaults, and
+    %       guarantees a white -- never black -- background even when the theme
+    %       cannot be set. A faint gray plot area and a soft-but-visible grid
+    %       give the figures contrast against the white page.
+    %
+    % NOTE: we deliberately do NOT set InvertHardcopy 'off' or a gray figure
+    % background -- under a dark desktop theme that captures the dark UI and
+    % produces black figures.
+    themeCleanup = force_light_theme(); %#ok<NASGU>  % restored on function exit
+
     rootProps = { ...
         'defaultTextColor',            [0 0 0]; ...
-        'defaultAxesColor',            [1 1 1]; ...      % white plot area: data stays legible
+        'defaultAxesColor',            [0.965 0.965 0.98]; ... % faint gray plot area for contrast
         'defaultAxesXColor',           [0.15 0.15 0.15]; ...
         'defaultAxesYColor',           [0.15 0.15 0.15]; ...
         'defaultAxesZColor',           [0.15 0.15 0.15]; ...
         'defaultAxesGridColor',        [0.15 0.15 0.15]; ...
-        'defaultAxesGridAlpha',        0.25; ...         % soft, always-visible grid
-        'defaultAxesLineWidth',        0.75; ...         % a slightly heavier axis box
-        'defaultFigureColor',          [0.93 0.93 0.95]; ... % soft gray frame vs. the white page
-        'defaultFigureInvertHardcopy', 'off'};           % keep that gray when published
+        'defaultAxesGridAlpha',        0.3; ...          % soft, always-visible grid
+        'defaultAxesLineWidth',        0.75};            % a slightly heavier axis box
     oldRootVals = cellfun(@(p) get(groot,p), rootProps(:,1), 'UniformOutput', false);
     set(groot, rootProps(:,1)', rootProps(:,2)');
     restoreRoot = onCleanup(@() set(groot, rootProps(:,1)', oldRootVals')); %#ok<NASGU>
@@ -116,6 +122,23 @@ function publish_all(varargin)
     end
     fprintf('Done (%d/%d published). Reports are in each directory''s %s/ subfolder.\n', ...
         total - numel(failures), total, opts.format);
+end
+
+% ------------------------------------------------------------------------
+function c = force_light_theme()
+%FORCE_LIGHT_THEME  Force a light figure graphics theme for this session.
+%   Returns an onCleanup that restores the previous setting. On releases
+%   without themed figures (pre-R2025a) or a different settings path, it
+%   silently does nothing and the caller relies on InvertHardcopy='on'.
+    c = [];
+    try
+        s  = settings;
+        gt = s.matlab.appearance.figure.GraphicsTheme;
+        gt.TemporaryValue = 'light';
+        c = onCleanup(@() clearTemporaryValue(gt));
+    catch
+        % Older release / different settings tree -- rely on InvertHardcopy='on'.
+    end
 end
 
 % ------------------------------------------------------------------------
