@@ -36,7 +36,8 @@ G_rlc = tf(1,[L*C R*C 1])
 figure
 [es,ts] = step(G_rlc);
 plot(ts, ones(size(ts)),'k--', ts, es,'b','LineWidth',1.3)
-legend('Input voltage step $e_i$ (before)','Capacitor voltage $e_o(t)$ (after)','Interpreter','latex','FontSize',11,'Location','east')
+legend('Input voltage step $e_i$ (before)','Capacitor voltage $e_o(t)$ (after)', ...
+    'Interpreter','latex','FontSize',11,'Location','east')
 title('Input vs. Output: Series RLC Circuit','Interpreter','latex','FontSize',16)
 ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)

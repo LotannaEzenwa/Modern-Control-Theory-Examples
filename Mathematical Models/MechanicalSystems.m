@@ -35,7 +35,8 @@ G_trans = tf(1,[m b k])
 figure
 [xs,ts] = step(G_trans);
 plot(ts, ones(size(ts)),'k--', ts, xs,'b','LineWidth',1.3)
-legend('Applied force step (before)','Displacement $x(t)$ (after)','Interpreter','latex','FontSize',11,'Location','east')
+legend('Applied force step (before)','Displacement $x(t)$ (after)', ...
+    'Interpreter','latex','FontSize',11,'Location','east')
 title('Force In vs. Displacement Out (Mass-Spring-Damper)','Interpreter','latex','FontSize',15)
 ylabel('amplitude','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
