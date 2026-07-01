@@ -151,6 +151,13 @@ function publish_all(varargin)
     end
     fprintf('Done (%d/%d published). Reports are in each directory''s %s/ subfolder.\n', ...
         total - numel(failures), total, opts.format);
+
+    % Collect the scattered per-directory PDFs into one top-level folder for
+    % easy browsing/sharing. Only meaningful for PDF output; neat() itself is
+    % a no-op for any topic that produced nothing.
+    if strcmpi(opts.format,'pdf')
+        neat('dirs', opts.dirs);
+    end
 end
 
 % ------------------------------------------------------------------------
