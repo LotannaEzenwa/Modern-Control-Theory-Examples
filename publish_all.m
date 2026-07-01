@@ -37,14 +37,16 @@ function publish_all(varargin)
             continue
         end
         files = dir(fullfile(thisDir,'*.m'));
+        startDir = pwd;
+        cd(thisDir);                 % run from inside the folder so a local file
+                                     % (e.g. Intro.m) shadows same-named files on the path
         for k = 1:numel(files)
-            fpath = fullfile(thisDir, files(k).name);
-            if is_function_file(fpath)
+            if is_function_file(files(k).name)
                 continue   % skip function files -- they are utilities, not tutorials
             end
             fprintf('  publishing %s%s%s ...\n', opts.dirs{d}, filesep, files(k).name);
             try
-                publish(fpath, ...
+                publish(files(k).name, ...
                     'format',    opts.format, ...
                     'evalCode',  logical(opts.evalCode), ...
                     'outputDir', fullfile(thisDir,'html'), ...
@@ -55,6 +57,7 @@ function publish_all(varargin)
                 warning('publish_all:failed','  FAILED on %s: %s', files(k).name, err.message);
             end
         end
+        cd(startDir);
     end
     fprintf('Done. Reports are in each directory''s html/ subfolder.\n');
 end

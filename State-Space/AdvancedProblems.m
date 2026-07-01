@@ -64,7 +64,7 @@ disp([controller_poles observer_poles])
 x0 = [0.5; -0.2; 0.1];
 e0 = x0;
 z0 = [x0;e0];
-sys_aug = ss(A_aug, zeros(2*n,1), [eye(n) zeros(n)], zeros(2*n,1));
+sys_aug = ss(A_aug, zeros(2*n,1), [eye(n) zeros(n)], zeros(n,1));
 t = 0:0.001:2;
 [x_resp,~] = initial(sys_aug,z0,t);
 
