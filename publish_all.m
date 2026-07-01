@@ -192,6 +192,8 @@ function publish_pdf_via_latex(mfile, outDir, evalCode)
         'maxOutputLines', 30);
     close all
 
+    patch_latex_report(texPath);        % wider margins, smaller code font, bigger figures
+
     [texDir, texName] = fileparts(texPath);
     prevDir = pwd;
     cd(texDir);                          % compile from the folder holding the images
@@ -216,6 +218,32 @@ function publish_pdf_via_latex(mfile, outDir, evalCode)
     for k = 1:numel(figs)
         delete_quiet(fullfile(texDir, figs(k).name));
     end
+end
+
+% ------------------------------------------------------------------------
+function patch_latex_report(texPath)
+%PATCH_LATEX_REPORT  Tune the MATLAB-generated .tex for a nicer PDF.
+%   MATLAB's LaTeX template uses default article margins, 10pt verbatim code,
+%   and hardcodes 4in-wide figures -- so long code lines overflow the right
+%   margin ("Overfull \hbox") and the plots look small. Widen the margins,
+%   shrink the code font (which removes the overfulls), and enlarge every
+%   figure. Uses only base LaTeX + geometry, so it needs no extra packages.
+    txt = fileread(texPath);
+
+    inject = strjoin({ ...
+        '\usepackage[letterpaper,margin=0.75in]{geometry}', ...
+        '\makeatletter', ...
+        '\g@addto@macro\@verbatim{\footnotesize}', ... % smaller code font -> no overfull
+        '\makeatother'}, newline);
+    txt = strrep(txt, '\begin{document}', [inject newline '\begin{document}']);
+
+    % Enlarge every included figure to nearly the (now wider) text width.
+    txt = regexprep(txt, '(\\includegraphics)\s*(\[[^\]]*\])?', '$1[width=6.5in]');
+
+    fid = fopen(texPath, 'w');
+    if fid < 0, error('Could not rewrite %s', texPath); end
+    closer = onCleanup(@() fclose(fid)); %#ok<NASGU>
+    fwrite(fid, txt);
 end
 
 % ------------------------------------------------------------------------
