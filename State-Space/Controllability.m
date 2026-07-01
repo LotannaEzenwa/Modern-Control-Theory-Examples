@@ -92,3 +92,9 @@ title('Singular Values of the Controllability Matrix','Interpreter','latex','Fon
 ylabel('$\sigma_i$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('Index $i$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Change |B2| to |[1;1]| and notice Example 2 become controllable -- the
+%   input now reaches both modes.
+% * Confirm you cannot |place| the eigenvalue of an uncontrollable mode no
+%   matter what gain you choose.

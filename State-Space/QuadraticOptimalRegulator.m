@@ -100,3 +100,8 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 sys_ol_lqr = ss(A,B,K,0);
 [~,PM_lqr] = margin(sys_ol_lqr);
 fprintf('\nLQR loop-gain phase margin at plant input = %.2f deg (>=60 guaranteed)\n', PM_lqr)
+
+%% Try it yourself
+% * Crank |Q(1,1)| up to 500 and notice the poles get faster and |K| grow --
+%   you are buying speed with control effort.
+% * Raise |R| instead and watch the response get gentle and the gain shrink.

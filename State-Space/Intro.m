@@ -108,3 +108,8 @@ title('Zero-Input (Free) Response from $x(0)=[1;0]$','Interpreter','latex','Font
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Change the damping |b| to 0.5 and notice the free response ring longer
+%   (the state-transition matrix $e^{At}$ decays more slowly).
+% * Round-trip the model with |tf(ss(G3))| and confirm you recover |G3|.

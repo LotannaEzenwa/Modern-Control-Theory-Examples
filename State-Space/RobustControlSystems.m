@@ -85,3 +85,9 @@ for p = perturbations
     fprintf('damping x%.1f: closed-loop poles = %s, stable = %d\n', ...
         p, mat2str(eig(A_true-B*K)',4), is_stable)
 end
+
+%% Try it yourself
+% * Widen the perturbation range (say 0.5 to 1.5) and find where the closed
+%   loop finally goes unstable.
+% * Retune |Q| and compare the sensitivity peak |max(magS)| -- a lower peak
+%   means more robust disturbance rejection.

@@ -70,3 +70,9 @@ figure
 pzmap(sys4)
 grid on
 title('Problem 4: Pole-Zero Map (No Cancellation)','Interpreter','latex','FontSize',18)
+
+%% Try it yourself
+% * In Problem 2, change |A| and re-solve |detCo2==0| to find that system's
+%   own uncontrollable |beta|.
+% * In Problem 4, force a pole-zero cancellation (put the zero at -1) and
+%   watch observability drop below full rank.

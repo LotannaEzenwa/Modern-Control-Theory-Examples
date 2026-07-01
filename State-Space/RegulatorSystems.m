@@ -113,3 +113,9 @@ D_c = 0;
 Gc_compensator = tf(ss(A_c,B_c,C_c,D_c));
 fprintf('\nObserver-based compensator transfer function:\n')
 Gc_compensator
+
+%% Try it yourself
+% * Change the observer poles and confirm the augmented eigenvalues stay
+%   exactly the controller poles union the observer poles (separation).
+% * Give the observer a worse initial guess and watch the estimation error
+%   decay independently of the regulation.

@@ -129,3 +129,9 @@ title('Pole Location vs. Response Speed','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Move the desired poles further left (faster) and notice |norm(K)| and
+%   the initial control effort grow.
+% * Set the reference gain to 1 (drop |Nr|) and watch a steady-state error
+%   appear.

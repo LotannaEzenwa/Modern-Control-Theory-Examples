@@ -107,3 +107,8 @@ T = V_eig;
 A_check = T\A_cc*T;
 fprintf('T^{-1}*A_cc*T (should match diag(poles), up to reordering):\n')
 disp(real(A_check))
+
+%% Try it yourself
+% * Give |G| a repeated pole and notice the diagonal (modal) form break down
+%   -- |residue| needs distinct poles.
+% * Verify |tf(sys_cc)|, |tf(sys_oc)|, and |tf(sys_diag)| are all identical.

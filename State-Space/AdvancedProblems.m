@@ -100,3 +100,9 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 T_closed = feedback(G*Gc,1);
 fprintf('\nClosed-loop poles via feedback(G*Gc,1):\n')
 disp(pole(T_closed)')
+
+%% Try it yourself
+% * Speed up only the observer poles and notice the regulator response
+%   barely change while the estimation transient shortens.
+% * Confirm |pole(feedback(G*Gc,1))| matches the controller-union-observer
+%   pole set you designed.

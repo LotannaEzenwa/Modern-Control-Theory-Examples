@@ -86,3 +86,8 @@ title('Singular Values of the Observability Matrix','Interpreter','latex','FontS
 ylabel('$\sigma_i$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('Index $i$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Change |C2| to |[0 1]| and notice which mode becomes the hidden one.
+% * Check Kalman duality yourself: compare |obsv(A1,C1)| with
+%   |ctrb(A1',C1')'|.

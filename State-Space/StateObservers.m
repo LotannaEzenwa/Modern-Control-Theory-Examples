@@ -108,3 +108,9 @@ title('What Changed: Error Decay vs. Observer Speed','Interpreter','latex','Font
 ylabel('$\|e(t)\|$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Slow the observer poles toward the controller poles and notice the
+%   estimate take much longer to catch the true state.
+% * Start the observer closer to the truth (|x0_hat = [0.8;0.4;-0.4]|) and
+%   see the error start small and vanish quickly.
