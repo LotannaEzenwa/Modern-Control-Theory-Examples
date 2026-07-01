@@ -16,11 +16,18 @@
 % Run with |publish('DiscretePID.m')|, or step through with *Ctrl+Enter*.
 
 %% Plant and a continuous PID design
-% Plant $G(s)=\frac{1}{(s+1)(s+3)}$. We first design a continuous PID
-% $G_c(s)=K_p+K_i/s+K_ds$ that gives a good continuous response.
+% Plant $G(s)=\frac{1}{(s+1)(s+3)}$. We first design a continuous PID with a
+% *filtered* derivative,
+%
+% $$ G_c(s) = K_p + \frac{K_i}{s} + \frac{K_d s}{T_f s + 1}, $$
+%
+% that gives a good continuous response. The derivative filter $T_f$ keeps
+% the controller proper: a pure $K_d s$ term has unbounded high-frequency
+% gain, which a real controller cannot realize and which a discretization
+% turns into a destabilizing ringing mode.
 G  = tf(1,conv([1 1],[1 3]));
-Kp = 30; Ki = 40; Kd = 5;
-Cc = pid(Kp,Ki,Kd);
+Kp = 8; Ki = 12; Kd = 2; Tf = 0.05;   % Tf: derivative-filter time constant
+Cc = pid(Kp,Ki,Kd,Tf);
 Tc = feedback(Cc*G,1);
 
 %% Discretize the controller (emulation design)
@@ -55,13 +62,15 @@ xlabel('$t$','Interpreter','latex','FontSize',16)
 
 %% Before vs. after: the sample time matters
 % Emulation only works if you sample fast enough. Re-discretize at a much
-% coarser rate and watch the extra phase lag eat the stability margin.
-T2  = 0.4;
+% coarser rate and watch the extra phase lag erode the damping: the same
+% controller now overshoots far more (still stable here), and pushed a
+% little further it would go unstable.
+T2  = 0.5;
 Cd2 = c2d(Cc,T2,'tustin');  Gd2 = c2d(G,T2,'zoh');
 Td2 = feedback(Cd2*Gd2,1);
 figure
 step(Td,'r--', Td2,'k')
-legend('Fast sampling ($T=0.05$)','Coarse sampling ($T=0.4$)','Interpreter','latex','FontSize',12)
+legend('Fast sampling ($T=0.05$)','Coarse sampling ($T=0.5$)','Interpreter','latex','FontSize',12)
 title('Digital PID: Fast vs. Coarse Sampling','Interpreter','latex','FontSize',15)
 ylabel('$y$','Interpreter','latex','FontSize',16); set(get(gca,'YLabel'),'Rotation',0)
 xlabel('$t$','Interpreter','latex','FontSize',16)
@@ -78,5 +87,5 @@ xlabel('$t$','Interpreter','latex','FontSize',16)
 %% Try it yourself
 % * Rebuild the controller with |'zoh'| instead of |'tustin'| and notice the
 %   integrator approximation shift slightly at the fast rate.
-% * Push |T2| past the point where the coarse-sampled loop goes unstable and
-%   watch the step response diverge.
+% * Push |T2| past about |0.55| and watch the coarse-sampled loop lose
+%   stability -- the step response starts to diverge.
