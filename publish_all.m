@@ -199,11 +199,27 @@ function publish_pdf_via_latex(mfile, outDir, evalCode)
     cd(texDir);                          % compile from the folder holding the images
     restore = onCleanup(@() cd(prevDir)); %#ok<NASGU>
 
-    cmd = sprintf('pdflatex -interaction=nonstopmode -halt-on-error "%s.tex"', texName);
-    [~, log1] = system(cmd);
-    system(cmd);                         % second pass resolves the table of contents
-
+    % If a previous PDF is still open in a viewer it is locked, and pdflatex
+    % cannot overwrite it -- detect that up front and give a clear message
+    % rather than pdflatex's cryptic "I can't write on file" emergency stop.
     pdfFile = fullfile(texDir, [texName '.pdf']);
+    if isfile(pdfFile)
+        try
+            delete(pdfFile);
+        catch
+            error(['%s.pdf is open/locked in another program (e.g. a PDF ' ...
+                   'viewer) -- close it and re-run.'], texName);
+        end
+    end
+
+    % Read stdin from the null device so pdflatex can never hang waiting for
+    % input, and capture BOTH passes so its verbose log does not flood the
+    % console (we keep the first pass's text only to report on failure).
+    nul = '/dev/null'; if ispc, nul = 'NUL'; end
+    cmd = sprintf('pdflatex -interaction=nonstopmode -halt-on-error "%s.tex" < %s', texName, nul);
+    [~, log1] = system(cmd);
+    [~, ~]    = system(cmd);   % second pass resolves the table of contents
+
     if ~isfile(pdfFile)
         error('pdflatex did not produce %s.pdf. Tail of log:\n%s', texName, log_tail(log1));
     end
