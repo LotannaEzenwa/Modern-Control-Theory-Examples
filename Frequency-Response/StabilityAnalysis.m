@@ -25,8 +25,12 @@
 % additional phase lag that can be tolerated before instability.
 
 %% Worked Example
-% $G(s) = \frac{20}{s(s+1)(s+4)}$
-G = tf(20,conv([1 0],conv([1 1],[1 4])));
+% $G(s) = \frac{5}{s(s+1)(s+4)}$
+% (Gain 5 sits comfortably below the critical gain of 20 for this plant,
+% so the margins come out positive -- exactly the healthy case the next
+% section interprets. Watch what happens to these numbers at $K=20$ in the
+% gain sweep further down.)
+G = tf(5,conv([1 0],conv([1 1],[1 4])));
 
 [Gm,Pm,Wcp,Wcg] = margin(G);
 GmdB = 20*log10(Gm);
