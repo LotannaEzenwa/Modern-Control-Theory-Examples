@@ -52,10 +52,10 @@ set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Block-Diagram Reduction
-% Reduce the cascaded, unity-feedback system with inner loop
-% $G_1(s)=\frac{1}{s+2}$, forward gain $G_2(s)=\frac{5}{s}$, and outer
-% unity feedback, to a single closed-loop transfer function, then
-% verify its steady-state step value via the final value theorem.
+% Reduce a unity-feedback system whose forward path is the cascade of
+% $G_1(s)=\frac{1}{s+2}$ and $G_2(s)=\frac{5}{s}$ (in series) to a single
+% closed-loop transfer function, then verify its steady-state step value
+% via the final value theorem.
 G1 = tf(1,[1 2]);
 G2 = tf(5,[1 0]);
 fwd = series(G1,G2);          % forward path only (before closing the loop)
