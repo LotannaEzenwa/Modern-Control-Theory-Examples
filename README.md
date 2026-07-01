@@ -59,6 +59,7 @@ Suggested reading order:
 | `State-Space/` | State models, controllability/observability, pole placement, observers, LQR, robustness |
 | `Digital-Control/` | Sampling, ZOH, discretization, digital PID, deadbeat control |
 | `Nonlinear-Systems/` | Phase-plane analysis and Lyapunov stability |
+| `System-Identification/` | Markov parameters from data, OKID, and the ERA realization |
 | `Case-Studies/` | End-to-end designs that tie the toolbox together (inverted pendulum, DC motor) |
 
 The `HW*/` and `Final/` folders hold the original homework and exam

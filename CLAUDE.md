@@ -35,6 +35,7 @@ The codebase is organized into topic-based directories and homework assignment d
 - `State-Space/` — state-space representation, controllability, observability, pole placement, LQR, state observers, robust control
 - `Digital-Control/` — sampling/ZOH, `c2d` discretization, digital PID, deadbeat control
 - `Nonlinear-Systems/` — phase-plane analysis, Lyapunov stability
+- `System-Identification/` — Markov parameters from data, OKID (uses the root helper functions), ERA realization
 - `Case-Studies/` — end-to-end designs (inverted pendulum LQR, DC motor position control)
 
 **Topic-directory content**: Each `.m` file in the topic directories is a self-contained, runnable tutorial for its named subject, written in the "code + full derivation" style — `%%` cell blocks with LaTeX-formatted derivations interleaved with Control System Toolbox code, based on the corresponding chapters of Ogata. (These files previously held byte-identical copies of an unrelated discrete observer Markov-parameter script; they have since been replaced with distinct, topic-correct content.) When adding new examples, follow the same style and keep each file's content matched to its name and directory.
