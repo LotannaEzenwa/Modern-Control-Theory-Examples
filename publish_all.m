@@ -10,17 +10,19 @@ function publish_all(varargin)
 %   PUBLISH_ALL('dirs',{'Root-Locus'}) restricts to the named directories.
 %   PUBLISH_ALL('evalCode',false) typesets the tutorials WITHOUT running
 %       the code (fast, no figures) -- handy for a quick formatting check.
-%   PUBLISH_ALL('resolution',300) sets the raster DPI for the equation and
-%       figure images (default 200). MATLAB rasterizes LaTeX equations to
-%       bitmaps at the screen DPI (~96), which look blurry in a PDF; a
-%       higher value renders them with more pixels and much crisper. For
-%       TRUE vector (infinitely sharp) math, publish to LaTeX and compile
-%       with pdflatex -- see the note in the code below.
+%
+%   PDF quality: by default (format 'pdf') PUBLISH_ALL renders each tutorial
+%   to LaTeX and compiles it with pdflatex, so equations are TRUE vector math
+%   -- sharp at any zoom -- instead of the blurry bitmaps MATLAB's built-in
+%   PDF export produces. This requires pdflatex on the system PATH (TeX Live,
+%   MiKTeX, or MacTeX). If pdflatex is not found, PUBLISH_ALL falls back to
+%   MATLAB's built-in bitmap PDF and says so. Pass 'vector',false to force the
+%   built-in bitmap PDF, or 'format','html' for HTML.
 %
 %   Examples:
-%     publish_all                       % all tutorials -> PDF
+%     publish_all                       % all tutorials -> vector PDF
 %     publish_all('dirs',{'Digital-Control'})
-%     publish_all('resolution',300)     % sharper equations/figures
+%     publish_all('vector',false)       % MATLAB's built-in bitmap PDF
 %     publish_all('format','html','evalCode',true)
 %
 %   Helper/function files and the homework folders are skipped; only the
@@ -32,7 +34,7 @@ function publish_all(varargin)
     p.addParameter('format','pdf',@ischar);
     p.addParameter('evalCode',true,@(x)islogical(x)||isnumeric(x));
     p.addParameter('dirs',default_dirs(),@iscell);
-    p.addParameter('resolution',200,@(x)isnumeric(x)&&isscalar(x)&&x>0);
+    p.addParameter('vector',true,@(x)islogical(x)||isnumeric(x));
     p.parse(varargin{:});
     opts = p.Results;
 
@@ -73,14 +75,20 @@ function publish_all(varargin)
     set(groot, rootProps(:,1)', rootProps(:,2)');
     restoreRoot = onCleanup(@() set(groot, rootProps(:,1)', oldRootVals')); %#ok<NASGU>
 
-    % Sharpen the rasterized equation/figure images. MATLAB's PUBLISH renders
-    % LaTeX equations to bitmaps at the screen DPI (~96), so inline math looks
-    % blurry in a PDF. Temporarily raising the reported screen DPI makes those
-    % images render with proportionally more pixels -> much crisper. Guarded,
-    % because ScreenPixelsPerInch is read-only on some releases; restored on
-    % exit. (For TRUE vector math, publish with 'format','latex' and compile
-    % the .tex with pdflatex -- equations stay as real LaTeX, not images.)
-    dpiCleanup = boost_screen_dpi(opts.resolution); %#ok<NASGU>
+    % Decide whether to produce vector PDFs via pdflatex. Only relevant for
+    % PDF output; needs pdflatex on PATH. If requested but unavailable, warn
+    % once and fall back to MATLAB's built-in (bitmap) PDF export.
+    useLatex = logical(opts.vector) && strcmpi(opts.format,'pdf');
+    if useLatex && ~has_pdflatex()
+        warning('publish_all:noPdflatex', ...
+            ['pdflatex not found on PATH -- falling back to MATLAB''s bitmap ' ...
+             'PDF export (equations will be lower quality). Install TeX Live / ' ...
+             'MiKTeX / MacTeX, or pass ''vector'',false to silence this.']);
+        useLatex = false;
+    end
+    if useLatex
+        fprintf('Using pdflatex for vector-quality equations.\n');
+    end
 
     % Build the full work list up front so the progress bar knows the total.
     % (Function files and the homework folders are excluded here, not mid-loop,
@@ -116,12 +124,16 @@ function publish_all(varargin)
         cd(thisDir);                 % run from inside the folder so a local file
                                      % (e.g. Intro.m) shadows same-named files on the path
         try
-            publish(jobs(j).file, ...
-                'format',    opts.format, ...
-                'evalCode',  logical(opts.evalCode), ...
-                'outputDir', fullfile(thisDir,opts.format), ...
-                'showCode',  true, ...
-                'maxOutputLines', 30);
+            if useLatex
+                publish_pdf_via_latex(jobs(j).file, fullfile(thisDir,'pdf'), opts.evalCode);
+            else
+                publish(jobs(j).file, ...
+                    'format',    opts.format, ...
+                    'evalCode',  logical(opts.evalCode), ...
+                    'outputDir', fullfile(thisDir,opts.format), ...
+                    'showCode',  true, ...
+                    'maxOutputLines', 30);
+            end
             close all
         catch err
             failures{end+1} = sprintf('%s: %s', label, err.message); %#ok<AGROW>
@@ -159,21 +171,67 @@ function c = force_light_theme()
 end
 
 % ------------------------------------------------------------------------
-function c = boost_screen_dpi(dpi)
-%BOOST_SCREEN_DPI  Temporarily raise the reported screen DPI for sharper
-%   published equation/figure bitmaps. Returns an onCleanup that restores
-%   the original value. If ScreenPixelsPerInch is read-only on this release,
-%   it silently does nothing.
-    c = [];
-    try
-        oldDPI = get(groot,'ScreenPixelsPerInch');
-        if dpi > oldDPI
-            set(groot,'ScreenPixelsPerInch',dpi);
-            c = onCleanup(@() set(groot,'ScreenPixelsPerInch',oldDPI));
-        end
-    catch
-        % Read-only on this release -- publish at the native DPI.
+function tf = has_pdflatex()
+%HAS_PDFLATEX  True if a pdflatex executable is callable on the PATH.
+    [status,~] = system('pdflatex --version');
+    tf = (status == 0);
+end
+
+% ------------------------------------------------------------------------
+function publish_pdf_via_latex(mfile, outDir, evalCode)
+%PUBLISH_PDF_VIA_LATEX  Publish MFILE to a vector-quality PDF in OUTDIR.
+%   Publishes to LaTeX (so equations stay as real, vector LaTeX rather than
+%   bitmaps), then compiles the .tex with pdflatex and cleans up the
+%   intermediate files, leaving just <name>.pdf. Errors if pdflatex fails.
+    texPath = publish(mfile, ...
+        'format',        'latex', ...
+        'imageFormat',   'png', ...     % figures raster; equations stay vector
+        'evalCode',      logical(evalCode), ...
+        'outputDir',     outDir, ...
+        'showCode',      true, ...
+        'maxOutputLines', 30);
+    close all
+
+    [texDir, texName] = fileparts(texPath);
+    prevDir = pwd;
+    cd(texDir);                          % compile from the folder holding the images
+    restore = onCleanup(@() cd(prevDir)); %#ok<NASGU>
+
+    cmd = sprintf('pdflatex -interaction=nonstopmode -halt-on-error "%s.tex"', texName);
+    [~, log1] = system(cmd);
+    system(cmd);                         % second pass resolves the table of contents
+
+    pdfFile = fullfile(texDir, [texName '.pdf']);
+    if ~isfile(pdfFile)
+        error('pdflatex did not produce %s.pdf. Tail of log:\n%s', texName, log_tail(log1));
     end
+
+    % Tidy up: remove aux files, the intermediate .tex, and the figure PNGs
+    % (now embedded in the PDF). Leave only the finished PDF.
+    exts = {'.aux','.log','.out','.toc','.tex'};
+    for e = 1:numel(exts)
+        delete_quiet(fullfile(texDir, [texName exts{e}]));
+    end
+    figs = dir(fullfile(texDir, [texName '_*.png']));
+    for k = 1:numel(figs)
+        delete_quiet(fullfile(texDir, figs(k).name));
+    end
+end
+
+% ------------------------------------------------------------------------
+function delete_quiet(f)
+%DELETE_QUIET  Delete F if it exists, ignoring errors.
+    if isfile(f)
+        try, delete(f); catch, end
+    end
+end
+
+% ------------------------------------------------------------------------
+function s = log_tail(txt)
+%LOG_TAIL  Last few lines of a pdflatex log, for error messages.
+    lines = strsplit(txt, newline);
+    n = numel(lines);
+    s = strjoin(lines(max(1,n-12):n), newline);
 end
 
 % ------------------------------------------------------------------------

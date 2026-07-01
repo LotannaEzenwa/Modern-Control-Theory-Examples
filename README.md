@@ -37,6 +37,7 @@ prose, equations, and figures together:
 publish('Root-Locus/LeadCompensation.m')        % one file
 publish_all                                       % every tutorial -> pdf/
 publish_all('dirs',{'Digital-Control'})           % just one directory
+publish_all('vector',false)                        % MATLAB's bitmap PDF
 publish_all('format','html')                       % HTML instead of PDF
 ```
 
@@ -44,6 +45,13 @@ publish_all('format','html')                       % HTML instead of PDF
 publishes each tutorial, and drops the reports in a subfolder named after
 the format (`pdf/` by default, `html/` for HTML) of each directory. Helper
 functions and the homework folders are skipped.
+
+By default the PDF path renders each tutorial to LaTeX and compiles it with
+**pdflatex**, so equations are true vector math (sharp at any zoom) rather
+than the blurry bitmaps MATLAB's built-in PDF export produces. This needs
+`pdflatex` on the `PATH` (TeX Live, MiKTeX, or MacTeX); if it isn't found,
+`publish_all` falls back to the built-in bitmap PDF and tells you. Pass
+`'vector',false` to force the built-in export.
 
 ## Directory guide
 
