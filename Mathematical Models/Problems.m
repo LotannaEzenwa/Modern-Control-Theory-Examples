@@ -8,7 +8,7 @@
 %% Problem 1: ODE to Transfer Function
 % Find the transfer function $G(s)=Y(s)/U(s)$ for the system
 %
-% $\dddot{y} + 6\ddot{y} + 11\dot{y} + 6y = 6u$
+% $y^{(3)} + 6\ddot{y} + 11\dot{y} + 6y = 6u$
 %
 % Taking the Laplace transform with zero initial conditions:
 %

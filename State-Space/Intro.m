@@ -12,7 +12,7 @@
 % Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A state-space model describes a system by a set of first-order
-% differential equations in the *state vector* $x(t)\in\mathbb{R}^n$,
+% differential equations in the *state vector* $x(t)\in\mathbf{R}^n$,
 % together with an algebraic output equation:
 %
 % $$\dot{x}(t) = Ax(t)+Bu(t)$$
