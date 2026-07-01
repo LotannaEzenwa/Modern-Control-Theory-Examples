@@ -10,10 +10,17 @@ function publish_all(varargin)
 %   PUBLISH_ALL('dirs',{'Root-Locus'}) restricts to the named directories.
 %   PUBLISH_ALL('evalCode',false) typesets the tutorials WITHOUT running
 %       the code (fast, no figures) -- handy for a quick formatting check.
+%   PUBLISH_ALL('resolution',300) sets the raster DPI for the equation and
+%       figure images (default 200). MATLAB rasterizes LaTeX equations to
+%       bitmaps at the screen DPI (~96), which look blurry in a PDF; a
+%       higher value renders them with more pixels and much crisper. For
+%       TRUE vector (infinitely sharp) math, publish to LaTeX and compile
+%       with pdflatex -- see the note in the code below.
 %
 %   Examples:
 %     publish_all                       % all tutorials -> PDF
 %     publish_all('dirs',{'Digital-Control'})
+%     publish_all('resolution',300)     % sharper equations/figures
 %     publish_all('format','html','evalCode',true)
 %
 %   Helper/function files and the homework folders are skipped; only the
@@ -25,6 +32,7 @@ function publish_all(varargin)
     p.addParameter('format','pdf',@ischar);
     p.addParameter('evalCode',true,@(x)islogical(x)||isnumeric(x));
     p.addParameter('dirs',default_dirs(),@iscell);
+    p.addParameter('resolution',200,@(x)isnumeric(x)&&isscalar(x)&&x>0);
     p.parse(varargin{:});
     opts = p.Results;
 
@@ -64,6 +72,15 @@ function publish_all(varargin)
     oldRootVals = cellfun(@(p) get(groot,p), rootProps(:,1), 'UniformOutput', false);
     set(groot, rootProps(:,1)', rootProps(:,2)');
     restoreRoot = onCleanup(@() set(groot, rootProps(:,1)', oldRootVals')); %#ok<NASGU>
+
+    % Sharpen the rasterized equation/figure images. MATLAB's PUBLISH renders
+    % LaTeX equations to bitmaps at the screen DPI (~96), so inline math looks
+    % blurry in a PDF. Temporarily raising the reported screen DPI makes those
+    % images render with proportionally more pixels -> much crisper. Guarded,
+    % because ScreenPixelsPerInch is read-only on some releases; restored on
+    % exit. (For TRUE vector math, publish with 'format','latex' and compile
+    % the .tex with pdflatex -- equations stay as real LaTeX, not images.)
+    dpiCleanup = boost_screen_dpi(opts.resolution); %#ok<NASGU>
 
     % Build the full work list up front so the progress bar knows the total.
     % (Function files and the homework folders are excluded here, not mid-loop,
@@ -138,6 +155,24 @@ function c = force_light_theme()
         c = onCleanup(@() clearTemporaryValue(gt));
     catch
         % Older release / different settings tree -- rely on InvertHardcopy='on'.
+    end
+end
+
+% ------------------------------------------------------------------------
+function c = boost_screen_dpi(dpi)
+%BOOST_SCREEN_DPI  Temporarily raise the reported screen DPI for sharper
+%   published equation/figure bitmaps. Returns an onCleanup that restores
+%   the original value. If ScreenPixelsPerInch is read-only on this release,
+%   it silently does nothing.
+    c = [];
+    try
+        oldDPI = get(groot,'ScreenPixelsPerInch');
+        if dpi > oldDPI
+            set(groot,'ScreenPixelsPerInch',dpi);
+            c = onCleanup(@() set(groot,'ScreenPixelsPerInch',oldDPI));
+        end
+    catch
+        % Read-only on this release -- publish at the native DPI.
     end
 end
 
