@@ -102,3 +102,8 @@ title('First-Order Impulse Response','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',16)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',16)
+
+%% Try it yourself
+% * Change the time constant |T| from 2 to 0.5 and notice every marker
+%   (63%, tangent, settling) rescale in time while the final value stays 1.
+% * Read |T| off the plot as the time where the tangent at the origin hits 1.

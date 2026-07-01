@@ -142,3 +142,9 @@ title('Dominant Pole Movement (Before vs. After)','Interpreter','latex','FontSiz
 ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Ask for a faster pole (|wn_desired = 12|) and notice the compensator
+%   pole move further left and the gain |Kc| grow.
+% * Place the zero away from |Re(sd)| and see the design still succeed but
+%   need a different pole angle.

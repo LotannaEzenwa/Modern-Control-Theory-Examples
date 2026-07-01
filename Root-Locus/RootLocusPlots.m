@@ -94,3 +94,9 @@ ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Try it yourself
+% * Sweep a finer gain vector and find where the branches cross the
+%   imaginary axis -- that gain matches the Routh limit K=12.
+% * Add a zero at -2 (|G = tf([1 2],den)|) and watch a branch terminate on
+%   it instead of escaping to infinity.

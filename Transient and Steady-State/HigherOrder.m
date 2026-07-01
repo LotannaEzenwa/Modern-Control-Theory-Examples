@@ -97,3 +97,9 @@ title('Dominant Poles Kept vs. Fast Pole Dropped','Interpreter','latex','FontSiz
 ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Move the fast pole from -10 to -20 and notice the dominant-pole
+%   approximation get even better (the fast mode decays sooner).
+% * Move it in to -2.5 and watch the approximation break down -- it is no
+%   longer "fast" relative to the dominant pair.

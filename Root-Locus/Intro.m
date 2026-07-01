@@ -113,3 +113,9 @@ ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Try it yourself
+% * Move the test point to |s0 = -1 + 2j| and see whether the angle-
+%   condition residual gets closer to zero (nearer the true locus).
+% * Add a zero (|G = tf([1 3],poly(poles))|) and notice the branches bend
+%   toward it instead of all running to infinity.

@@ -85,3 +85,10 @@ title('Unit Impulse Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Add an integrator to the plant (|G = tf(1,[1 1 0])|) and re-close the
+%   loop: notice the ramp error becomes a constant lag (type-1) instead of
+%   growing without bound.
+% * Overlay |impulse(T)| with the numerical derivative of the step and
+%   confirm they coincide.

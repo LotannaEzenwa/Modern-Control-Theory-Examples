@@ -118,3 +118,9 @@ title('Pole Migration as Damping $\zeta$ Increases','Interpreter','latex','FontS
 ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Set |zeta = 0.1| and notice the huge overshoot and long ringing; then
+%   try |zeta = 1.2| for a sluggish, overshoot-free response.
+% * Hold |zeta| fixed and double |wn|: notice the shape stays the same but
+%   the time axis compresses (faster, same overshoot).

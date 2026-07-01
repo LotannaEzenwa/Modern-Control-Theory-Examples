@@ -87,3 +87,9 @@ title('Problem 3: Step Response at $K=20$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 1, raise the gain and watch the max-real-part curve cross
+%   zero exactly at the Routh limit K=48.
+% * In Problem 3, try K=40 (closer to the boundary) and notice the extra
+%   overshoot and slower settling reported by |stepinfo|.

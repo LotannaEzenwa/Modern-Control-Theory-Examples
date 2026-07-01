@@ -115,3 +115,9 @@ title('Problem 3: Step Response Before vs. After','Interpreter','latex','FontSiz
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, target |zeta = 0.5| instead of 0.707 and read the new
+%   required gain off the locus using the constant-zeta ray.
+% * In Problem 3, raise |wn3| to 8 and notice the lead network need more
+%   phase (a wider pole/zero separation).

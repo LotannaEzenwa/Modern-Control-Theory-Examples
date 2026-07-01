@@ -125,3 +125,9 @@ xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
 % Summary: Kv (and ramp accuracy) improves by the factor zc/pc while the
 % dominant closed-loop poles -- and hence the transient response -- are
 % left essentially unchanged.
+
+%% Try it yourself
+% * Demand |Kv_desired = 50| instead of 20 and notice the zero/pole ratio
+%   (and the ramp accuracy) increase, with the transient still untouched.
+% * Move the pole out to |pc = 0.2| and watch it start to disturb the
+%   dominant poles -- a lag pole/zero pair must stay near the origin.

@@ -150,3 +150,9 @@ subplot(1,2,2)
 step(feedback(tf(8,[1 3 2 0]),1), t_cl)
 title('After: $K=8$ (unstable)','Interpreter','latex','FontSize',14)
 xlabel('$t$','Interpreter','latex','FontSize',14)
+
+%% Try it yourself
+% * Extend the plant to |s(s+1)(s+2)(s+3)| (fourth order), rebuild the Routh
+%   array, and notice the stability range for K shrink.
+% * Set K exactly at the boundary (K=6) and confirm |roots| shows a pair on
+%   the imaginary axis -- marginal stability.
