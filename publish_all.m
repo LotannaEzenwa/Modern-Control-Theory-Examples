@@ -2,18 +2,19 @@ function publish_all(varargin)
 %PUBLISH_ALL  Render every tutorial script in this repo to a report.
 %   PUBLISH_ALL() runs MATLAB's built-in PUBLISH on each tutorial .m file
 %   in the topic directories, evaluating the code and capturing the
-%   figures, and writes one HTML report per script into an html/ subfolder
-%   of that script's directory.
+%   figures, and writes one PDF report per script into a pdf/ subfolder
+%   of that script's directory (the output subfolder is named after the
+%   format, so HTML output would go into html/).
 %
-%   PUBLISH_ALL('format','pdf') publishes to PDF instead of HTML.
+%   PUBLISH_ALL('format','html') publishes to HTML instead of PDF.
 %   PUBLISH_ALL('dirs',{'Root-Locus'}) restricts to the named directories.
 %   PUBLISH_ALL('evalCode',false) typesets the tutorials WITHOUT running
 %       the code (fast, no figures) -- handy for a quick formatting check.
 %
 %   Examples:
-%     publish_all                       % all tutorials -> HTML
+%     publish_all                       % all tutorials -> PDF
 %     publish_all('dirs',{'Digital-Control'})
-%     publish_all('format','pdf','evalCode',true)
+%     publish_all('format','html','evalCode',true)
 %
 %   Helper/function files and the homework folders are skipped; only the
 %   self-contained instructional scripts are published.
@@ -21,7 +22,7 @@ function publish_all(varargin)
 %   See also PUBLISH.
 
     p = inputParser;
-    p.addParameter('format','html',@ischar);
+    p.addParameter('format','pdf',@ischar);
     p.addParameter('evalCode',true,@(x)islogical(x)||isnumeric(x));
     p.addParameter('dirs',default_dirs(),@iscell);
     p.parse(varargin{:});
@@ -95,7 +96,7 @@ function publish_all(varargin)
             publish(jobs(j).file, ...
                 'format',    opts.format, ...
                 'evalCode',  logical(opts.evalCode), ...
-                'outputDir', fullfile(thisDir,'html'), ...
+                'outputDir', fullfile(thisDir,opts.format), ...
                 'showCode',  true, ...
                 'maxOutputLines', 30);
             close all
@@ -113,8 +114,8 @@ function publish_all(varargin)
             fprintf('  FAILED %s\n', failures{i});
         end
     end
-    fprintf('Done (%d/%d published). Reports are in each directory''s html/ subfolder.\n', ...
-        total - numel(failures), total);
+    fprintf('Done (%d/%d published). Reports are in each directory''s %s/ subfolder.\n', ...
+        total - numel(failures), total, opts.format);
 end
 
 % ------------------------------------------------------------------------

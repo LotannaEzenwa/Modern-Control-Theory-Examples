@@ -19,7 +19,7 @@ run('HW6/HW6.m')
 
 There is no build system, test framework, or linter. Validation is visual — scripts produce plots that are inspected manually.
 
-**Publishing tutorials**: the instructional files are written in MATLAB Publishing Markup, so they render with `publish`. Use `publish('Root-Locus/LeadCompensation.m')` for one file, or the root-level helper `publish_all` (`publish_all`, `publish_all('dirs',{'Digital-Control'})`, `publish_all('format','pdf')`) to render every tutorial into per-directory `html/` folders. When authoring/editing instructional files, preserve publish compatibility: the first line is a `%% Title` cell, each `%%` section starts with contiguous `%` comment prose, LaTeX uses `$...$`/`$$...$$`, and markup uses `*bold*`, `_italic_`, `|monospace|`, and `% *`/`% #` lists.
+**Publishing tutorials**: the instructional files are written in MATLAB Publishing Markup, so they render with `publish`. Use `publish('Root-Locus/LeadCompensation.m')` for one file, or the root-level helper `publish_all` (`publish_all`, `publish_all('dirs',{'Digital-Control'})`, `publish_all('format','html')`) to render every tutorial into per-directory report folders (`pdf/` by default, or `html/` when `'format','html'` is passed). When authoring/editing instructional files, preserve publish compatibility: the first line is a `%% Title` cell, each `%%` section starts with contiguous `%` comment prose, LaTeX uses `$...$`/`$$...$$`, and markup uses `*bold*`, `_italic_`, `|monospace|`, and `% *`/`% #` lists.
 
 ## Repository Structure and Architecture
 

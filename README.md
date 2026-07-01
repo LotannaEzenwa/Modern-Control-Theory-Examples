@@ -35,14 +35,15 @@ prose, equations, and figures together:
 
 ```matlab
 publish('Root-Locus/LeadCompensation.m')        % one file
-publish_all                                       % every tutorial -> html/
+publish_all                                       % every tutorial -> pdf/
 publish_all('dirs',{'Digital-Control'})           % just one directory
-publish_all('format','pdf')                        % PDF instead of HTML
+publish_all('format','html')                       % HTML instead of PDF
 ```
 
 `publish_all` (at the repo root) walks the instructional directories,
-publishes each tutorial, and drops the reports in an `html/` subfolder of
-each directory. Helper functions and the homework folders are skipped.
+publishes each tutorial, and drops the reports in a subfolder named after
+the format (`pdf/` by default, `html/` for HTML) of each directory. Helper
+functions and the homework folders are skipped.
 
 ## Directory guide
 
