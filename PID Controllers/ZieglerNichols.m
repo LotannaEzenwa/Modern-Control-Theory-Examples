@@ -143,3 +143,9 @@ title('Ziegler-Nichols: Before vs. After','Interpreter','latex','FontSize',17)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Notice both ZN tunings are deliberately aggressive (~25% overshoot);
+%   scale |Kp| down by 0.8 and see a calmer response for a small speed cost.
+% * Change the plant to add a fourth pole and re-run: the ultimate gain
+%   |Kcr| and period |Pcr| shift, and so do the recommended gains.

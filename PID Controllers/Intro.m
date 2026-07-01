@@ -137,3 +137,9 @@ title('After: P, PI, PD, PID vs. the Uncontrolled Baseline','Interpreter','latex
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Zero out the integral term (|Ti = inf| in the PID) and watch the
+%   steady-state error return -- integral action is what removes it.
+% * Push |Td| up and notice the overshoot fall but the response get twitchier
+%   (derivative amplifies fast changes, including noise).

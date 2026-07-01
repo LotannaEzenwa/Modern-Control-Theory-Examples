@@ -103,3 +103,9 @@ title('Frequency Tuning: Before vs. After','Interpreter','latex','FontSize',17)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Raise the target |w_target| and notice |Kp| grow to push the crossover
+%   out -- a faster loop at the cost of less phase margin.
+% * Set the integral time |Ti| smaller (say |3/w_target|) and watch the
+%   extra low-frequency phase lag eat into the achieved margin.

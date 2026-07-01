@@ -95,3 +95,9 @@ title('Problem 3: PI vs. PID Overshoot Reduction','Interpreter','latex','FontSiz
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, keep lowering |Kp2| and |Td2| until the overshoot is under
+%   5%, then compare settling time with the ZN design.
+% * In Problem 3, drop the derivative term and confirm the overshoot climbs
+%   back -- derivative action is doing the damping.
