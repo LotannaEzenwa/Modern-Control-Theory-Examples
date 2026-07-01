@@ -81,3 +81,9 @@ xlabel('$x_1$','Interpreter','latex','FontSize',16)
 % * Physical energy is often a ready-made Lyapunov function.
 % * For linear systems the search is automatic: solve $A^TP+PA=-Q$ with
 %   |lyap| and check $P>0$.
+
+%% Try it yourself
+% * Start the pendulum near the top (|[3.0;0]|) and notice V still decreases
+%   monotonically -- energy dissipates from any initial swing.
+% * Change |Q| to |diag([10 1])| and confirm |lyap| returns a different
+%   P>0 with the same near-zero residual.

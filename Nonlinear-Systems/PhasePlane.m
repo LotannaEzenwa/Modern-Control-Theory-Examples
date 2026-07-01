@@ -92,3 +92,9 @@ xlabel('$x$','Interpreter','latex','FontSize',18)
 %
 % *Next:* |LyapunovStability.m| certifies stability *without* solving the
 % equations.
+
+%% Try it yourself
+% * Raise the damping |b| and notice the pendulum trajectories spiral into
+%   the down equilibrium faster (a tighter focus).
+% * Set the Van der Pol |mu| to 3 and watch the limit cycle sharpen into a
+%   relaxation oscillation.

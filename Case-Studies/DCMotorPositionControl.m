@@ -86,3 +86,9 @@ fprintf('PID: overshoot %.1f%%, settling %.3f s, ss error %.4f\n', ...
 %
 % *Try it:* lower $K_d$ and watch overshoot and ringing return -- the same
 % derivative-damping tradeoff seen in |PID Controllers/Intro.m|.
+
+%% Try it yourself
+% * Remove the integral term (PD only) and confirm a small steady-state
+%   error creeps in against the plant dynamics.
+% * Double |Kp| and notice the response speed up but overshoot grow -- the
+%   classic proportional tradeoff.

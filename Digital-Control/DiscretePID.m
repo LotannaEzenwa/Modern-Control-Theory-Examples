@@ -74,3 +74,9 @@ xlabel('$t$','Interpreter','latex','FontSize',16)
 %
 % *Next:* |DeadbeatControl.m| uses the discrete domain to settle in a
 % finite number of steps -- something continuous control cannot do.
+
+%% Try it yourself
+% * Rebuild the controller with |'zoh'| instead of |'tustin'| and notice the
+%   integrator approximation shift slightly at the fast rate.
+% * Push |T2| past the point where the coarse-sampled loop goes unstable and
+%   watch the step response diverge.

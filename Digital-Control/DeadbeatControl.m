@@ -77,3 +77,9 @@ xlabel('sample $k$','Interpreter','latex','FontSize',16)
 %   impossible in continuous time.
 % * The cost is large control effort and high sensitivity, so deadbeat is
 %   used sparingly and only when the model is trustworthy.
+
+%% Try it yourself
+% * Lengthen the sample time |T| and notice the deadbeat gain |K| shrink,
+%   while the fixed n-step settling takes longer in real time.
+% * Add a third state and confirm the loop still settles in exactly n steps
+%   with $(A-BK)^n = 0$.

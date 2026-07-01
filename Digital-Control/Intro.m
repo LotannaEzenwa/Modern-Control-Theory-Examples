@@ -91,3 +91,9 @@ xlabel('$t$','Interpreter','latex','FontSize',16)
 % *Next:* |DiscretePID.m| runs a controller in discrete time, and
 % |DeadbeatControl.m| exploits sampling to settle in a finite number of
 % steps.
+
+%% Try it yourself
+% * Halve the sample time |T| and notice the ZOH discrete step hug the
+%   continuous curve more tightly.
+% * Discretize with |'matched'| instead of |'zoh'| and compare the poles
+%   against |exp(s_poles*T)|.

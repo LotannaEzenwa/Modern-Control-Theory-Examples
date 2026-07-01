@@ -102,3 +102,9 @@ xlabel('$t$ (s)','Interpreter','latex','FontSize',16)
 %
 % *Try it:* increase the angle weight in $Q$ and watch the pole snap
 % upright faster (at the cost of more cart motion and control force).
+
+%% Try it yourself
+% * Raise |R| and watch the controller get gentler -- less force, more cart
+%   travel, a slower recovery.
+% * Stop penalizing cart position (zero |Q(1,1)|) and notice the pole still
+%   balances while the cart is free to drift.
