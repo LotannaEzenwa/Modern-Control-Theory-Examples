@@ -47,7 +47,7 @@ fprintf('Observer gain G = '); disp(G)
 % This block-triangular structure is the separation principle made
 % explicit: the $2n\times 2n$ system matrix
 %
-% $$\begin{bmatrix}A-BK & BK\\0 & A-GC\end{bmatrix}$$
+% $$[\,A-BK\ \ \ BK\ ;\ \ 0\ \ \ A-GC\,]$$
 %
 % has eigenvalues equal to the union of $\mathrm{eig}(A-BK)$ and
 % $\mathrm{eig}(A-GC)$.

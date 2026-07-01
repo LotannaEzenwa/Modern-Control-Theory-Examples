@@ -43,7 +43,7 @@ grid on
 % indicates closed-loop stability; small positive margins indicate a
 % lightly-damped, oscillatory closed-loop response, while large margins
 % indicate sluggish but robust response. A practical rule of thumb (per
-% Ogata) targets $PM\approx30^\circ\text{--}60^\circ$ and
+% Ogata) targets $PM\approx30^\circ\mathrm{--}60^\circ$ and
 % $GM_{dB}>6$ dB.
 T = feedback(G,1);
 fprintf('Closed-loop poles:\n'); disp(pole(T))

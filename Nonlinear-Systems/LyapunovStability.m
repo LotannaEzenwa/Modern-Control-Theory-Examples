@@ -16,7 +16,7 @@
 %% Energy as a Lyapunov function (damped pendulum)
 % For $\ddot{\theta}+b\dot{\theta}+\sin\theta=0$, the total energy
 %
-% $$ V(\theta,\dot{\theta}) = \tfrac{1}{2}\dot{\theta}^2 + (1-\cos\theta) \ge 0 $$
+% $$ V(\theta,\dot{\theta}) = \frac{1}{2}\dot{\theta}^2 + (1-\cos\theta) \ge 0 $$
 %
 % is a natural candidate. Differentiating along trajectories gives
 % $\dot{V}=-b\,\dot{\theta}^2\le 0$: energy can only dissipate, so the

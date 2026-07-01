@@ -14,7 +14,7 @@
 % Builds on |PID Controllers/Intro.m|. Run with |publish('TwoDOF.m')|.
 
 %% Plant and feedback controller
-% Plant $G(s)=\dfrac{1}{s(s+2)}$ with a PI controller tuned for disturbance
+% Plant $G(s)=\frac{1}{s(s+2)}$ with a PI controller tuned for disturbance
 % rejection. The PI zero ends up in the closed-loop transfer function and
 % causes command overshoot.
 G  = tf(1,[1 2 0]);

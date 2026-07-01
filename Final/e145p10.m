@@ -26,7 +26,7 @@ fprintf('Discrete plant A = \n'); disp(A)
 fprintf('Discrete plant B = \n'); disp(B)
 
 %% Part (a): Controllability
-% Form the controllability matrix $\mathcal{C}=[B\ AB]$ and check rank.
+% Form the controllability matrix $\mathbf{C}=[B\ AB]$ and check rank.
 Co = ctrb(A,B);
 fprintf('\nrank(Co) = %d (n = %d) -> controllable: %d\n', ...
     rank(Co), size(A,1), rank(Co)==size(A,1))

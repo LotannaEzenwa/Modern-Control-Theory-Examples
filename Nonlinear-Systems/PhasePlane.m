@@ -57,7 +57,7 @@ xlabel('$\theta$','Interpreter','latex','FontSize',18)
 
 %% Classifying equilibria with the Jacobian
 % Linearizing about an equilibrium $x^*$ gives the local behavior. The
-% Jacobian is $J=\begin{bmatrix}0&1\\-\cos\theta&-b\end{bmatrix}$.
+% Jacobian is $J=[\,0\ \ 1\,;\ -\cos\theta\ \ -b\,]$.
 J = @(th) [0 1; -cos(th) -b];
 fprintf('Down (theta=0):  eigenvalues %s  -> stable focus\n', mat2str(eig(J(0)).',3))
 fprintf('Up   (theta=pi): eigenvalues %s  -> saddle (unstable)\n', mat2str(eig(J(pi)).',3))

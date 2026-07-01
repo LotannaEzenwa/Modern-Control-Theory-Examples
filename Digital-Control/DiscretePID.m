@@ -16,7 +16,7 @@
 % Run with |publish('DiscretePID.m')|, or step through with *Ctrl+Enter*.
 
 %% Plant and a continuous PID design
-% Plant $G(s)=\dfrac{1}{(s+1)(s+3)}$. We first design a continuous PID
+% Plant $G(s)=\frac{1}{(s+1)(s+3)}$. We first design a continuous PID
 % $G_c(s)=K_p+K_i/s+K_ds$ that gives a good continuous response.
 G  = tf(1,conv([1 1],[1 3]));
 Kp = 30; Ki = 40; Kd = 5;

@@ -6,7 +6,7 @@
 % Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Integral servo to a pole-placement spec
-% For $G(s)=\dfrac{1}{(s+1)(s+3)}$, design integral-plus-state feedback that
+% For $G(s)=\frac{1}{(s+1)(s+3)}$, design integral-plus-state feedback that
 % places the augmented poles at $-4,-5,-6$, and confirm zero steady-state
 % error to a step *and* rejection of a constant input disturbance.
 A = [0 1; -3 -4];  B = [0;1];  C = [1 0];

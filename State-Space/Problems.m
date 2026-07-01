@@ -8,8 +8,8 @@
 %% Problem 1: Test Controllability and Observability
 % For $\dot{x}=Ax+Bu,\ y=Cx$ with
 %
-% $$A=\begin{bmatrix}0&1&0\\0&0&1\\-6&-11&-6\end{bmatrix},\quad
-%   B=\begin{bmatrix}0\\0\\1\end{bmatrix},\quad C=\begin{bmatrix}1&0&0\end{bmatrix}$$
+% $$A=[\,0\ \ 1\ \ 0\,;\ 0\ \ 0\ \ 1\,;\ -6\ \ -11\ \ -6\,],\quad
+%   B=[\,0\,;\,0\,;\,1\,],\quad C=[\,1\ \ 0\ \ 0\,]$$
 %
 % determine complete state controllability and observability.
 A1 = [0 1 0; 0 0 1; -6 -11 -6];
@@ -26,8 +26,8 @@ fprintf('Controllable: %d, Observable: %d\n', ...
 %% Problem 2: Find the Value of a Parameter that Destroys Controllability
 % For
 %
-% $$A=\begin{bmatrix}-1&0\\0&-2\end{bmatrix},\quad
-%   B=\begin{bmatrix}1\\\beta\end{bmatrix}$$
+% $$A=[\,-1\ \ 0\,;\ 0\ \ -2\,],\quad
+%   B=[\,1\,;\,\beta\,]$$
 %
 % find all $\beta$ for which the system is *not* controllable.
 syms beta

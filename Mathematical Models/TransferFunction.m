@@ -21,8 +21,8 @@
 % transform of the output to the Laplace transform of the input, with
 % all initial conditions assumed zero:
 %
-% $G(s) = \frac{\mathcal{L}[\text{output}]}{\mathcal{L}[\text{input}]}
-%   \Big|_{\text{zero I.C.}} = \frac{Y(s)}{U(s)} =
+% $G(s) = \frac{\mathbf{L}[\mathrm{output}]}{\mathbf{L}[\mathrm{input}]}
+%   |_{\mathrm{zero I.C.}} = \frac{Y(s)}{U(s)} =
 %   \frac{b_m s^m + \dots + b_1 s + b_0}{a_n s^n + \dots + a_1 s + a_0}$
 %
 % The transfer function is a property of the system itself -- it does

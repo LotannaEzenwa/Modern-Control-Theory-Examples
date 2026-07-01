@@ -50,9 +50,9 @@ grid on
 % desired characteristic polynomial $\alpha_c(s)=s^n+\alpha_1s^{n-1}+
 % \cdots+\alpha_n$ is given directly by
 %
-% $$K = \begin{bmatrix}0&0&\cdots&1\end{bmatrix}\mathcal{C}^{-1}\alpha_c(A)$$
+% $$K = [\,0\ \ 0\ \cdots\ 1\,]\,\mathbf{C}^{-1}\alpha_c(A)$$
 %
-% where $\mathcal{C}$ is the controllability matrix and $\alpha_c(A)$ is
+% where $\mathbf{C}$ is the controllability matrix and $\alpha_c(A)$ is
 % the matrix polynomial (Cayley-Hamilton-style substitution of $A$ for
 % $s$).
 desired_poles = [-2+2j, -2-2j, -10];

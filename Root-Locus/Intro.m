@@ -17,7 +17,7 @@
 % unity-feedback system with open-loop transfer function $KG(s)$, the
 % closed-loop characteristic equation is
 %
-% $1 + KG(s) = 0 \quad\Longleftrightarrow\quad G(s) = -\frac{1}{K}$
+% $1 + KG(s) = 0 \quad\Leftrightarrow\quad G(s) = -\frac{1}{K}$
 
 %% The Angle and Magnitude Conditions
 % Writing $G(s)$ in pole-zero form,
@@ -109,10 +109,8 @@ hold off
 legend('Locus','$K=0$ poles (before)','Test point $s_0$','$K=20$ poles (after)', ...
     'Interpreter','latex','FontSize',11)
 title('From Open-Loop Poles ($K=0$) Along the Locus','Interpreter','latex','FontSize',17)
-ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0)
-xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
-grid on
+grid on   % keep rlocus's own axis labels (it re-appends units, which breaks
+          % a custom latex xlabel/ylabel)
 
 %% Try it yourself
 % * Move the test point to |s0 = -1 + 2j| and see whether the angle-

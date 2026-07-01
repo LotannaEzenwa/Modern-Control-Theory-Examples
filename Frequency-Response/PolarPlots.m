@@ -12,7 +12,7 @@
 % Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The polar plot of $G(j\omega)$ traces the locus of the complex number
-% $G(j\omega) = \text{Re}\,G(j\omega) + j\,\text{Im}\,G(j\omega)$
+% $G(j\omega) = \mathrm{Re}\,G(j\omega) + j\,\mathrm{Im}\,G(j\omega)$
 % in the complex plane as $\omega$ sweeps from $0$ to $\infty$. Unlike
 % the Bode diagram, magnitude and phase are shown on a single plot, at
 % the cost of frequency no longer being an explicit axis (it is only a

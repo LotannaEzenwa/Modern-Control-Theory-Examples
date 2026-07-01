@@ -16,7 +16,7 @@
 % interval, given the input $u(t)$. For LTI systems this holds iff the
 % *observability matrix*
 %
-% $$\mathcal{O} = \begin{bmatrix}C\\CA\\CA^2\\\vdots\\CA^{n-1}\end{bmatrix}$$
+% $$\mathbf{O} = [\,C\,;\ CA\,;\ CA^2\,;\ \cdots\,;\ CA^{n-1}\,]$$
 %
 % has full rank $n$.
 
@@ -42,8 +42,8 @@ fprintf('rank = %d (n = %d) -> %s\n', rank(Ob2), size(A2,1), ...
 fprintf('State x2 has no effect on y: it is unobservable from this sensor.\n')
 
 %% PBH Eigenvector Test for Observability
-% $(A,C)$ is observable iff $\mathrm{rank}\begin{bmatrix}A-\lambda
-% I\\C\end{bmatrix}=n$ for every eigenvalue of $A$.
+% $(A,C)$ is observable iff $\mathrm{rank}\,[\,A-\lambda I\,;\ C\,]=n$ for
+% every eigenvalue of $A$.
 eigsA2 = eig(A2);
 for i = 1:length(eigsA2)
     lam = eigsA2(i);

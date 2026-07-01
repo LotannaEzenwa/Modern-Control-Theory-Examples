@@ -17,7 +17,7 @@
 % |publish('IntegralControl.m')|.
 
 %% Plant
-% $G(s)=\dfrac{1}{(s+1)(s+2)}$ in state-space; only the output is measured.
+% $G(s)=\frac{1}{(s+1)(s+2)}$ in state-space; only the output is measured.
 A = [0 1; -2 -3];
 B = [0; 1];
 C = [1 0];
@@ -25,11 +25,10 @@ C = [1 0];
 %% Augment with an integrator of the tracking error
 % Introduce a state $x_i$ with $\dot{x}_i=r-y=r-Cx$. The augmented system is
 %
-% $$ \begin{bmatrix}\dot{x}\\\dot{x}_i\end{bmatrix}
-%    =\begin{bmatrix}A&0\\-C&0\end{bmatrix}
-%     \begin{bmatrix}x\\x_i\end{bmatrix}
-%    +\begin{bmatrix}B\\0\end{bmatrix}u
-%    +\begin{bmatrix}0\\1\end{bmatrix}r. $$
+% $$ [\,\dot{x}\,;\,\dot{x}_i\,]
+%    =[\,A\ \ 0\,;\ -C\ \ 0\,]\,[\,x\,;\,x_i\,]
+%    +[\,B\,;\,0\,]\,u
+%    +[\,0\,;\,1\,]\,r. $$
 Aa = [A, zeros(2,1); -C, 0];
 Ba = [B; 0];
 n  = size(A,1);

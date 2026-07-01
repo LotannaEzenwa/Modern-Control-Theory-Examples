@@ -14,7 +14,7 @@
 % Run with |publish('DeadbeatControl.m')|, or step through with *Ctrl+Enter*.
 
 %% Discretize the plant
-% Continuous plant $G(s)=\dfrac{1}{s^2+s}$ (an integrator plus a lag),
+% Continuous plant $G(s)=\frac{1}{s^2+s}$ (an integrator plus a lag),
 % sampled at $T=0.2$ s.
 G    = tf(1,[1 1 0]);
 T    = 0.2;

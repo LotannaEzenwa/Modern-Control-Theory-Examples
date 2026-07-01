@@ -31,12 +31,13 @@ fprintf('G(s) denominator: '); disp(den)
 % formula transparent). For $a_1,a_2,a_3$ the denominator coefficients
 % (monic, $a_0=1$):
 %
-% $$A_{cc}=\begin{bmatrix}-a_1&-a_2&-a_3\\1&0&0\\0&1&0\end{bmatrix},\quad
-%   B_{cc}=\begin{bmatrix}1\\0\\0\end{bmatrix}$$
+% $$A_{cc}=[\,-a_1\ \ -a_2\ \ -a_3\,;\ 1\ \ 0\ \ 0\,;\ 0\ \ 1\ \ 0\,],\quad
+%   B_{cc}=[\,1\,;\,0\,;\,0\,]$$
 %
-% $$C_{cc}=\begin{bmatrix}b_1&b_2&b_3\end{bmatrix},\quad b_i=\text{(numerator
-% coefficients of the same order, after removing any }b_0\text{ direct
-% term)}$$
+% $$C_{cc}=[\,b_1\ \ b_2\ \ b_3\,]$$
+%
+% where each $b_i$ is a numerator coefficient of the same order, after
+% removing any $b_0$ direct term.
 a1 = den(2); a2 = den(3); a3 = den(4);
 b1 = num(2)-num(1)*a1;
 b2 = num(3)-num(1)*a2;
@@ -51,9 +52,9 @@ sys_cc = ss(A_cc,B_cc,C_cc,D_cc);
 % The transpose structure of controllable canonical form -- useful for
 % observer (Luenberger) design by duality:
 %
-% $$A_{oc}=\begin{bmatrix}-a_1&1&0\\-a_2&0&1\\-a_3&0&0\end{bmatrix},\quad
-%   B_{oc}=\begin{bmatrix}b_1\\b_2\\b_3\end{bmatrix},\quad
-%   C_{oc}=\begin{bmatrix}1&0&0\end{bmatrix}$$
+% $$A_{oc}=[\,-a_1\ \ 1\ \ 0\,;\ -a_2\ \ 0\ \ 1\,;\ -a_3\ \ 0\ \ 0\,],\quad
+%   B_{oc}=[\,b_1\,;\,b_2\,;\,b_3\,],\quad
+%   C_{oc}=[\,1\ \ 0\ \ 0\,]$$
 A_oc = [-a1 1 0; -a2 0 1; -a3 0 0];
 B_oc = [b1;b2;b3];
 C_oc = [1 0 0];
@@ -98,7 +99,7 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 %% The Similarity Transformation Matrix
 % Between controllable and observable canonical form realizations of the
 % *same* system, $T$ can be found by matching the controllability
-% matrices: $T = \mathcal{C}_{cc}\mathcal{C}_{oc}^{-1}$ is generally not
+% matrices: $T = \mathbf{C}_{cc}\mathbf{C}_{oc}^{-1}$ is generally not
 % applicable directly between distinct canonical types without going
 % through a common basis; here we instead verify the diagonal form's
 % transformation directly via the eigenvector matrix of $A_{cc}$.

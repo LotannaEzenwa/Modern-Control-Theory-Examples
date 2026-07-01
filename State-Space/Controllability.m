@@ -16,7 +16,7 @@
 % $u(t)$ that transfers the system from $x(0)$ to $x_1$ in finite time.
 % For LTI systems this is equivalent to the *controllability matrix*
 %
-% $$\mathcal{C} = \begin{bmatrix}B & AB & A^2B & \cdots & A^{n-1}B\end{bmatrix}$$
+% $$\mathbf{C} = [\,B\ \ AB\ \ A^2B\ \cdots\ A^{n-1}B\,]$$
 %
 % having full rank $n$ (Kalman's rank condition).
 
@@ -42,7 +42,7 @@ fprintf('rank = %d (n = %d) -> %s\n', rank(Co2), size(A2,1), ...
 fprintf('State x2 cannot be influenced by u: it is uncontrollable.\n')
 
 %% Geometric Interpretation: Reachable Subspace
-% The columns of $\mathcal{C}$ span the *reachable subspace* -- the set
+% The columns of $\mathbf{C}$ span the *reachable subspace* -- the set
 % of states attainable from the origin. For Example 2, this subspace is
 % only the $x_1$-axis.
 fprintf('\nReachable subspace basis (Example 2): column space of Co2\n')
@@ -50,7 +50,7 @@ disp(orth(Co2))
 
 %% PBH (Popov-Belevitch-Hautus) Eigenvector Test
 % An equivalent test: $(A,B)$ is controllable iff
-% $\mathrm{rank}\begin{bmatrix}A-\lambda I & B\end{bmatrix}=n$ for every
+% $\mathrm{rank}\,[\,A-\lambda I\ \ B\,]=n$ for every
 % eigenvalue $\lambda$ of $A$. This identifies *which* mode is
 % uncontrollable.
 eigsA2 = eig(A2);

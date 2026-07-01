@@ -90,10 +90,8 @@ hold off
 legend('Locus','$K=0$ (before)','$K=6$','$K=K_{cr}=12$ (boundary)', ...
     'Interpreter','latex','FontSize',11,'Location','southwest')
 title('Closed-Loop Pole Migration: $K=0 \rightarrow K_{cr}$','Interpreter','latex','FontSize',18)
-ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0)
-xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
-grid on
+grid on   % keep rlocus's own "Real/Imaginary Axis" labels (it re-appends units,
+          % which breaks a custom latex xlabel/ylabel)
 
 %% Try it yourself
 % * Sweep a finer gain vector and find where the branches cross the

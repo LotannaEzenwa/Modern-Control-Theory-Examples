@@ -25,19 +25,19 @@
 %% The Laplace Transform
 % The Laplace transform of a time function $f(t)$, $t \geq 0$, is
 %
-% $$F(s) = \mathcal{L}[f(t)] = \int_0^\infty f(t) e^{-st}\,dt$$
+% $$F(s) = \mathbf{L}[f(t)] = \int_0^\infty f(t) e^{-st}\,dt$$
 %
 % Two properties make it the natural tool for LTI systems:
 %
-% * Differentiation: $\mathcal{L}[\dot f(t)] = sF(s) - f(0)$
-% * Linearity: $\mathcal{L}[a f(t) + b g(t)] = aF(s) + bG(s)$
+% * Differentiation: $\mathbf{L}[\dot f(t)] = sF(s) - f(0)$
+% * Linearity: $\mathbf{L}[a f(t) + b g(t)] = aF(s) + bG(s)$
 %
 % Common transform pairs used throughout this repository:
 %
-% $$\mathcal{L}[1(t)] = \frac{1}{s}, \quad
-%   \mathcal{L}[t] = \frac{1}{s^2}, \quad
-%   \mathcal{L}[e^{-at}] = \frac{1}{s+a}, \quad
-%   \mathcal{L}[\sin(\omega t)] = \frac{\omega}{s^2+\omega^2}$$
+% $$\mathbf{L}[1(t)] = \frac{1}{s}, \quad
+%   \mathbf{L}[t] = \frac{1}{s^2}, \quad
+%   \mathbf{L}[e^{-at}] = \frac{1}{s+a}, \quad
+%   \mathbf{L}[\sin(\omega t)] = \frac{\omega}{s^2+\omega^2}$$
 
 syms t s
 f1 = heaviside(t);          % unit step
