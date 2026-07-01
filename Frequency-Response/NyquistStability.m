@@ -85,3 +85,9 @@ grid on
 fprintf('K=30: closed-loop RHP poles = %d;  K=90: closed-loop RHP poles = %d\n', ...
     sum(real(pole(feedback(tf(30,den3),1)))>0), ...
     sum(real(pole(feedback(tf(90,den3),1)))>0))
+
+%% Try it yourself
+% * Sweep K between 30 and 90 and find (by counting encirclements of -1)
+%   the gain where the closed loop first goes unstable -- it is Kcr=60.
+% * For the unstable-open-loop plant, check that closing the loop is
+%   actually stable by inspecting |pole(feedback(G3,1))|.

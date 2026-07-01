@@ -103,3 +103,9 @@ grid on
 [~,Pm1] = margin(G);
 [~,Pm2] = margin(10*G);
 fprintf('Phase margin: before = %.1f deg, after (10x gain) = %.1f deg\n', Pm1, Pm2)
+
+%% Try it yourself
+% * Change the multiplier from 10 to 100 and notice the whole magnitude
+%   curve lift by 40 dB, dropping the phase margin further.
+% * Move the zero corner |z1| from 2 to 20 and watch the mid-frequency
+%   +20 dB/decade stretch shrink.

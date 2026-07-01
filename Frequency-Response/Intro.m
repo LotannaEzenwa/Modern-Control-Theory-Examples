@@ -91,3 +91,9 @@ figure
 bode(G)
 title('Bode Diagram of $G(s)=\frac{1}{s+1}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Try it yourself
+% * Change the test frequency |w_test| to 0.5 and 5 and notice the output
+%   amplitude follow $|G(j\omega)|$ (bigger at low frequency for this lag).
+% * Read the phase lag off the shifted output and compare with
+%   |angle(evalfr(G,1j*w_test))|.

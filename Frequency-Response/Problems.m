@@ -84,3 +84,9 @@ title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSiz
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 1, halve K and confirm both margins grow (a more sluggish,
+%   more robust loop).
+% * In Problem 2, tighten the spec to PM>=55 and read off the new maximum
+%   allowable gain from the sweep.

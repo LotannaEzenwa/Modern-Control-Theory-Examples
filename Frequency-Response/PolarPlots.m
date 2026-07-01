@@ -96,3 +96,9 @@ title('Polar Plot: Gain Pushes the Locus Toward $-1$','Interpreter','latex','Fon
 ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Raise the type-1 gain from 4 toward 8 and notice the locus swing closer
+%   to the -1 point -- the geometric approach to instability.
+% * Increase |T| in the first example and watch the semicircle radius stay
+%   0.5 but the frequencies redistribute along it.

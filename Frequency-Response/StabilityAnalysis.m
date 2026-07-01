@@ -92,3 +92,9 @@ title('Closed-Loop Step as Gain Rises (Margin Shrinks)','Interpreter','latex','F
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
 set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Push a stable gain from 5 toward 20 and watch |margin| report the phase
+%   margin shrinking toward zero as the step response rings harder.
+% * Use the approximation |zeta ~ PM/100| to predict overshoot, then check
+%   it against |stepinfo(feedback(Gk,1))|.

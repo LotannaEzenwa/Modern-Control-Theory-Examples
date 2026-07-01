@@ -99,3 +99,9 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % pursued the same goal (steady-state error improvement without
 % disturbing the dominant transient response) via pole/zero placement
 % instead of a magnitude-attenuation argument.
+
+%% Try it yourself
+% * Ask for a larger phase margin (|PM_desired = 65|) and notice the lead
+%   ratio |alpha| grow -- more phase means a wider pole/zero split.
+% * Reduce the safety margin |epsilon| to 3 and see the achieved margin
+%   fall short (the crossover shifts more than a small epsilon allows for).
