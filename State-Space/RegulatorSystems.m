@@ -54,7 +54,7 @@ fprintf('Observer gain G = '); disp(G)
 A_aug = [A-B*K, B*K; zeros(n), A-G*C];
 fprintf('\nCombined system eigenvalues:\n')
 disp(eig(A_aug)')
-fprintf('Controller poles ∪ observer poles:\n')
+fprintf('Controller poles and observer poles (union):\n')
 disp([controller_poles observer_poles])
 
 %% Simulating the Regulator
