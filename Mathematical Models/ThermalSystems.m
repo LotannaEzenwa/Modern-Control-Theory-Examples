@@ -1,6 +1,15 @@
 %% Thermal Systems
-% Ogata, Modern Control Engineering, Ch. 4: Mathematical Modeling of
-% Thermal Systems
+% *Thermal resistance and capacitance: the thermometer as a first-order lag.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 4.
+%
+% In this tutorial you will:
+%
+% * model a thermometer from a heat balance,
+% * recognize the familiar first-order time constant $\tau=RC$, and
+% * see how a thicker wall (larger R) slows the response.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Thermal systems, like fluid systems, are characterized by a
 % resistance and a capacitance:
@@ -40,7 +49,7 @@ figure
 step(G_thermo)
 title('Thermometer Step Response','Interpreter','latex','FontSize',20)
 ylabel('$\theta_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -67,5 +76,10 @@ hold off
 legend('$R=0.9$','$R=3$ (thicker wall)','Interpreter','latex','FontSize',14)
 title('Effect of Thermal Resistance on Response Speed','Interpreter','latex','FontSize',20)
 ylabel('$\theta_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Notice that changing |R| moves the time constant but never the final
+%   reading -- try |R = 0.3| and confirm the steady value is unchanged.
+% * Estimate the time to reach 95% (about 3*tau) and check it on the plot.

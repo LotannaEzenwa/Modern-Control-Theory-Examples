@@ -1,0 +1,12 @@
+# Ignore common image file formats
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.svg
+
+# Ignore generated publish reports
+*.html

@@ -1,9 +1,18 @@
 %% Introduction to State-Space Representation
-% Ogata, Modern Control Engineering, Ch. 9: State-Space Representation of
-% Dynamic Systems
+% *Describing a system by first-order state equations $\dot{x}=Ax+Bu$.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * write a mass-spring-damper in state-space form and build it with |ss|,
+% * convert between state-space and transfer function (|tf| / |ss|), and
+% * compute the free response and meet the state-transition matrix.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A state-space model describes a system by a set of first-order
-% differential equations in the *state vector* $x(t)\in\mathbb{R}^n$,
+% differential equations in the *state vector* $x(t)\in\mathbf{R}^n$,
 % together with an algebraic output equation:
 %
 % $$\dot{x}(t) = Ax(t)+Bu(t)$$
@@ -39,7 +48,7 @@ figure
 step(sys_ss)
 title('State-Space Model: Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% State-Space to Transfer Function
@@ -54,6 +63,21 @@ G_from_ss
 G_direct = tf(1,[m b k]);
 fprintf('Direct TF poles vs. SS-derived poles:\n')
 [pole(G_direct) pole(G_from_ss)]
+
+%% What Changed vs. What Didn't: Representation vs. Behavior
+% Converting between state-space and transfer-function form changes the
+% *representation* but not the input-output *behavior*: the step
+% responses of the ss and tf models lie exactly on top of each other.
+figure
+step(sys_ss)
+hold on
+step(G_from_ss,'r--')
+hold off
+legend('State-space model','Recovered transfer function','Interpreter','latex','FontSize',12)
+title('Same Behavior in Two Representations','Interpreter','latex','FontSize',16)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Transfer Function to State-Space
 % Conversely, `ss(G)` realizes a transfer function in (typically)
@@ -82,5 +106,10 @@ plot(t,x_free)
 legend('$x_1(t)$','$x_2(t)$','Interpreter','latex','FontSize',14)
 title('Zero-Input (Free) Response from $x(0)=[1;0]$','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Change the damping |b| to 0.5 and notice the free response ring longer
+%   (the state-transition matrix $e^{At}$ decays more slowly).
+% * Round-trip the model with |tf(ss(G3))| and confirm you recover |G3|.

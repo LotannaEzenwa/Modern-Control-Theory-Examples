@@ -1,6 +1,15 @@
 %% Nyquist Stability Criterion
-% Ogata, Modern Control Engineering, Ch. 7: The Nyquist Stability
-% Criterion
+% *Closed-loop stability from encirclements of $-1$.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * apply $Z=N+P$ to read closed-loop stability off a Nyquist plot,
+% * work a stable-open-loop and an unstable-open-loop ($P>0$) example, and
+% * watch a stable design lose stability as the gain crosses $K_{cr}$.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % For a unity-feedback loop with open-loop transfer function $G(s)H(s)$,
 % the Nyquist criterion relates the number of closed-loop right-half-plane
@@ -57,3 +66,28 @@ grid on
 T3 = feedback(G3,1);
 fprintf('Closed-loop poles of G3/(1+G3):\n'); disp(pole(T3))
 fprintf('Closed-loop stable: %d\n', all(real(pole(T3))<0))
+
+%% Before vs. After: Crossing the Critical Gain
+% Back to the first plant. Below Kcr the Nyquist plot stays to the right
+% of -1 (no encirclement, closed-loop stable); above Kcr it encircles -1
+% (Z = 2, unstable). This is the same stability boundary the root locus
+% crosses at K = Kcr.
+den3 = conv(conv([1 1],[1 2]),[1 3]);
+figure
+subplot(1,2,1)
+nyquist(tf(30,den3))
+title('Before: $K=30<K_{cr}$ (stable)','Interpreter','latex','FontSize',13)
+grid on
+subplot(1,2,2)
+nyquist(tf(90,den3))
+title('After: $K=90>K_{cr}$ (encircles $-1$)','Interpreter','latex','FontSize',13)
+grid on
+fprintf('K=30: closed-loop RHP poles = %d;  K=90: closed-loop RHP poles = %d\n', ...
+    sum(real(pole(feedback(tf(30,den3),1)))>0), ...
+    sum(real(pole(feedback(tf(90,den3),1)))>0))
+
+%% Try it yourself
+% * Sweep K between 30 and 90 and find (by counting encirclements of -1)
+%   the gain where the closed loop first goes unstable -- it is Kcr=60.
+% * For the unstable-open-loop plant, check that closing the loop is
+%   actually stable by inspecting |pole(feedback(G3,1))|.

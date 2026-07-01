@@ -19,18 +19,26 @@ run('HW6/HW6.m')
 
 There is no build system, test framework, or linter. Validation is visual — scripts produce plots that are inspected manually.
 
+**Publishing tutorials**: the instructional files are written in MATLAB Publishing Markup, so they render with `publish`. Use `publish('Root-Locus/LeadCompensation.m')` for one file, or the root-level helper `publish_all` (`publish_all`, `publish_all('dirs',{'Digital-Control'})`, `publish_all('format','html')`) to render every tutorial into per-directory report folders (`pdf/` by default, or `html/` when `'format','html'` is passed). When authoring/editing instructional files, preserve publish compatibility: the first line is a `%% Title` cell, each `%%` section starts with contiguous `%` comment prose, LaTeX uses `$...$`/`$$...$$`, and markup uses `*bold*`, `_italic_`, `|monospace|`, and `% *`/`% #` lists.
+
 ## Repository Structure and Architecture
 
 The codebase is organized into topic-based directories and homework assignment directories:
 
 **Topic directories** (intended for instructional examples):
+- `Intro/` — introductory examples; open- vs closed-loop control
 - `Mathematical Models/` — transfer functions, Laplace-domain modeling of mechanical/electrical/fluid/thermal systems
 - `Transient and Steady-State/` — first/second/higher-order step response, Routh-Hurwitz stability
 - `Root-Locus/` — root locus plots, lead/lag compensation design
 - `Frequency-Response/` — Bode diagrams, Nyquist stability, polar plots
 - `PID Controllers/` — PID tuning, Ziegler-Nichols, frequency-domain tuning
 - `State-Space/` — state-space representation, controllability, observability, pole placement, LQR, state observers, robust control
-- `Intro/` — introductory examples
+- `Servo-and-Tracking/` — integral control, constant-disturbance rejection, two-degree-of-freedom (prefilter) design
+- `Digital-Control/` — sampling/ZOH, `c2d` discretization, digital PID, deadbeat control
+- `Nonlinear-Systems/` — phase-plane analysis, Lyapunov stability
+- `System-Identification/` — Markov parameters from data, OKID (uses the root helper functions), ERA realization
+- `Kalman-Filtering/` — discrete Kalman filter, steady-state form, LQG control
+- `Case-Studies/` — end-to-end designs (inverted pendulum LQR, DC motor position control)
 
 **Topic-directory content**: Each `.m` file in the topic directories is a self-contained, runnable tutorial for its named subject, written in the "code + full derivation" style — `%%` cell blocks with LaTeX-formatted derivations interleaved with Control System Toolbox code, based on the corresponding chapters of Ogata. (These files previously held byte-identical copies of an unrelated discrete observer Markov-parameter script; they have since been replaced with distinct, topic-correct content.) When adding new examples, follow the same style and keep each file's content matched to its name and directory.
 
@@ -64,7 +72,7 @@ A_d = sys_dsct.A;  B_d = sys_dsct.B;
 G = acker(A_d', -C_d', desired_poles)';
 ```
 
-**Plot formatting**: Axes labels use LaTeX interpreter with FontSize 20–30; `ylabel` rotation is set to 0 with right horizontal alignment. This is consistent across all files and should be preserved.
+**Plot formatting**: Axes labels use LaTeX interpreter with FontSize 20–30; `ylabel` rotation is set to 0 (kept horizontal) via `set(get(gca,'YLabel'),'Rotation',0)`. This is consistent across all files and should be preserved. (Do not re-add a `'HorizontalAlignment'` argument to that `set` call — it was removed because it crashed plotting in some environments.)
 
 **Section structure**: Scripts use `%%` cell blocks for MATLAB's cell-mode execution. Each `%% Part N` block is a self-contained analysis step. Block-level comments explain the mathematical derivation inline using `%` and LaTeX (`$$...$$`).
 

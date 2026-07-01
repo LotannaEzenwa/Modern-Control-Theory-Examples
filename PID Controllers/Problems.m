@@ -1,6 +1,11 @@
 %% PID Controllers -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 8: end-of-chapter style PID
-% tuning and comparison problems.
+% *Practice: tune and compare PID controllers.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 8 (end-of-chapter style).
+%
+% Three problems: Ziegler-Nichols tuning, ZN vs. hand-tuning, and a
+% PI-vs-PID steady-state/overshoot tradeoff. Step through with
+% *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Ziegler-Nichols Method 2 Tuning
 % For $G(s) = \frac{1}{s(s+1)(s+2)}$, find the ultimate gain $K_{cr}$ and
@@ -19,11 +24,21 @@ fprintf('Problem 1 PID: Kp=%.4f, Ti=%.4f, Td=%.4f\n', Kp1, Ti1, Td1)
 
 Gc1 = tf(Kp1*[Td1 1 1/Ti1],[1 0]);
 T1 = feedback(Gc1*G1,1);
+
+%% Problem 1 -- Before vs. After
+% "Before" is the diagnostic the tuning rule starts from: at the ultimate
+% gain K=Kcr the closed loop oscillates without decay. "After" applies the
+% ZN Method 2 PID, which damps the response into a usable step.
+T_marg = feedback(Kcr1*G1,1);
 figure
-step(T1)
-title('Problem 1: ZN Method 2 PID Step Response','Interpreter','latex','FontSize',20)
+step(T_marg,0:0.01:20)
+hold on
+step(T1,0:0.01:20)
+hold off
+legend('Before (sustained oscillation at $K_{cr}$)','After (ZN PID)','Interpreter','latex','FontSize',12)
+title('Problem 1: Before vs. After ZN Method 2 Tuning','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 2: Compare ZN Tuning to a Hand-Tuned PID
@@ -48,7 +63,7 @@ hold off
 legend('ZN Method 2','Hand-Tuned (reduced overshoot)','Interpreter','latex','FontSize',14)
 title('Problem 2: ZN vs. Hand-Tuned PID','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: PI-Only vs. Full PID Steady-State and Transient Tradeoff
@@ -78,5 +93,11 @@ hold off
 legend('PI','PID','Interpreter','latex','FontSize',14)
 title('Problem 3: PI vs. PID Overshoot Reduction','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, keep lowering |Kp2| and |Td2| until the overshoot is under
+%   5%, then compare settling time with the ZN design.
+% * In Problem 3, drop the derivative term and confirm the overshoot climbs
+%   back -- derivative action is doing the damping.

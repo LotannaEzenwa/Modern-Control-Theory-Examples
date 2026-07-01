@@ -1,6 +1,15 @@
 %% Mathematical Models -- Introduction
-% Ogata, Modern Control Engineering, Ch. 2: Mathematical Modeling of
-% Control Systems
+% *From a differential equation to a transfer function.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2.
+%
+% In this tutorial you will:
+%
+% * recall the Laplace transform pairs that make LTI analysis algebraic,
+% * turn a governing ODE into a transfer function $G(s)=Y(s)/U(s)$, and
+% * read poles and DC gain off $G(s)$ with |pole| and |dcgain|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A mathematical model of a dynamic system is the set of equations that
 % represent its dynamics. For linear, time-invariant (LTI) systems
@@ -16,19 +25,19 @@
 %% The Laplace Transform
 % The Laplace transform of a time function $f(t)$, $t \geq 0$, is
 %
-% $$F(s) = \mathcal{L}[f(t)] = \int_0^\infty f(t) e^{-st}\,dt$$
+% $$F(s) = \mathbf{L}[f(t)] = \int_0^\infty f(t) e^{-st}\,dt$$
 %
 % Two properties make it the natural tool for LTI systems:
 %
-% * Differentiation: $\mathcal{L}[\dot f(t)] = sF(s) - f(0)$
-% * Linearity: $\mathcal{L}[a f(t) + b g(t)] = aF(s) + bG(s)$
+% * Differentiation: $\mathbf{L}[\dot f(t)] = sF(s) - f(0)$
+% * Linearity: $\mathbf{L}[a f(t) + b g(t)] = aF(s) + bG(s)$
 %
 % Common transform pairs used throughout this repository:
 %
-% $$\mathcal{L}[1(t)] = \frac{1}{s}, \quad
-%   \mathcal{L}[t] = \frac{1}{s^2}, \quad
-%   \mathcal{L}[e^{-at}] = \frac{1}{s+a}, \quad
-%   \mathcal{L}[\sin(\omega t)] = \frac{\omega}{s^2+\omega^2}$$
+% $$\mathbf{L}[1(t)] = \frac{1}{s}, \quad
+%   \mathbf{L}[t] = \frac{1}{s^2}, \quad
+%   \mathbf{L}[e^{-at}] = \frac{1}{s+a}, \quad
+%   \mathbf{L}[\sin(\omega t)] = \frac{\omega}{s^2+\omega^2}$$
 
 syms t s
 f1 = heaviside(t);          % unit step
@@ -74,10 +83,13 @@ poles_G = pole(G)
 % $G(0) = 1/2$, consistent with the final value theorem
 % $\lim_{t\to\infty} y(t) = \lim_{s\to 0} sG(s)\frac{1}{s} = G(0)$.
 figure
-step(G)
-title('Step Response of $G(s)=\frac{1}{s^2+3s+2}$','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[ys,ts] = step(G);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+yline(0.5,'r:','DC gain 0.5')
+legend('Input step (before)','Output $y(t)$ (after)','Interpreter','latex','FontSize',12,'Location','east')
+title('Input vs. Output: $G(s)=\frac{1}{s^2+3s+2}$','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -85,3 +97,8 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % (mechanical, electrical, fluid, thermal) whose governing equations
 % produce transfer functions of this type, plus the block-diagram
 % algebra used to combine them into full control systems.
+
+%% Try it yourself
+% * Swap |G = tf(1,[1 3 2])| for one with complex poles, e.g.
+%   |tf(1,[1 1 4])|, and notice the step response now overshoots and rings.
+% * Use |dcgain(G)| to predict the final value before you plot it.

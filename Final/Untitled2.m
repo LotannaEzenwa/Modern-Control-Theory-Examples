@@ -54,7 +54,7 @@ hold off
 legend('True $h_i$','Identified $\hat{h}_i$','Interpreter','latex','FontSize',14)
 title('Scratch Problem: Least-Squares Markov Parameter ID','Interpreter','latex','FontSize',18)
 ylabel('$h_i$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$i$','Interpreter','latex','FontSize',20)
 
 err = norm(h_hat-h_true)/norm(h_true);

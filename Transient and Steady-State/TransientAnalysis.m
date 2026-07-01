@@ -1,6 +1,15 @@
 %% Transient and Steady-State Response Analysis
-% Ogata, Modern Control Engineering, Ch. 5: Transient and Steady-State
-% Response Analysis
+% *Driving systems with standard test signals to compare them fairly.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * meet the standard test signals (step, ramp, impulse, parabolic),
+% * simulate them with |step|, |impulse|, and |lsim|, and
+% * see how the transient and steady-state parts of a response separate.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The time response of a control system is split into two parts:
 %
@@ -37,10 +46,12 @@ T = feedback(G,1);
 % MATLAB's |step| command applies a unit step input ($R(s)=1/s$) and
 % plots $y(t)$.
 figure
-step(T)
-title('Unit Step Response','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[ys,ts] = step(T);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+legend('Input step $r(t)$ (before)','Output $y(t)$ (after)','Interpreter','latex','FontSize',12,'Location','southeast')
+title('Unit Step: Input vs. Output Response','Interpreter','latex','FontSize',17)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Ramp Response
@@ -55,7 +66,7 @@ plot(t,r_ramp,'--',t,y_ramp,'-')
 legend('Input $r(t)=t$','Output $y(t)$','Interpreter','latex','FontSize',14,'Location','northwest')
 title('Unit Ramp Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -72,5 +83,12 @@ figure
 impulse(T)
 title('Unit Impulse Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Add an integrator to the plant (|G = tf(1,[1 1 0])|) and re-close the
+%   loop: notice the ramp error becomes a constant lag (type-1) instead of
+%   growing without bound.
+% * Overlay |impulse(T)| with the numerical derivative of the step and
+%   confirm they coincide.

@@ -1,6 +1,9 @@
 %% Frequency-Response -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 7: end-of-chapter style margin
-% and frequency-response design problems.
+% *Practice: read margins, find the max gain for a spec, and design a lead.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Find Gain/Phase Margins and Assess Stability
 % For $G(s) = \frac{K}{s(s+2)(s+10)}$ with $K=200$, find the gain and
@@ -38,7 +41,7 @@ yline(45,'r--')
 hold off
 title('Problem 2: Phase Margin vs. Gain','Interpreter','latex','FontSize',20)
 ylabel('$PM$ (deg)','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$K$','Interpreter','latex','FontSize',20)
 grid on
 
@@ -79,5 +82,11 @@ hold off
 legend('Uncompensated','Lead-Compensated','Interpreter','latex','FontSize',14)
 title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 1, halve K and confirm both margins grow (a more sluggish,
+%   more robust loop).
+% * In Problem 2, tighten the spec to PM>=55 and read off the new maximum
+%   allowable gain from the sweep.

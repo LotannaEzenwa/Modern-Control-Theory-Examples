@@ -1,6 +1,9 @@
 %% Transient and Steady-State -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 5: end-of-chapter style
-% stability and transient-response problems.
+% *Practice: Routh stability ranges and transient specifications.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Routh Stability Range
 % A unity-feedback system has forward-path transfer function
@@ -30,6 +33,22 @@ for k = Ks
     fprintf('K = %5.1f -> max real part = %8.4f\n', k, max(real(p)))
 end
 
+%% Problem 1 -- Before vs. After: Stable vs. Unstable Gain
+% In the time domain: K=20 (< 48) settles; K=60 (> 48) diverges -- the
+% Routh range made visible.
+t_cl = 0:0.01:15;
+figure
+subplot(1,2,1)
+step(feedback(tf(20,[1 6 8 0]),1), t_cl)
+title('Before: $K=20$ (stable)','Interpreter','latex','FontSize',13)
+ylabel('$y$','Interpreter','latex','FontSize',15)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',13)
+subplot(1,2,2)
+step(feedback(tf(60,[1 6 8 0]),1), t_cl)
+title('After: $K=60$ (unstable)','Interpreter','latex','FontSize',13)
+xlabel('$t$','Interpreter','latex','FontSize',13)
+
 %% Problem 2: Marginal Stability and Sustained Oscillation
 % Using the boundary $K=48$ from Problem 1, the system is marginally
 % stable; the row of zeros at $s^1$ indicates a pair of poles on the
@@ -48,7 +67,7 @@ figure
 impulse(T_marginal, 0:0.01:10)
 title('Problem 2: Sustained Oscillation at $K=48$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Transient Specs from a Gain Choice
@@ -66,5 +85,11 @@ figure
 step(T3)
 title('Problem 3: Step Response at $K=20$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 1, raise the gain and watch the max-real-part curve cross
+%   zero exactly at the Routh limit K=48.
+% * In Problem 3, try K=40 (closer to the boundary) and notice the extra
+%   overshoot and slower settling reported by |stepinfo|.

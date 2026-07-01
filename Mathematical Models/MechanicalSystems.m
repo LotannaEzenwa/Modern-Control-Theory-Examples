@@ -1,6 +1,15 @@
 %% Mechanical Systems
-% Ogata, Modern Control Engineering, Ch. 3: Mathematical Modeling of
-% Mechanical Systems
+% *Newton's second law to transfer functions: mass-spring-damper systems.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 3.
+%
+% In this tutorial you will:
+%
+% * derive the mass-spring-damper model from a free-body diagram,
+% * see the translational/rotational analogy, and
+% * build a two-mass system directly in state-space form.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Mechanical systems obey Newton's second law, $\sum F = m\ddot{x}$.
 % For a translational mass-spring-damper system with displacement
@@ -24,10 +33,13 @@ m = 1; b = 4; k = 20;
 G_trans = tf(1,[m b k])
 
 figure
-step(G_trans)
-title('Mass-Spring-Damper Step Response','Interpreter','latex','FontSize',20)
-ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[xs,ts] = step(G_trans);
+plot(ts, ones(size(ts)),'k--', ts, xs,'b','LineWidth',1.3)
+legend('Applied force step (before)','Displacement $x(t)$ (after)', ...
+    'Interpreter','latex','FontSize',11,'Location','east')
+title('Force In vs. Displacement Out (Mass-Spring-Damper)','Interpreter','latex','FontSize',15)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Rotational Analog
@@ -68,5 +80,10 @@ figure
 step(sys_2mass)
 title('Two-Mass System Step Response ($x_1$)','Interpreter','latex','FontSize',20)
 ylabel('$x_1(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Lower the damping to |b = 1| and notice the step response start to
+%   overshoot -- the same underdamped behavior as a lightly damped circuit.
+% * Set |k = 0| (no spring) and watch the system lose its restoring force.

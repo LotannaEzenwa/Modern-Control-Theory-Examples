@@ -1,5 +1,15 @@
 %% First-Order System Response
-% Ogata, Modern Control Engineering, Ch. 5: First-Order Systems
+% *One pole, one time constant, no overshoot.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * derive the $1/(Ts+1)$ step response and the 63.2% rule,
+% * read the time constant $T$ off the initial slope, and
+% * see the ramp and impulse responses of a first-order lag.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A first-order system has the transfer function
 %
@@ -24,10 +34,17 @@ T = 2;
 G = tf(1,[T 1]);
 
 figure
-step(G)
-title('First-Order Step Response','Interpreter','latex','FontSize',20)
-ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[ys,ts] = step(G);
+plot(ts, ones(size(ts)),'k--', ts, ys,'b','LineWidth',1.3)
+hold on
+plot(T, 1-exp(-1),'ro','MarkerSize',9,'MarkerFaceColor','r')
+xline(T,'r:')
+hold off
+legend('Input step (before)','Output $y(t)$ (after)','$63.2\%$ at $t=T$', ...
+    'Interpreter','latex','FontSize',11,'Location','southeast')
+title('First-Order Step: Input vs. Output (time constant $T$)','Interpreter','latex','FontSize',15)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% The 63.2% Time-Constant Rule
@@ -61,7 +78,7 @@ hold off
 legend('$y(t)$','Tangent at $t=0$','Interpreter','latex','FontSize',14,'Location','southeast')
 title('Graphical Time-Constant Estimation','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Unit-Ramp and Unit-Impulse Response
@@ -77,11 +94,16 @@ y_ramp = t2 - T + T*exp(-t2/T);
 plot(t2,y_ramp)
 title('First-Order Ramp Response','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',16)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 
 subplot(2,1,2)
 impulse(G)
 title('First-Order Impulse Response','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',16)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',16)
+
+%% Try it yourself
+% * Change the time constant |T| from 2 to 0.5 and notice every marker
+%   (63%, tangent, settling) rescale in time while the final value stays 1.
+% * Read |T| off the plot as the time where the tangent at the origin hits 1.

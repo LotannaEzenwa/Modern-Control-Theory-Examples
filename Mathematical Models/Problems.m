@@ -1,11 +1,14 @@
 %% Mathematical Models -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 2-4: end-of-chapter style
-% modeling exercises.
+% *Practice: ODE-to-TF, parameter identification, and block reduction.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2--4 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: ODE to Transfer Function
 % Find the transfer function $G(s)=Y(s)/U(s)$ for the system
 %
-% $\dddot{y} + 6\ddot{y} + 11\dot{y} + 6y = 6u$
+% $y^{(3)} + 6\ddot{y} + 11\dot{y} + 6y = 6u$
 %
 % Taking the Laplace transform with zero initial conditions:
 %
@@ -22,7 +25,7 @@ figure
 step(G1)
 title('Problem 1: Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 2: Spring-Mass-Damper Parameter Identification
@@ -45,24 +48,40 @@ figure
 step(G2)
 title('Problem 2: Identified System Step Response','Interpreter','latex','FontSize',20)
 ylabel('$x(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Block-Diagram Reduction
-% Reduce the cascaded, unity-feedback system with inner loop
-% $G_1(s)=\frac{1}{s+2}$, forward gain $G_2(s)=\frac{5}{s}$, and outer
-% unity feedback, to a single closed-loop transfer function, then
-% verify its steady-state step value via the final value theorem.
+% Reduce a unity-feedback system whose forward path is the cascade of
+% $G_1(s)=\frac{1}{s+2}$ and $G_2(s)=\frac{5}{s}$ (in series) to a single
+% closed-loop transfer function, then verify its steady-state step value
+% via the final value theorem.
 G1 = tf(1,[1 2]);
 G2 = tf(5,[1 0]);
-T = feedback(series(G1,G2),1)
+fwd = series(G1,G2);          % forward path only (before closing the loop)
+T = feedback(fwd,1)            % closed-loop (after)
 
 ess = 1 - dcgain(T);   % steady-state error for unit step (type-1 system, ess should be 0)
 fprintf('Steady-state error to unit step = %.4f\n', ess)
 
+%% Problem 3 -- Before vs. After Closing the Loop
+% The open forward path $G_1G_2$ has an integrator, so its step ramps off
+% without bound (before); closing the unity-feedback loop turns it into a
+% stable, reference-tracking system (after).
 figure
-step(T)
-title('Problem 3: Closed-Loop Step Response','Interpreter','latex','FontSize',20)
+step(fwd,0:0.01:5)
+hold on
+step(T,0:0.01:5)
+yline(1,'k:','HandleVisibility','off')
+hold off
+legend('Before (open forward path)','After (closed loop)','Interpreter','latex','FontSize',12,'Location','northwest')
+title('Problem 3: Before vs. After Closing the Loop','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, change the target |zeta| to 0.2 and recompute |b|:
+%   notice how much less damping the system then needs.
+% * In Problem 3, remove the integrator (|G2 = tf(5,[1 5])|) and see the
+%   steady-state error stop being zero.

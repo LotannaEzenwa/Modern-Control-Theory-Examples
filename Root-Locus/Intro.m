@@ -1,5 +1,15 @@
 %% Introduction to the Root-Locus Method
-% Ogata, Modern Control Engineering, Ch. 6: Root-Locus Analysis
+% *Where the closed-loop poles go as the loop gain varies from 0 to infinity.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6.
+%
+% In this tutorial you will:
+%
+% * read the *angle* and *magnitude* conditions that define the locus,
+% * learn the construction rules (branches, asymptotes, breakaway points), and
+% * draw and read a locus with |rlocus|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % The root locus is the set of all locations in the $s$-plane that the
 % closed-loop poles can occupy as a single real parameter (almost
@@ -7,7 +17,7 @@
 % unity-feedback system with open-loop transfer function $KG(s)$, the
 % closed-loop characteristic equation is
 %
-% $1 + KG(s) = 0 \quad\Longleftrightarrow\quad G(s) = -\frac{1}{K}$
+% $1 + KG(s) = 0 \quad\Leftrightarrow\quad G(s) = -\frac{1}{K}$
 
 %% The Angle and Magnitude Conditions
 % Writing $G(s)$ in pole-zero form,
@@ -81,3 +91,29 @@ figure
 rlocus(G)
 title('Root Locus of $G(s)=\frac{1}{s(s+2)(s+4)}$','Interpreter','latex','FontSize',20)
 grid on
+
+%% Before vs. After: Starting Points and Where They Go
+% At K=0 the closed-loop poles coincide with the open-loop poles (the
+% "before"); as K increases they trace the locus. Overlay the K=0 poles,
+% the test point s0, and the closed-loop poles for a sample K so the
+% migration the locus encodes is explicit.
+K_demo = 20;
+cl_demo = pole(feedback(K_demo*G,1));
+figure
+rlocus(G)
+hold on
+plot(real(poles),imag(poles),'ks','MarkerSize',10,'LineWidth',1.5)
+plot([real(s0) real(s0)],[imag(s0) -imag(s0)],'rp','MarkerSize',13,'MarkerFaceColor','r')
+plot(real(cl_demo),imag(cl_demo),'bd','MarkerSize',8,'LineWidth',1.5)
+hold off
+legend('Locus','$K=0$ poles (before)','Test point $s_0$','$K=20$ poles (after)', ...
+    'Interpreter','latex','FontSize',11)
+title('From Open-Loop Poles ($K=0$) Along the Locus','Interpreter','latex','FontSize',17)
+grid on   % keep rlocus's own axis labels (it re-appends units, which breaks
+          % a custom latex xlabel/ylabel)
+
+%% Try it yourself
+% * Move the test point to |s0 = -1 + 2j| and see whether the angle-
+%   condition residual gets closer to zero (nearer the true locus).
+% * Add a zero (|G = tf([1 3],poly(poles))|) and notice the branches bend
+%   toward it instead of all running to infinity.

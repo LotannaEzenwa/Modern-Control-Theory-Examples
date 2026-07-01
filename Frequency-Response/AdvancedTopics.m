@@ -1,6 +1,15 @@
 %% Frequency-Domain Compensator Design
-% Ogata, Modern Control Engineering, Ch. 7-8: Lead/Lag Compensation via
-% the Frequency Response
+% *Designing lead/lag compensators straight from the Bode plot.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7--8.
+%
+% In this tutorial you will:
+%
+% * size a lead compensator from a phase-margin specification,
+% * place its corner frequencies and recompute the margin, and
+% * see the lag compensator as the magnitude-attenuation dual.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % This file parallels the root-locus compensator designs in
 % |Root-Locus/LeadCompensation.m| and |Root-Locus/LagCompensation.m|, but
@@ -77,7 +86,7 @@ hold off
 legend('Uncompensated','Lead-Compensated','Interpreter','latex','FontSize',14)
 title('Step Response: Frequency-Domain Lead Design','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Lag Compensator: Phase-Margin Specification (Brief Note)
@@ -90,3 +99,9 @@ xlabel('$t$','Interpreter','latex','FontSize',20)
 % pursued the same goal (steady-state error improvement without
 % disturbing the dominant transient response) via pole/zero placement
 % instead of a magnitude-attenuation argument.
+
+%% Try it yourself
+% * Ask for a larger phase margin (|PM_desired = 65|) and notice the lead
+%   ratio |alpha| grow -- more phase means a wider pole/zero split.
+% * Reduce the safety margin |epsilon| to 3 and see the achieved margin
+%   fall short (the crossover shifts more than a small epsilon allows for).

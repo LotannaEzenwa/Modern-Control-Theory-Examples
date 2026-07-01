@@ -1,6 +1,9 @@
 %% Root-Locus -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 6: end-of-chapter style
-% root-locus and compensator design problems.
+% *Practice: breakaway points, gain for a damping spec, and lead design.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 6 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Locate the Breakaway Point
 % For $G(s) = \frac{K}{s(s+4)}$, find the breakaway point on the real
@@ -42,11 +45,25 @@ T2 = feedback(K2*G1,1);
 poles_2 = pole(T2)
 info2 = stepinfo(T2)
 
+%% Problem 2 -- Before: Locating the Design Point on the Locus
+% Draw the locus together with the constant-$\zeta=0.707$ ray; their
+% intersection is the design point, and the gain there is the K computed
+% above. The resulting closed-loop poles are marked.
+figure
+rlocus(G1)
+hold on
+sgrid(0.707,[])
+plot(real(poles_2),imag(poles_2),'rp','MarkerSize',13,'MarkerFaceColor','r')
+hold off
+title('Problem 2 (Before): Design Point at $\zeta=0.707$','Interpreter','latex','FontSize',17)
+grid on
+
+%% Problem 2 -- After: The Resulting Step Response
 figure
 step(T2)
-title('Problem 2: Step Response at $\zeta=0.707$ Design Point','Interpreter','latex','FontSize',20)
+title('Problem 2 (After): Step Response at the Design Point','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Problem 3: Lead Compensator for a Settling-Time Spec
@@ -83,9 +100,24 @@ cl3 = pole(T3_comp);
 [~,i3] = min(abs(cl3 - sd3));
 fprintf('Nearest closed-loop pole to s_d: %.4f + %.4fj\n', real(cl3(i3)), imag(cl3(i3)))
 
+%% Problem 3 -- Before vs. After
+% Compare the uncompensated unit-feedback response with the
+% lead-compensated one: the compensator speeds up and damps the response
+% toward the $\zeta=0.5,\ \omega_n=6$ target.
+T3_uncomp = feedback(G3,1);
 figure
+hold on
+step(T3_uncomp)
 step(T3_comp)
-title('Problem 3: Lead-Compensated Step Response','Interpreter','latex','FontSize',20)
+hold off
+legend('Before (uncompensated)','After (lead-compensated)','Interpreter','latex','FontSize',13)
+title('Problem 3: Step Response Before vs. After','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * In Problem 2, target |zeta = 0.5| instead of 0.707 and read the new
+%   required gain off the locus using the constant-zeta ray.
+% * In Problem 3, raise |wn3| to 8 and notice the lead network need more
+%   phase (a wider pole/zero separation).

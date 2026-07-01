@@ -1,5 +1,15 @@
 %% Introduction to PID Control
-% Ogata, Modern Control Engineering, Ch. 8: PID Controllers
+% *The proportional-integral-derivative controller, one term at a time.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 8.
+%
+% In this tutorial you will:
+%
+% * see what each of the *P*, *I*, and *D* terms does on its own,
+% * combine them and watch steady-state error and overshoot improve, and
+% * build PID controllers as transfer functions with |tf| and |feedback|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A PID controller computes its actuating signal from the error
 % $e(t)=r(t)-y(t)$ as a weighted sum of proportional, integral, and
@@ -20,6 +30,22 @@
 G = tf(1,conv([1 1],[1 2]));
 t = 0:0.01:15;
 
+%% Before: The Uncontrolled Plant
+% Start from the bare plant's open-loop step response (no controller). It
+% is sluggish and -- being type-0 -- settles well short of the reference,
+% leaving a large steady-state error. Each PID term below attacks a
+% different deficiency of this baseline.
+figure
+step(G,t)
+hold on
+yline(1,'k--')
+hold off
+legend('Open-loop plant $G$','Reference','Interpreter','latex','FontSize',12)
+title('Before: Uncontrolled Plant Step Response','Interpreter','latex','FontSize',17)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
 %% Proportional (P) Control
 % $G_c(s)=K_p$. Increasing $K_p$ speeds the response and reduces (but
 % does not eliminate) steady-state error for a type-0 plant, at the cost
@@ -37,7 +63,7 @@ hold off
 legend('Interpreter','latex','FontSize',12)
 title('Proportional Control: Effect of $K_p$','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 Kp_demo = 5;
@@ -64,7 +90,7 @@ hold off
 legend('P only','PI','Interpreter','latex','FontSize',14)
 title('P vs. PI Control','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Proportional-Derivative (PD) Control
@@ -83,7 +109,7 @@ hold off
 legend('P only','PD','Interpreter','latex','FontSize',14)
 title('P vs. PD Control','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% Full PID Control
@@ -103,9 +129,17 @@ step(T_p,t)
 step(T_pi,t)
 step(T_pd,t)
 step(T_pid,t)
+step(G,t)
+yline(1,'k:','HandleVisibility','off')
 hold off
-legend('P','PI','PD','PID','Interpreter','latex','FontSize',14)
-title('Qualitative Comparison of P, PI, PD, PID Control','Interpreter','latex','FontSize',20)
+legend('P','PI','PD','PID','Before (open-loop)','Interpreter','latex','FontSize',13)
+title('After: P, PI, PD, PID vs. the Uncontrolled Baseline','Interpreter','latex','FontSize',16)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Zero out the integral term (|Ti = inf| in the PID) and watch the
+%   steady-state error return -- integral action is what removes it.
+% * Push |Td| up and notice the overshoot fall but the response get twitchier
+%   (derivative amplifies fast changes, including noise).

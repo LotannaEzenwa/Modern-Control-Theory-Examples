@@ -1,6 +1,15 @@
 %% Bode Diagrams
-% Ogata, Modern Control Engineering, Ch. 7: Bode Diagram (Logarithmic
-% Plot) Construction
+% *Adding up simple factors on a log-frequency axis.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 7.
+%
+% In this tutorial you will:
+%
+% * learn the asymptotic rules for gain, integrator, and pole/zero factors,
+% * compare an asymptotic sketch with the exact |bode| plot, and
+% * read the gain and phase crossover frequencies with |margin|.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A Bode diagram plots $20\log_{10}|G(j\omega)|$ (dB) and
 % $\angle G(j\omega)$ (deg) vs. $\log_{10}\omega$. Because $G(j\omega)$
@@ -63,7 +72,7 @@ hold off
 legend('Exact','Asymptotic (piecewise-linear)','Interpreter','latex','FontSize',14)
 title('Bode Magnitude: Asymptotic vs. Exact','Interpreter','latex','FontSize',20)
 ylabel('dB','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$\omega$ (rad/s)','Interpreter','latex','FontSize',20)
 grid on
 
@@ -81,3 +90,22 @@ grid on
 [Gm,Pm,Wcp,Wcg] = margin(G);
 fprintf('Gain crossover frequency wc = %.4f rad/s\n', Wcg)
 fprintf('Phase crossover frequency wp = %.4f rad/s\n', Wcp)
+
+%% Before vs. After: Raising the Gain Shifts the Magnitude Up
+% Multiplying the loop gain by 10 lifts the entire magnitude curve by
+% 20 dB, pushing the gain-crossover frequency higher and eroding the
+% phase margin -- the frequency-domain "before/after" of a gain change.
+figure
+bode(G, 10*G)
+legend('Before ($G$)','After ($10G$)','Interpreter','latex','FontSize',12)
+title('Bode: Before vs. After a 20 dB Gain Increase','Interpreter','latex','FontSize',16)
+grid on
+[~,Pm1] = margin(G);
+[~,Pm2] = margin(10*G);
+fprintf('Phase margin: before = %.1f deg, after (10x gain) = %.1f deg\n', Pm1, Pm2)
+
+%% Try it yourself
+% * Change the multiplier from 10 to 100 and notice the whole magnitude
+%   curve lift by 40 dB, dropping the phase margin further.
+% * Move the zero corner |z1| from 2 to 20 and watch the mid-frequency
+%   +20 dB/decade stretch shrink.

@@ -1,5 +1,15 @@
 %% Routh-Hurwitz Stability Criterion
-% Ogata, Modern Control Engineering, Ch. 5: Routh's Stability Criterion
+% *Counting right-half-plane roots without solving for them.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * build a Routh array and read off the number of unstable roots,
+% * find the range of a gain $K$ that keeps a loop stable, and
+% * confirm the boundary against the actual closed-loop poles.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A linear system is stable if and only if all poles of its closed-loop
 % transfer function lie in the open left half of the $s$-plane. The
@@ -102,3 +112,47 @@ end
 % using the derivative of the auxiliary polynomial formed from the row
 % above. These special cases are not required for the worked examples
 % above, which both have well-defined, nonzero first columns.
+
+%% Visualizing the Stability Boundary
+% Sweeping the gain K of the $K/(s(s+1)(s+2))$ example and plotting the
+% maximum real part of the closed-loop poles shows them crossing into the
+% right half-plane exactly at K = 6 -- the boundary the Routh array
+% predicted analytically above.
+K_sweep = 0:0.05:12;
+max_re = zeros(size(K_sweep));
+for ii = 1:numel(K_sweep)
+    max_re(ii) = max(real(roots([1 3 2 K_sweep(ii)])));
+end
+figure
+plot(K_sweep, max_re, 'b', 'LineWidth', 1.5)
+hold on
+yline(0,'k--')
+xline(6,'r:','K = 6')
+hold off
+grid on
+title('Stability Boundary: Max Pole Real Part vs. Gain','Interpreter','latex','FontSize',18)
+ylabel('$\max_i\,\mathrm{Re}(s_i)$','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$K$','Interpreter','latex','FontSize',20)
+
+%% Before vs. After: Stable vs. Unstable Gain
+% The boundary in the time domain: at K=4 (< 6) the closed-loop step
+% settles; at K=8 (> 6) it diverges -- crossing K=6 flips stability.
+t_cl = 0:0.01:20;
+figure
+subplot(1,2,1)
+step(feedback(tf(4,[1 3 2 0]),1), t_cl)
+title('Before: $K=4$ (stable)','Interpreter','latex','FontSize',14)
+ylabel('$y$','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',14)
+subplot(1,2,2)
+step(feedback(tf(8,[1 3 2 0]),1), t_cl)
+title('After: $K=8$ (unstable)','Interpreter','latex','FontSize',14)
+xlabel('$t$','Interpreter','latex','FontSize',14)
+
+%% Try it yourself
+% * Extend the plant to |s(s+1)(s+2)(s+3)| (fourth order), rebuild the Routh
+%   array, and notice the stability range for K shrink.
+% * Set K exactly at the boundary (K=6) and confirm |roots| shows a pair on
+%   the imaginary axis -- marginal stability.

@@ -1,5 +1,15 @@
 %% Block Diagrams and Mason's Gain Formula
-% Ogata, Modern Control Engineering, Ch. 2.4-2.5
+% *Reducing an interconnection of blocks to one transfer function.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 2.4--2.5.
+%
+% In this tutorial you will:
+%
+% * apply the series, parallel, and feedback reduction rules,
+% * use |series|, |parallel|, and |feedback| to combine blocks, and
+% * cross-check a multi-loop diagram with Mason's gain formula.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Complex control systems are described by interconnected blocks, each
 % representing a transfer function, joined by summing junctions and
@@ -88,3 +98,27 @@ H2n = tf(0.5,1);
 
 inner = feedback(series(G1n,G2n),H1n);
 T_blocks = feedback(series(inner,G3n),H2n)
+
+%% Before vs. After Reduction: The Inner Loop vs. the Whole Diagram
+% Block-diagram algebra collapses the multi-block diagram step by step.
+% Compare the inner loop alone (before the outer feedback is closed) with
+% the fully reduced system T_blocks (after) -- closing the outer loop
+% speeds up and re-damps the response.
+figure
+step(series(inner,G3n),0:0.01:8)
+hold on
+step(T_blocks,0:0.01:8)
+hold off
+grid on
+legend('Before (inner loop $\times G_3$, outer loop open)','After (fully reduced $T$)', ...
+    'Interpreter','latex','FontSize',11)
+title('Block Reduction: Before vs. After Closing the Outer Loop','Interpreter','latex','FontSize',15)
+ylabel('$y(t)$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Flip the inner loop to positive feedback with
+%   |feedback(series(G1n,G2n),H1n,+1)| and notice the poles move the other way.
+% * Set |H2s = 1| and re-derive |T_mason|, then check it against the numeric
+%   |feedback| result -- they should still agree.

@@ -1,5 +1,15 @@
 %% Higher-Order System Response and Dominant Poles
-% Ogata, Modern Control Engineering, Ch. 5: Higher-Order Systems
+% *When a third-order system behaves like a second-order one.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 5.
+%
+% In this tutorial you will:
+%
+% * approximate a high-order system by its *dominant poles*,
+% * match DC gain so the approximation is fair, and
+% * see when the approximation holds and when it breaks down.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A system with three or more poles generally has no simple closed
 % form for its transient specifications. However, if a pair of
@@ -45,7 +55,7 @@ hold off
 legend('Exact third-order','Dominant-pole approximation','Interpreter','latex','FontSize',14)
 title('Dominant-Pole Approximation vs. Exact Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -69,5 +79,27 @@ hold off
 legend('Exact (close extra pole at $s=-3$)','Dominant-pole approximation','Interpreter','latex','FontSize',12)
 title('Approximation Breakdown: Non-Dominant Extra Pole','Interpreter','latex','FontSize',18)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% What We Keep vs. What We Drop: The Pole Map
+% The approximation's logic is visual: keep the slow dominant pair (close
+% to the imaginary axis, sets the bulk of the response) and drop the fast
+% pole far to the left whose mode decays before it matters.
+figure
+plot(real(poles_exact),imag(poles_exact),'bx','MarkerSize',12,'LineWidth',1.5)
+hold on
+plot(real(roots([1 2 5])),imag(roots([1 2 5])),'ro','MarkerSize',10,'LineWidth',1.5)
+hold off
+grid on
+legend('All poles (exact)','Kept dominant pair','Interpreter','latex','FontSize',12)
+title('Dominant Poles Kept vs. Fast Pole Dropped','Interpreter','latex','FontSize',16)
+ylabel('$\mathrm{Im}$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('$\mathrm{Re}$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Move the fast pole from -10 to -20 and notice the dominant-pole
+%   approximation get even better (the fast mode decays sooner).
+% * Move it in to -2.5 and watch the approximation break down -- it is no
+%   longer "fast" relative to the dominant pair.

@@ -1,5 +1,15 @@
 %% Automatic Control Systems: Open-Loop vs. Closed-Loop
-% Ogata, Modern Control Engineering, Ch. 1-2
+% *Why we close the loop: disturbance rejection and reduced sensitivity.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 1--2.
+%
+% In this tutorial you will:
+%
+% * compare open-loop and closed-loop step responses,
+% * compute the steady-state error reduction from feedback, and
+% * see feedback reject an input disturbance.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % An *open-loop* control system uses a controller and process (plant)
 % in a forward path only -- the output is not measured or compared to
@@ -37,7 +47,7 @@ hold off
 legend('Open-loop','Closed-loop (unity feedback)','Interpreter','latex','FontSize',14)
 title('Open-Loop vs. Closed-Loop Step Response','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -69,5 +79,11 @@ hold off
 legend('Open-loop disturbance response','Closed-loop disturbance response','Interpreter','latex','FontSize',12)
 title('Disturbance Rejection via Feedback','Interpreter','latex','FontSize',20)
 ylabel('$y(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Raise |K| to 20 and notice the closed-loop steady-state error 1/(1+K)
+%   shrink further while the open loop drifts even farther off.
+% * Halve the plant gain and watch the closed loop barely move -- feedback
+%   desensitizes the output to plant changes.

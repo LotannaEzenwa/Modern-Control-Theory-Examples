@@ -1,13 +1,22 @@
 %% Controllability
-% Ogata, Modern Control Engineering, Ch. 9: Controllability of
-% Linear Time-Invariant Systems
+% *Can the input steer the state anywhere we want?*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9.
+%
+% In this tutorial you will:
+%
+% * test controllability with the |ctrb| rank condition,
+% * use the PBH eigenvector test to pinpoint an uncontrollable mode, and
+% * see why controllability is what makes pole placement possible.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % A system $\dot{x}=Ax+Bu$ is *completely state controllable* if, for any
 % initial state $x(0)$ and any final state $x_1$, there exists an input
 % $u(t)$ that transfers the system from $x(0)$ to $x_1$ in finite time.
 % For LTI systems this is equivalent to the *controllability matrix*
 %
-% $$\mathcal{C} = \begin{bmatrix}B & AB & A^2B & \cdots & A^{n-1}B\end{bmatrix}$$
+% $$\mathbf{C} = [\,B\ \ AB\ \ A^2B\ \cdots\ A^{n-1}B\,]$$
 %
 % having full rank $n$ (Kalman's rank condition).
 
@@ -33,7 +42,7 @@ fprintf('rank = %d (n = %d) -> %s\n', rank(Co2), size(A2,1), ...
 fprintf('State x2 cannot be influenced by u: it is uncontrollable.\n')
 
 %% Geometric Interpretation: Reachable Subspace
-% The columns of $\mathcal{C}$ span the *reachable subspace* -- the set
+% The columns of $\mathbf{C}$ span the *reachable subspace* -- the set
 % of states attainable from the origin. For Example 2, this subspace is
 % only the $x_1$-axis.
 fprintf('\nReachable subspace basis (Example 2): column space of Co2\n')
@@ -41,7 +50,7 @@ disp(orth(Co2))
 
 %% PBH (Popov-Belevitch-Hautus) Eigenvector Test
 % An equivalent test: $(A,B)$ is controllable iff
-% $\mathrm{rank}\begin{bmatrix}A-\lambda I & B\end{bmatrix}=n$ for every
+% $\mathrm{rank}\,[\,A-\lambda I\ \ B\,]=n$ for every
 % eigenvalue $\lambda$ of $A$. This identifies *which* mode is
 % uncontrollable.
 eigsA2 = eig(A2);
@@ -62,10 +71,30 @@ fprintf('\nExample 3: rank(Co3) = %d (n=%d)\n', rank(Co3), size(A3,1))
 
 %% Effect of Controllability on Pole Placement
 % A controllable pair permits arbitrary closed-loop pole placement via
-% state feedback $u=-Kx$ (see |Pole-Placement.m|); an uncontrollable mode
+% state feedback $u=-Kx$ (see |PolePlacement.m|); an uncontrollable mode
 % cannot have its associated eigenvalue moved by any $K$.
 K_test = place(A1,B1,[-3 -4]);
 fprintf('\nFeedback gain K placing Example 1 poles at -3,-4: ')
 disp(K_test)
 fprintf('Closed-loop poles: ')
 disp(eig(A1-B1*K_test)')
+
+%% Visualizing the Rank Condition
+% The singular values of the controllability matrix make the rank test
+% visual: a controllable pair has all n singular values nonzero, while an
+% uncontrollable pair has a zero singular value flagging the unreachable
+% mode (its bar collapses to zero height below).
+figure
+bar([svd(Co1), svd(Co2)])
+grid on
+legend('Controllable (Ex. 1)','Uncontrollable (Ex. 2)','Interpreter','latex','FontSize',12)
+title('Singular Values of the Controllability Matrix','Interpreter','latex','FontSize',18)
+ylabel('$\sigma_i$','Interpreter','latex','FontSize',20)
+set(get(gca, 'YLabel'), 'Rotation', 0)
+xlabel('Index $i$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Change |B2| to |[1;1]| and notice Example 2 become controllable -- the
+%   input now reaches both modes.
+% * Confirm you cannot |place| the eigenvalue of an uncontrollable mode no
+%   matter what gain you choose.

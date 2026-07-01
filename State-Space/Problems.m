@@ -1,12 +1,15 @@
 %% State-Space -- Worked Problems
-% Ogata, Modern Control Engineering, Ch. 9: end-of-chapter style
-% controllability/observability problem set.
+% *Practice: controllability and observability of given systems.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 9 (end-of-chapter style).
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 
 %% Problem 1: Test Controllability and Observability
 % For $\dot{x}=Ax+Bu,\ y=Cx$ with
 %
-% $$A=\begin{bmatrix}0&1&0\\0&0&1\\-6&-11&-6\end{bmatrix},\quad
-%   B=\begin{bmatrix}0\\0\\1\end{bmatrix},\quad C=\begin{bmatrix}1&0&0\end{bmatrix}$$
+% $$A=[\,0\ \ 1\ \ 0\,;\ 0\ \ 0\ \ 1\,;\ -6\ \ -11\ \ -6\,],\quad
+%   B=[\,0\,;\,0\,;\,1\,],\quad C=[\,1\ \ 0\ \ 0\,]$$
 %
 % determine complete state controllability and observability.
 A1 = [0 1 0; 0 0 1; -6 -11 -6];
@@ -23,8 +26,8 @@ fprintf('Controllable: %d, Observable: %d\n', ...
 %% Problem 2: Find the Value of a Parameter that Destroys Controllability
 % For
 %
-% $$A=\begin{bmatrix}-1&0\\0&-2\end{bmatrix},\quad
-%   B=\begin{bmatrix}1\\\beta\end{bmatrix}$$
+% $$A=[\,-1\ \ 0\,;\ 0\ \ -2\,],\quad
+%   B=[\,1\,;\,\beta\,]$$
 %
 % find all $\beta$ for which the system is *not* controllable.
 syms beta
@@ -58,3 +61,18 @@ A4 = sys4.A; B4 = sys4.B; C4 = sys4.C;
 fprintf('\nProblem 4: rank(Co) = %d, rank(Ob) = %d (n=%d)\n', ...
     rank(ctrb(A4,B4)), rank(obsv(A4,C4)), size(A4,1))
 fprintf('No pole-zero cancellation present, so both hold (n=%d, full rank).\n', size(A4,1))
+
+%% Visualizing Problem 4: Pole-Zero Map
+% The realization of $G(s)=\frac{s+2}{(s+1)(s+3)(s+4)}$ has its zero at
+% $-2$ distinct from every pole, so no pole-zero cancellation occurs and
+% the system is a minimal realization -- both controllable and observable.
+figure
+pzmap(sys4)
+grid on
+title('Problem 4: Pole-Zero Map (No Cancellation)','Interpreter','latex','FontSize',18)
+
+%% Try it yourself
+% * In Problem 2, change |A| and re-solve |detCo2==0| to find that system's
+%   own uncontrollable |beta|.
+% * In Problem 4, force a pole-zero cancellation (put the zero at -1) and
+%   watch observability drop below full rank.

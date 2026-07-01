@@ -1,6 +1,15 @@
 %% Fluid (Liquid-Level) Systems
-% Ogata, Modern Control Engineering, Ch. 4: Mathematical Modeling of
-% Fluid Systems
+% *Tanks, valves, and the resistance-capacitance view of fluid dynamics.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 4.
+%
+% In this tutorial you will:
+%
+% * derive a single-tank model from conservation of mass,
+% * relate it to the first-order RC time constant, and
+% * extend to an interacting two-tank system.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Consider a single tank of cross-sectional area $C$ with inflow rate
 % $q_i(t)$ and outflow through a resistive valve to atmosphere, with
@@ -43,10 +52,12 @@ R = 2; C = 5;
 G_tank = tf(R,[R*C 1])
 
 figure
-step(G_tank)
-title('Liquid-Level Tank Step Response','Interpreter','latex','FontSize',20)
-ylabel('$h(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[hs,ts] = step(G_tank);
+plot(ts, ones(size(ts)),'k--', ts, hs,'b','LineWidth',1.3)
+legend('Inflow step $q_i$ (before)','Tank level $h(t)$ (after)','Interpreter','latex','FontSize',11,'Location','east')
+title('Input vs. Output: Liquid-Level Tank','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %%
@@ -76,5 +87,11 @@ figure
 step(G_2tank)
 title('Two-Tank Interacting System Step Response','Interpreter','latex','FontSize',20)
 ylabel('$h_2(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Double the tank area |C| and notice the time constant |tau=RC| double,
+%   so the level responds half as fast.
+% * Compare the two-tank |step| with a single first-order lag and see the
+%   extra S-shaped delay a second tank adds.

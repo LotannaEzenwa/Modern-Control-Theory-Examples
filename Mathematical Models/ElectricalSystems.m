@@ -1,6 +1,15 @@
 %% Electrical Systems
-% Ogata, Modern Control Engineering, Ch. 3: Mathematical Modeling of
-% Electrical Systems
+% *Kirchhoff's laws to transfer functions, and the electrical-mechanical analogy.*
+%
+% Ogata, _Modern Control Engineering_, Ch. 3.
+%
+% In this tutorial you will:
+%
+% * model a series RLC circuit with KVL,
+% * see the force-voltage analogy with the mass-spring-damper, and
+% * model an op-amp PI controller circuit.
+%
+% Step through with *Ctrl+Enter*, or render a report with |publish|.
 %
 % Electrical circuits are modeled with Kirchhoff's voltage and current
 % laws. Consider a series RLC circuit driven by source voltage
@@ -25,10 +34,13 @@ L = 1; R = 2; C = 0.5;
 G_rlc = tf(1,[L*C R*C 1])
 
 figure
-step(G_rlc)
-title('Series RLC Circuit Step Response','Interpreter','latex','FontSize',20)
-ylabel('$e_o(t)$','Interpreter','latex','FontSize',20)
-set(get(gca, 'YLabel'), 'Rotation', 0,'HorizontalAlignment','right')
+[es,ts] = step(G_rlc);
+plot(ts, ones(size(ts)),'k--', ts, es,'b','LineWidth',1.3)
+legend('Input voltage step $e_i$ (before)','Capacitor voltage $e_o(t)$ (after)', ...
+    'Interpreter','latex','FontSize',11,'Location','east')
+title('Input vs. Output: Series RLC Circuit','Interpreter','latex','FontSize',16)
+ylabel('amplitude','Interpreter','latex','FontSize',16)
+set(get(gca, 'YLabel'), 'Rotation', 0)
 xlabel('$t$','Interpreter','latex','FontSize',20)
 
 %% The Electrical-Mechanical Analogy
@@ -65,3 +77,9 @@ G_opamp = tf(-[R2*C2 1],[R1*C2 0])
 figure
 bode(G_opamp)
 title('Op-Amp PI Circuit Frequency Response','Interpreter','latex','FontSize',20)
+
+%% Try it yourself
+% * Shrink |R| toward 0 and notice the RLC response become more oscillatory
+%   (less damping) -- the electrical twin of a light mechanical damper.
+% * Check the analogy: build the mass-spring-damper with |m=L, b=R, k=1/C|
+%   and confirm its poles match the circuit.
